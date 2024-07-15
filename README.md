@@ -4,6 +4,8 @@
 
 ## flow chart
 
+![map_location](https://github.com/user-attachments/assets/d21a7043-48eb-4f44-acd9-c03ffa19e22f)
+
 ## feature
 
 ### 이전 단계
