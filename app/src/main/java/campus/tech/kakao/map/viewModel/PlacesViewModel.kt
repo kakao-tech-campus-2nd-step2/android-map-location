@@ -8,7 +8,8 @@ import campus.tech.kakao.map.model.RecentSearchWord
 
 class PlacesViewModel(private val repository: MapRepository) : ViewModel() {
 
-    val places: LiveData<List<Place>> = repository.places
+    private val _places: MutableLiveData<List<Place>> = MutableLiveData<List<Place>>()
+    val places: LiveData<List<Place>> = _places
 
     private val _searchHistoryData: MutableLiveData<ArrayList<RecentSearchWord>> =
         MutableLiveData<ArrayList<RecentSearchWord>>()
@@ -19,11 +20,23 @@ class PlacesViewModel(private val repository: MapRepository) : ViewModel() {
     }
 
     fun searchPlaces(search: String) {
-        repository.searchPlaces(search)
+        if (search.isEmpty()) {
+            _places.value = mutableListOf()
+            return
+        }
+        repository.searchPlaces(search) { placeList ->
+            _places.value = placeList
+        }
     }
 
     fun searchDBPlaces(search: String) {
-        repository.searchDBPlaces(search)
+        if (search.isEmpty()) {
+            _places.value = mutableListOf()
+            return
+        }
+        repository.searchDBPlaces(search) { placeList ->
+            _places.value = placeList
+        }
     }
 
     fun getSearchHistory(): List<RecentSearchWord> {

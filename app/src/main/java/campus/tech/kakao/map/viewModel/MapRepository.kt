@@ -25,9 +25,6 @@ class MapRepository(private val context: Context) {
     private var stringPrefs: String? = null
     var searchHistoryList = ArrayList<RecentSearchWord>()
 
-    private val _places: MutableLiveData<List<Place>> = MutableLiveData<List<Place>>()
-    val places: LiveData<List<Place>> = _places
-
     init {
         setPrefs()
         val dbFile = context.getDatabasePath("${PlacesDBHelper.TABLE_NAME}")
@@ -40,11 +37,7 @@ class MapRepository(private val context: Context) {
     /**
      * 카카오 REST API 관련
      */
-    fun searchPlaces(search: String) {
-        if (search.isEmpty()) {
-            _places.value = mutableListOf()
-            return
-        }
+    fun searchPlaces(search: String, onPlaceResponse: (List<Place>) -> Unit) {
         RetrofitClient.retrofitService.requestPlaces(query = search).enqueue(object :
             Callback<SearchResponse> {
             override fun onResponse(
@@ -58,12 +51,15 @@ class MapRepository(private val context: Context) {
                         val category = it.categoryName.split(" \u003e ").last()
                         responseList.add(Place(it.placeName, it.addressName, category))
                     }
-                    _places.value = responseList.toMutableList()
+                    onPlaceResponse(responseList)
+                } else {
+                    onPlaceResponse(emptyList())
                 }
             }
 
             override fun onFailure(call: Call<SearchResponse>, t: Throwable) {
                 println("error: $t")
+                onPlaceResponse(emptyList())
             }
         })
     }
@@ -98,15 +94,11 @@ class MapRepository(private val context: Context) {
         localDB.deletePlace(place)
     }
 
-    fun searchDBPlaces(search: String) {
+    fun searchDBPlaces(search: String, onPlaceResponse: (List<Place>) -> Unit) {
         val allPlaces = getAllLocalPlaces()
-        val filtered = if (search.isEmpty()) {
-            emptyList()
-        } else {
-            allPlaces.filter { it.name.contains(search, ignoreCase = true) }
-        }
+        val filtered = allPlaces.filter { it.name.contains(search, ignoreCase = true) }
         Log.d("Thread", "${Thread.currentThread().name}")   // main 스레드
-        _places.value = filtered
+        onPlaceResponse(filtered)
     }
 
 
