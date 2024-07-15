@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Map</string>
+    <string name="search_hint">검색어를 입력해 주세요.</string>
+    <string name="cancelBtn">cancelBtn</string>
+    <string name="search_empty">검색 결과가 없습니다.</string>
+    <string name="placeName">이름</string>
+    <string name="placeAddress">장소</string>
+    <string name="placeCategory">카테고리</string>
+    <string name="saveplace">장소</string>
+    <string name="deleteSavePlace">검색기록삭제</string>
+    <string name="search_btn">검색 버튼</string>
+    <string name="place_icon">place_icon</string>
 </resources>

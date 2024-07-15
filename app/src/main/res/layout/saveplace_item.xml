@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="15dp">
+
+    <ImageView
+        android:id="@+id/saveCancelBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/cancel_btn"
+        android:contentDescription="@string/deleteSavePlace" />
+
+    <TextView
+        android:id="@+id/savePlace"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:text="@string/saveplace"
+        android:textSize="20sp" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>
