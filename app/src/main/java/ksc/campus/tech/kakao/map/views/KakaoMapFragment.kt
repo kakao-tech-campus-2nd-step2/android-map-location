@@ -6,25 +6,23 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapLifeCycleCallback
-import com.kakao.vectormap.MapReadyCallback
 import com.kakao.vectormap.MapView
 import com.kakao.vectormap.camera.CameraPosition
-import com.kakao.vectormap.camera.CameraUpdate
 import com.kakao.vectormap.camera.CameraUpdateFactory
 import ksc.campus.tech.kakao.map.R
 import java.lang.Exception
 
 class KakaoMapFragment : Fragment() {
-    private lateinit var kakaoMap: MapView
+    private lateinit var kakaoMapView: MapView
+    private lateinit var kakaoMap: KakaoMap
 
     private fun initiateKakaoMap(view: View) {
-        kakaoMap = view.findViewById(R.id.kakao_map_view)
-        kakaoMap.start(object : MapLifeCycleCallback() {
+        kakaoMapView = view.findViewById(R.id.kakao_map_view)
+        kakaoMapView.start(object : MapLifeCycleCallback() {
             override fun onMapDestroy() {
             }
 
@@ -35,6 +33,7 @@ class KakaoMapFragment : Fragment() {
         },
             object : KakaoMapReadyCallback() {
                 override fun onMapReady(km: KakaoMap) {
+                    kakaoMap = km
                     val builder = CameraPosition.Builder()
                     builder.position = LatLng.from(35.8905341232321, 128.61213266480294)
                     builder.tiltAngle = 0.0
@@ -59,17 +58,18 @@ class KakaoMapFragment : Fragment() {
     }
 
     override fun onResume() {
-        kakaoMap.resume()
+        kakaoMapView.resume()
         super.onResume()
     }
 
     override fun onPause() {
-        kakaoMap.pause()
+        kakaoMapView.pause()
         super.onPause()
     }
 
     override fun onDestroyView() {
-        kakaoMap.finish()
+        kakaoMapView.finish()
         super.onDestroyView()
     }
+
 }
