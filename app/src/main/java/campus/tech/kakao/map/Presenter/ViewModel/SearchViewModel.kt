@@ -22,8 +22,8 @@ class SearchViewModel(private val repository: PlaceRepository) : ViewModel() {
         _currentResult.value = repository.getSimilarPlacesByName(string)
     }
 
-    fun searchPlaceRemote(name: String) {
-        _currentResult.postValue(repository.getPlaceByNameHTTP(name))
+    suspend fun searchPlaceRemote(name: String) {
+        _currentResult.postValue(repository.searchPlaceRemote(name))
     }
 
     fun addFavorite(name: String) {

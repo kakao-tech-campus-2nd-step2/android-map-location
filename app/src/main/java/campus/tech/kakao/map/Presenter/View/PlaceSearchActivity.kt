@@ -22,6 +22,9 @@ import campus.tech.kakao.map.Presenter.View.Adapter.FavoriteAdapter
 import campus.tech.kakao.map.Presenter.View.Adapter.SearchResultAdapter
 import campus.tech.kakao.map.Presenter.View.Observer.EmptyPlaceObserver
 import campus.tech.kakao.map.ViewModel.SearchViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class PlaceSearchActivity : AppCompatActivity() {
     private lateinit var viewModel: SearchViewModel
@@ -92,9 +95,9 @@ class PlaceSearchActivity : AppCompatActivity() {
 
     private fun setEditTextListener() {
         etSearchPlace.addTextChangedListener {
-            Thread {
+            CoroutineScope(Dispatchers.IO).launch {
                 viewModel.searchPlaceRemote(etSearchPlace.text.toString())
-            }.start()
+            }
         }
     }
 
