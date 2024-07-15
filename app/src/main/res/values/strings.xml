@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Map</string>
+    <string name="no_search_result">검색 결과가 없습니다.</string>
+    <string name="hint_search">검색어를 입력해 주세요.</string>
+    <string name="place_name">카페1</string>
+    <string name="place_address">서울 성동구 성수동 1</string>
+    <string name="place_category">카페</string>
 </resources>
