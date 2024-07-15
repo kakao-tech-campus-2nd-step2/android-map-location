@@ -1,6 +1,5 @@
 package campus.tech.kakao.map.ViewModel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

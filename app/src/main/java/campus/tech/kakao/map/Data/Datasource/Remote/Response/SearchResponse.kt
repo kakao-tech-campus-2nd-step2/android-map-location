@@ -15,7 +15,11 @@ data class SearchResponse(
 
 data class SameName(
     @SerializedName("keyword") val keyword: String?,
-    @SerializedName("region") val region: List<Any>,
+    @SerializedName("region") val region: String?,
+    @SerializedName("selected_region") val selectedRegion: String?
+)
+
+data class Meta(
     @SerializedName("is_end") val isEnd: Boolean?,
     @SerializedName("pageable_count") val pageableCount: Int?,
     @SerializedName("same_name") val sameName: SameName?,
