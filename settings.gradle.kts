@@ -10,8 +10,9 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven ("https://devrepo.kakao.com/nexus/repository/kakaomap-releases/")
     }
 }
 
-rootProject.name = "android-map-location"
+rootProject.name = "android-map-search"
 include(":app")
