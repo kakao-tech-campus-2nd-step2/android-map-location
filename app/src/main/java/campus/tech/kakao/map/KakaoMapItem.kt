@@ -38,35 +38,11 @@ class KakaoMapItemDbHelper(context: Context) : SQLiteOpenHelper(context, "mapIte
                     "${SelectItemDB.TABLE_COLUMN_MAP_ITEM_ID} varchar(20) not null" +
                     ");"
         )
+        Log.d("uin", "table생성")
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         db?.execSQL("DROP TABLE IF EXISTS ${SelectItemDB.TABLE_NAME}")
         onCreate(db)
-    }
-
-    suspend fun searchKakaoMapItem(category: String): MutableList<KakaoMapItem> {
-        val mapItemList = mutableListOf<KakaoMapItem>()
-
-        val response = withContext(Dispatchers.IO) {
-            retrofitService.requsetKakaoMap(query = category).execute()
-        }
-        if(response.isSuccessful) {
-            val body = response.body()
-            //val maxPage = body?.meta?.pageable_count ?: 1
-            val maxPage = 3
-            for(i in 1..maxPage) {
-                val responseEachPage = withContext(Dispatchers.IO) {
-                    retrofitService.requsetKakaoMap(query = category, page = i).execute()
-                }
-                responseEachPage.body()?.documents?.forEach {
-                    mapItemList.add(
-                        KakaoMapItem(it.id, it.place_name, it.address_name, it.category_group_name)
-                    )
-                }
-
-            }
-        }
-        return mapItemList
     }
 }

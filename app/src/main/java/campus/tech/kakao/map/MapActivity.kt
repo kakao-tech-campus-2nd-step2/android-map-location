@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.kakao.vectormap.KakaoMapSdk
 import com.kakao.sdk.common.util.Utility
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
@@ -18,8 +17,6 @@ class MapActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
-
-        KakaoMapSdk.init(this, getString(R.string.kakao_api_key))
 
         val inputSpace = findViewById<TextView>(R.id.inputSpace)
         mapView = findViewById<MapView>(R.id.mapView)
@@ -43,8 +40,8 @@ class MapActivity : AppCompatActivity() {
             }
         })
 
-        val keyHash = Utility.getKeyHash(this)
-        Log.d("uin", keyHash)
+        //val keyHash = Utility.getKeyHash(this)
+        //Log.d("uin", keyHash)
     }
 
     override fun onResume() {

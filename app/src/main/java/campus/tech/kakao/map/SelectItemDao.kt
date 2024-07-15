@@ -57,4 +57,18 @@ class SelectItemDao(private val wDb: SQLiteDatabase, private val rDb: SQLiteData
             return false
         }
     }
+
+    fun checkTableExist() : Boolean {
+        val cursor = rDb.rawQuery(
+            "SELECT name FROM sqlite_master WHERE type='table' AND name = '${SelectItemDB.TABLE_NAME}'",
+            null
+        )
+        if(cursor.getCount() > 0) {
+            cursor.close()
+            return true
+        } else {
+            cursor.close()
+            return false
+        }
+    }
 }

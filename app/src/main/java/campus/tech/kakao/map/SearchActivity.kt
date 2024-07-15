@@ -21,6 +21,7 @@ class SearchActivity : AppCompatActivity() {
         setContentView(R.layout.activity_search)
 
         val mapItemViewModel = MapItemViewModel(this)
+        mapItemViewModel.makeAllSelectItemList()
 
         val mapList = findViewById<RecyclerView>(R.id.mapList)
         val selectList = findViewById<RecyclerView>(R.id.selectList)
@@ -52,9 +53,7 @@ class SearchActivity : AppCompatActivity() {
 
         mapItemViewModel.kakaoMapItemList.observe(this) {
             mapListAdapter.updateMapItemList(it)
-            if (mapItemViewModel.kakaoMapItemList.value == null) {
-                mainText.visibility = View.VISIBLE
-            } else if (mapItemViewModel.kakaoMapItemList.value!!.isEmpty()){
+            if (mapItemViewModel.kakaoMapItemList.value.isNullOrEmpty()){
                 mainText.visibility = View.VISIBLE
             } else {
                 mainText.visibility = View.INVISIBLE
@@ -69,7 +68,7 @@ class SearchActivity : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                CoroutineScope(Dispatchers.Default).launch {
+                CoroutineScope(Dispatchers.IO).launch {
                     mapItemViewModel.searchKakaoMapItem(s.toString())
                 }
             }
