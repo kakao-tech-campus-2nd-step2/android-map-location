@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="50dp">
+
+    <TextView
+        android:id="@+id/delSavedSearchKeyword"
+        android:layout_width="50dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="X"
+        app:layout_constraintRight_toLeftOf="@+id/SavedSearchKeyword" />
+
+    <TextView
+        android:id="@+id/SavedSearchKeyword"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="cafe"
+        app:layout_constraintLeft_toRightOf="@+id/delSavedSearchKeyword" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
