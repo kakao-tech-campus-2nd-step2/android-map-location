@@ -15,7 +15,6 @@ import campus.tech.kakao.map.R
 import campus.tech.kakao.Model.ResultSearchKeyword
 import campus.tech.kakao.Model.RetrofitClient
 import campus.tech.kakao.Model.SQLiteDb
-import campus.tech.kakao.map.BuildConfig
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -96,7 +95,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun searchPlaces(query: String) {
-        val apiKey = "KakaoAK ${BuildConfig.KAKAO_REST_API_KEY}"
+        val apiKey = "KakaoAK ${campus.tech.kakao.map.BuildConfig.KAKAO_REST_API_KEY}"
 
         RetrofitClient.instance.searchPlaces(apiKey, query).enqueue(object : Callback<ResultSearchKeyword> {
             override fun onResponse(call: Call<ResultSearchKeyword>, response: Response<ResultSearchKeyword>) {
