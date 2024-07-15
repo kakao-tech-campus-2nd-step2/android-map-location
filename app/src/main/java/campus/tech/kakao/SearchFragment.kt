@@ -1,11 +1,9 @@
 package campus.tech.kakao.View
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
@@ -18,8 +16,6 @@ import campus.tech.kakao.Model.SQLiteDb
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-
-
 
 class SearchFragment : Fragment() {
     private lateinit var searchView: SearchView
@@ -62,11 +58,11 @@ class SearchFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(context)
         historyRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
-        historyAdapter = HistoryAdapter(mutableListOf()) { id ->
+        historyAdapter = HistoryAdapter(mutableListOf(), { id ->
             databaseHelper.deleteFromSelectedData(id)
             historyAdapter.removeItemById(id)
             updateHistoryData()
-        }
+        }, { historyItem -> searchView.setQuery(historyItem, true) })
         historyRecyclerView.adapter = historyAdapter
 
         adapter = PlacesAdapter(listOf()) { name ->
@@ -79,7 +75,10 @@ class SearchFragment : Fragment() {
     private fun setupSearchView() {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                return false
+                if (!query.isNullOrEmpty()) {
+                    searchPlaces(query)
+                }
+                return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
@@ -133,9 +132,6 @@ class SearchFragment : Fragment() {
     private fun updateHistoryData() {
         val historyData = databaseHelper.getAllSelectedData()
         historyAdapter.updateData(historyData)
-        historyAdapter.notifyDataSetChanged()
         historyRecyclerView.visibility = if (historyData.isNotEmpty()) View.VISIBLE else View.GONE
     }
-
-
 }
