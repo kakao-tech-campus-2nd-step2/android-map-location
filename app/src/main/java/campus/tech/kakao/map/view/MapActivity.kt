@@ -17,6 +17,8 @@ import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapAuthException
 import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.MapView
+import com.kakao.vectormap.camera.CameraAnimation
+import com.kakao.vectormap.camera.CameraUpdateFactory
 import com.kakao.vectormap.label.Label
 import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.label.LabelStyle
@@ -55,6 +57,7 @@ class MapActivity : AppCompatActivity() {
 
                 markerLocation?.let { location ->
                     setMarker(location)
+                    moveMapCamera(location.latitude, location.longitude)
                 }
             }
         }
@@ -117,5 +120,10 @@ class MapActivity : AppCompatActivity() {
                 .setStyles(style).setTexts(LabelTextBuilder().setTexts(location.name))
             previousLabel = labelManager.layer?.addLabel(options)
         }
+    }
+
+    private fun moveMapCamera(latitude: Double, longitude: Double) {
+        val cameraUpdate = CameraUpdateFactory.newCenterPosition(LatLng.from(latitude, longitude), 15)
+        myKakaoMap.moveCamera(cameraUpdate, CameraAnimation.from(500, true, true))
     }
 }
