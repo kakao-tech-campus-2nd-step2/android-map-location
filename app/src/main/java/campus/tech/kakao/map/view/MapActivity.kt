@@ -3,11 +3,13 @@ package campus.tech.kakao.map.view
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.LinearLayoutCompat
 import campus.tech.kakao.map.BuildConfig
 import campus.tech.kakao.map.R
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
@@ -22,6 +24,7 @@ class MapActivity : AppCompatActivity() {
     private lateinit var clickedPlaceNameView: TextView
     private lateinit var clickedPlaceAddressView: TextView
     private lateinit var clickedPlaceView: LinearLayoutCompat
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
     private lateinit var KAKAO_APP_KEY: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,6 +45,8 @@ class MapActivity : AppCompatActivity() {
         clickedPlaceNameView = findViewById(R.id.clickedPlaceName)
         clickedPlaceAddressView = findViewById(R.id.clickedPlaceAddress)
         clickedPlaceView = findViewById(R.id.clickedPlaceView)
+        bottomSheetBehavior = BottomSheetBehavior.from(clickedPlaceView)
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
     }
 
     private fun setListeners() {
@@ -79,5 +84,6 @@ class MapActivity : AppCompatActivity() {
     private fun showClickedPlaceInfo(clickedPlaceName: String?, clickedPlaceAddress: String?) {
         clickedPlaceNameView.text = clickedPlaceName
         clickedPlaceAddressView.text = clickedPlaceAddress
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
     }
 }
