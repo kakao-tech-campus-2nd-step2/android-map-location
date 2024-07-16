@@ -1,5 +1,6 @@
 package campus.tech.kakao.map.ui.search
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
@@ -10,6 +11,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import campus.tech.kakao.map.databinding.ActivitySearchBinding
 import campus.tech.kakao.map.model.Place
 import campus.tech.kakao.map.model.SavedSearchWord
+import campus.tech.kakao.map.ui.IntentKeys.EXTRA_PLACE_ADDRESS
+import campus.tech.kakao.map.ui.IntentKeys.EXTRA_PLACE_LATITUDE
+import campus.tech.kakao.map.ui.IntentKeys.EXTRA_PLACE_LONGITUDE
+import campus.tech.kakao.map.ui.IntentKeys.EXTRA_PLACE_NAME
 import campus.tech.kakao.map.ui.ViewModelFactory
 import campus.tech.kakao.map.ui.search.adapters.ResultRecyclerViewAdapter
 import campus.tech.kakao.map.ui.search.adapters.SavedSearchWordRecyclerViewAdapter
@@ -88,16 +93,46 @@ class SearchActivity : AppCompatActivity() {
         val placeItemClickListener =
             object : OnPlaceItemClickListener {
                 override fun onPlaceItemClicked(place: Place) {
-                    savedSearchWordViewModel.insertSearchWord(
-                        SavedSearchWord(
-                            name = place.name,
-                            placeId = place.id,
-                        ),
-                    )
+                    insertSearchWord(place)
+                    navigateToMapActivity(place)
                 }
             }
         binding.searchResultRecyclerView.adapter = ResultRecyclerViewAdapter(placeItemClickListener)
         binding.searchResultRecyclerView.layoutManager = LinearLayoutManager(this)
+    }
+
+    /**
+     * 검색된 장소 정보를 저장하는 함수.
+     *
+     * @param place 저장할 장소 정보를 담고 있는 Place 객체
+     */
+    private fun insertSearchWord(place: Place) {
+        savedSearchWordViewModel.insertSearchWord(
+            SavedSearchWord(
+                name = place.name,
+                placeId = place.id,
+                address = place.address,
+                latitude = place.latitude,
+                longitude = place.longitude,
+            ),
+        )
+    }
+
+    /**
+     * MapActivity로 이동하는 함수.
+     *
+     * Intent에 Place의 정보를 담아 전달.
+     *
+     * @param place 이동할 장소의 정보를 담고 있는 Place 객체.
+     */
+    private fun navigateToMapActivity(place: Place) {
+        val intent = Intent()
+        intent.putExtra(EXTRA_PLACE_NAME, place.name)
+        intent.putExtra(EXTRA_PLACE_ADDRESS, place.address)
+        intent.putExtra(EXTRA_PLACE_LONGITUDE, place.longitude)
+        intent.putExtra(EXTRA_PLACE_LATITUDE, place.latitude)
+        setResult(RESULT_OK, intent)
+        finish()
     }
 
     interface OnSavedSearchWordClearImageViewClickListener {

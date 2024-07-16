@@ -9,4 +9,6 @@ data class Place(
     @SerialName("place_name") val placeName: String = "",
     @SerialName("address_name") val address: String = "",
     @SerialName("category_group_name") val category: String = "",
+    @SerialName("x") val longitude: String = "",
+    @SerialName("y") val latitude: String = "",
 )

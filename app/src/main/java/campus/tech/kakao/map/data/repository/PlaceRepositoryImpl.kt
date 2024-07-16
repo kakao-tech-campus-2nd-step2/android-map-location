@@ -93,6 +93,8 @@ class PlaceRepositoryImpl
                     name = dto.placeName,
                     address = dto.address,
                     category = dto.category,
+                    longitude = dto.longitude,
+                    latitude = dto.latitude,
                 )
             }
         }
