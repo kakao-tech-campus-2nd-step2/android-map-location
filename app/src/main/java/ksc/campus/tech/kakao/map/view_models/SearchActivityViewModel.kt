@@ -4,14 +4,20 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.kakao.vectormap.LatLng
+import com.kakao.vectormap.camera.CameraPosition
 import ksc.campus.tech.kakao.map.BuildConfig
+import ksc.campus.tech.kakao.map.models.LocationInfo
 import ksc.campus.tech.kakao.map.models.SearchKeywordRepository
 import ksc.campus.tech.kakao.map.models.SearchResult
 import ksc.campus.tech.kakao.map.models.SearchResultRepository
+import ksc.campus.tech.kakao.map.models.MapViewRepository
 
 
 class SearchActivityViewModel(application: Application) : AndroidViewModel(application) {
 
+    private val mapViewRepository: MapViewRepository =
+        MapViewRepository.getInstance()
     private val searchResultRepository: SearchResultRepository =
         SearchResultRepository.getInstance()
     private val keywordRepository: SearchKeywordRepository =
@@ -28,6 +34,12 @@ class SearchActivityViewModel(application: Application) : AndroidViewModel(appli
         get() = _searchText
     val activeContent: LiveData<ContentType>
         get() = _activeContent
+
+    val selectedLocation: LiveData<LocationInfo?>
+        get() = mapViewRepository.selectedLocation
+    val cameraPosition: LiveData<CameraPosition>
+        get() = mapViewRepository.cameraPosition
+
 
     init {
         keywordRepository.getKeywords()
@@ -46,8 +58,14 @@ class SearchActivityViewModel(application: Application) : AndroidViewModel(appli
         keywordRepository.deleteKeyword(keyword)
     }
 
+    private fun updateLocation(address:String, name:String, latitude:Double, longitude:Double){
+        mapViewRepository.updateSelectedLocation(LocationInfo(address, name, latitude, longitude))
+    }
+
     fun clickSearchResultItem(selectedItem: SearchResult) {
+        locationUpdateForTest()
         addKeyword(selectedItem.name)
+        switchContent(ContentType.MAP)
     }
 
     fun submitQuery(value: String) {
@@ -65,6 +83,14 @@ class SearchActivityViewModel(application: Application) : AndroidViewModel(appli
 
     fun switchContent(type: ContentType) {
         _activeContent.postValue(type)
+    }
+
+    fun locationUpdateForTest(){
+        updateLocation("대구 복현동", "경북대학교", 35.8905341232321, 128.61213266480294)
+    }
+
+    fun updateCameraPosition(position: CameraPosition){
+        mapViewRepository.updateCameraPosition(position)
     }
 
     enum class ContentType { MAP, SEARCH_LIST }
