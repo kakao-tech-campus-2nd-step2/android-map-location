@@ -35,8 +35,4 @@
 
 ### 2단계 - 테스트
 
-<<<<<<< HEAD
 - 테스트 코드를 작성한다.
-=======
-- 테스트 코드를 작성한다.
->>>>>>> 9c29d0a (chore: bring Code From Week 3 Assignment)
