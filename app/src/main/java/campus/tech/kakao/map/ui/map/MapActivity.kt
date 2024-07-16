@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import campus.tech.kakao.map.BuildConfig
 import campus.tech.kakao.map.R
 import campus.tech.kakao.map.databinding.ActivityMapBinding
+import campus.tech.kakao.map.ui.IntentKeys.EXTRA_MAP_ERROR_MESSAGE
 import campus.tech.kakao.map.ui.IntentKeys.EXTRA_PLACE_ADDRESS
 import campus.tech.kakao.map.ui.IntentKeys.EXTRA_PLACE_LATITUDE
 import campus.tech.kakao.map.ui.IntentKeys.EXTRA_PLACE_LONGITUDE
@@ -124,7 +125,6 @@ class MapActivity : AppCompatActivity() {
         markerData = MarkerData(name, latitude.toDouble(), longitude.toDouble(), address)
     }
 
-
     /**
      * location 정보를 SharedPreferences에서 가져오는 함수.
      *
@@ -166,6 +166,11 @@ class MapActivity : AppCompatActivity() {
 
             override fun onMapError(error: Exception) {
                 logMapError(error)
+                startErrorActivity(error.message)
+                val intent = Intent(this@MapActivity, ErrorActivity::class.java)
+                intent.putExtra(EXTRA_MAP_ERROR_MESSAGE, error.message)
+                startActivity(intent)
+                finish()
             }
         }
     }
@@ -242,6 +247,18 @@ class MapActivity : AppCompatActivity() {
      */
     private fun logMapError(error: Exception) {
         Log.e("MapActivity", "onMapError: ${error.message}")
+    }
+
+    /**
+     * 에러 발생 시 ErrorActivity로 이동하는 함수.
+     *
+     * @param errorMessage 전달할 에러 메시지.
+     */
+    private fun startErrorActivity(errorMessage: String?) {
+        val intent = Intent(this@MapActivity, ErrorActivity::class.java)
+        intent.putExtra(EXTRA_MAP_ERROR_MESSAGE, errorMessage)
+        startActivity(intent)
+        finish()
     }
 
     /**
