@@ -17,12 +17,16 @@ import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.MapView
 import com.kakao.vectormap.camera.CameraUpdateFactory
+import com.kakao.vectormap.label.LabelOptions
+import com.kakao.vectormap.label.LabelStyle
+import com.kakao.vectormap.label.LabelStyles
 
 class MapFragment : Fragment() {
     private lateinit var mapView: MapView
     private lateinit var searchView: SearchView
     private var x: Double = 127.108621
     private var y: Double = 37.402005
+    private var kakaoMap: KakaoMap? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,19 +70,26 @@ class MapFragment : Fragment() {
                 requireActivity().finish()
             }
         }, object : KakaoMapReadyCallback() {
-            override fun onMapReady(kakaoMap: KakaoMap) {
+            override fun onMapReady(readyMap: KakaoMap) {
+                kakaoMap = readyMap
                 val latLng = LatLng.from(y, x)
                 Log.d("latlng", "onMapReady: $y $x")
 
                 val cameraUpdate = CameraUpdateFactory.newCenterPosition(latLng)
-                kakaoMap.moveCamera(cameraUpdate)
-                kakaoMap.setOnCameraMoveEndListener { _, _, _ ->
-                    val position = kakaoMap.cameraPosition!!.position
+                readyMap.moveCamera(cameraUpdate)
+
+                readyMap.setOnCameraMoveEndListener { _, _, _ ->
+                    val position = readyMap.cameraPosition!!.position
                     saveLastLocation(position.latitude, position.longitude)
                 }
 
-                kakaoMap.setOnMapClickListener { _, _, _, _ ->
+                readyMap.setOnMapClickListener { _, _, _, _ ->
                     (activity as? MainActivity)?.showSearchFragment()
+                }
+
+                // Check if arguments are set and update marker
+                arguments?.let {
+                    setCoordinates(it.getDouble("x", x), it.getDouble("y", y))
                 }
             }
         })
@@ -114,5 +125,25 @@ class MapFragment : Fragment() {
         val lat = sharedPreferences.getFloat("lastY", 37.402005f).toDouble()
         val lng = sharedPreferences.getFloat("lastX", 127.108621f).toDouble()
         return Pair(lat, lng)
+    }
+
+    fun setCoordinates(newX: Double, newY: Double) {
+        x = newX
+        y = newY
+        kakaoMap?.let { map ->
+            val latLng = LatLng.from(y, x)
+            val cameraUpdate = CameraUpdateFactory.newCenterPosition(latLng)
+            map.moveCamera(cameraUpdate)
+            setMarker(map, x, y)
+        }
+    }
+
+    private fun setMarker(kakaoMap: KakaoMap, x: Double, y: Double) {
+        kakaoMap.labelManager?.clearAll() // 기존 마커 제거
+        val styles = kakaoMap.labelManager?.addLabelStyles(
+            LabelStyles.from(LabelStyle.from(R.drawable.mapmarker))
+        )
+        val options = LabelOptions.from(LatLng.from(y, x)).setStyles(styles)
+        kakaoMap.labelManager?.layer?.addLabel(options)
     }
 }

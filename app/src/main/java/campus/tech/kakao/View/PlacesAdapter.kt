@@ -56,7 +56,6 @@ class PlacesAdapter(private var places: List<Place>, private val onItemClick: (S
     private suspend fun navigateToMapFragment(x: Double?, y: Double?, activity: MainActivity) {
         withContext(Dispatchers.Main) {
             activity.clearBackStack()
-
             val fragment = MapFragment().apply {
                 arguments = Bundle().apply {
                     putDouble("x", x!!)
@@ -68,6 +67,11 @@ class PlacesAdapter(private var places: List<Place>, private val onItemClick: (S
                 .replace(R.id.fragmentContainer, fragment)
                 .addToBackStack(null)
                 .commit()
+
+            activity.supportFragmentManager.executePendingTransactions() // Ensure fragment transaction is completed
+
+            val mapFragment = activity.supportFragmentManager.findFragmentById(R.id.fragmentContainer) as? MapFragment
+            mapFragment?.setCoordinates(x!!, y!!)
         }
     }
 }
