@@ -88,6 +88,7 @@ class KakaoMapFragment : Fragment() {
     }
 
     override fun onDestroyView() {
+        kakaoMapView.finish()
         super.onDestroyView()
     }
 
