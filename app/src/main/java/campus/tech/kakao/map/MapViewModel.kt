@@ -51,4 +51,9 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
     fun removeSelectedItem(item: MapItem) {
         _selectedItems.value = _selectedItems.value?.minus(item)
     }
+
+    //선택된 항목 설정
+    fun setSelectedItems(items: List<MapItem>) {
+        _selectedItems.value = items
+    }
 }
