@@ -1,13 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".views.KakaoMapFragment">
 
     <com.kakao.vectormap.MapView
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/text_location_name"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:id="@+id/kakao_map_view"/>
 
-</FrameLayout>
+    <TextView
+        android:textSize="24dp"
+        android:gravity="bottom|start"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/text_location_address"
+        app:layout_constraintTop_toBottomOf="@id/kakao_map_view"
+        android:id="@+id/text_location_name"
+        android:paddingStart="15dp"
+        android:paddingBottom="5dp"
+        android:layout_width="0dp"
+        android:layout_height="60dp"/>
+    
+    <TextView
+        android:textSize="18dp"
+        android:gravity="top|start"
+        android:paddingStart="15dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_location_name"
+        android:id="@+id/text_location_address"
+
+        android:layout_width="0dp"
+        android:layout_height="40dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
