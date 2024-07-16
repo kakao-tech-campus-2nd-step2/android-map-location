@@ -81,6 +81,8 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-intents:3.5.1")
 
 
+    // https://developer.android.com/codelabs/android-preferences-datastore?hl=ko#4
+    implementation ("androidx.datastore:datastore-preferences:1.0.0")   // prefs.getString() -> 동기 형태 : 개선필요
     implementation ("com.kakao.sdk:v2-all:2.20.3")
     implementation ("androidx.activity:activity-ktx:$activity_version")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")

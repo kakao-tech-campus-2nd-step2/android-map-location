@@ -43,13 +43,13 @@ class PlacesViewModel(private val repository: MapRepository) : ViewModel() {
         return searchHistoryData.value ?: emptyList()
     }
 
-    fun moveSearchToLast(idx: Int, search: String) {
-        repository.moveSearchToLast(idx, search)
-        _searchHistoryData.value = repository.searchHistoryList
-    }
-
-    fun addSearch(search: String) {
-        repository.addSearchHistory(search)
+    fun insertSearch(idx: Int, search: String) {
+        val foundIdx = repository.searchHistoryContains(search)
+        if (foundIdx != -1) {
+            repository.moveSearchToLast(foundIdx, search)
+        } else {
+            repository.addSearchHistory(search)
+        }
         _searchHistoryData.value = repository.searchHistoryList
     }
 

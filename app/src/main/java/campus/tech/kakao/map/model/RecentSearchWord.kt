@@ -1,3 +1,3 @@
 package campus.tech.kakao.map.model
 
-class RecentSearchWord(val word: String)
+data class RecentSearchWord(val word: String)

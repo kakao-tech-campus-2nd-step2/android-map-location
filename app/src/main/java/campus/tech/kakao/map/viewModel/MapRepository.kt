@@ -110,7 +110,12 @@ class MapRepository(private val context: Context) {
         return searchHistoryList
     }
 
+    fun searchHistoryContains(itemName: String): Int {
+        return searchHistoryList.indexOfFirst { it.word == itemName }
+    }
+
     fun moveSearchToLast(idx: Int, search: String) {
+        if (idx == searchHistoryList.size-1) return
         searchHistoryList.removeAt(idx)
         searchHistoryList.add(RecentSearchWord(search))
         saveSearchHistory()
