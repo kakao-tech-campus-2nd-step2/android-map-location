@@ -29,9 +29,7 @@ import com.kakao.vectormap.label.LabelStyles
 class MapActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMapBinding
     private lateinit var searchActivityResultLauncher: ActivityResultLauncher<Intent>
-    private var markerLatitude = 35.230934
-    private var markerLongitude = 129.082476
-    private var markerPlaceName = "부산대 컴공관"
+    private lateinit var markerData: MarkerData
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +37,8 @@ class MapActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         initializeKakaoMapSdk()
+        loadLocation()
+        setBottomSheet()
         startMapView()
         setSearchBoxClickListener()
         setSearchActivityResultLauncher()
@@ -93,8 +93,8 @@ class MapActivity : AppCompatActivity() {
             val longitude = data?.getStringExtra(EXTRA_PLACE_LONGITUDE) ?: ""
             val latitude = data?.getStringExtra(EXTRA_PLACE_LATITUDE) ?: ""
 
-            setBottomSheet(name, address)
-            setMarker(name, longitude, latitude)
+            setMarker(name, longitude, latitude, address)
+            setBottomSheet()
             startMapView()
         }
     }
@@ -102,15 +102,10 @@ class MapActivity : AppCompatActivity() {
     /**
      * bottom sheet의 name과 address의 text를 설정하는 함수.
      *
-     * @param name 설정할 위치의 name String.
-     * @param address 설정할 위치의 address String.
      */
-    private fun setBottomSheet(
-        name: String,
-        address: String,
-    ) {
-        binding.bottomSheetPlaceNameTextView.text = name
-        binding.bottomSheetPlaceAddressTextView.text = address
+    private fun setBottomSheet() {
+        binding.bottomSheetPlaceNameTextView.text = markerData.name
+        binding.bottomSheetPlaceAddressTextView.text = markerData.address
     }
 
     /**
@@ -124,10 +119,30 @@ class MapActivity : AppCompatActivity() {
         name: String,
         longitude: String,
         latitude: String,
+        address: String,
     ) {
-        markerPlaceName = name
-        markerLongitude = longitude.toDouble()
-        markerLatitude = latitude.toDouble()
+        markerData = MarkerData(name, latitude.toDouble(), longitude.toDouble(), address)
+    }
+
+
+    /**
+     * location 정보를 SharedPreferences에서 가져오는 함수.
+     *
+     * 데이터가 존재한다면 정보를 가져와서 저장. 그 외의 경우는 기본값(부산대 컴공관) 저장.
+     */
+    private fun loadLocation() {
+        val sharedPref = getSharedPreferences(PREF_NAME, MODE_PRIVATE)
+        val placeName = sharedPref.getString(MARKER_PLACE_NAME, null)
+        val latitude = sharedPref.getString(MARKER_LATITUDE, null)
+        val longitude = sharedPref.getString(MARKER_LONGITUDE, null)
+        val address = sharedPref.getString(MARKER_ADDRESS, null)
+
+        markerData =
+            if (placeName != null && latitude != null && longitude != null && address != null) {
+                MarkerData(placeName, latitude.toDouble(), longitude.toDouble(), address)
+            } else {
+                MarkerData("부산대 컴공관", 35.230934, 129.082476, "부산광역시 금정구 부산대학로 63번길 2")
+            }
     }
 
     /**
@@ -171,7 +186,7 @@ class MapActivity : AppCompatActivity() {
             }
 
             override fun getPosition(): LatLng {
-                return LatLng.from(markerLatitude, markerLongitude) // 부산대학교 컴퓨터 공학관으로 초기 위치 설정
+                return LatLng.from(markerData.latitude, markerData.longitude)
             }
         }
     }
@@ -210,9 +225,9 @@ class MapActivity : AppCompatActivity() {
         labelManager: LabelManager,
         styles: LabelStyles,
     ): LabelOptions {
-        return LabelOptions.from(LatLng.from(markerLatitude, markerLongitude))
+        return LabelOptions.from(LatLng.from(markerData.latitude, markerData.longitude))
             .setStyles(labelManager.addLabelStyles(styles))
-            .setTexts(markerPlaceName)
+            .setTexts(markerData.name)
     }
 
     /**
@@ -247,4 +262,39 @@ class MapActivity : AppCompatActivity() {
         super.onPause()
         binding.mapView.pause()
     }
+
+    @Override
+    override fun onDestroy() {
+        saveLocation()
+        super.onDestroy()
+    }
+
+    /**
+     * location 정보를 SharedPreferences에 저장하는 함수.
+     */
+    private fun saveLocation() {
+        val sharedPref = getSharedPreferences(PREF_NAME, MODE_PRIVATE)
+        with(sharedPref.edit()) {
+            putString(MARKER_PLACE_NAME, markerData.name)
+            putString(MARKER_LATITUDE, markerData.latitude.toString())
+            putString(MARKER_LONGITUDE, markerData.longitude.toString())
+            putString(MARKER_ADDRESS, markerData.address)
+            apply()
+        }
+    }
+
+    companion object {
+        private const val PREF_NAME = "location_prefs"
+        private const val MARKER_PLACE_NAME = "placeName"
+        private const val MARKER_LATITUDE = "latitude"
+        private const val MARKER_LONGITUDE = "longitude"
+        private const val MARKER_ADDRESS = "address"
+    }
+
+    data class MarkerData(
+        val name: String,
+        val latitude: Double,
+        val longitude: Double,
+        val address: String,
+    )
 }

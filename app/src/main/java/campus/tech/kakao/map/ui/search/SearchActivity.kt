@@ -229,5 +229,4 @@ class SearchActivity : AppCompatActivity() {
             }
         }
     }
-
 }
