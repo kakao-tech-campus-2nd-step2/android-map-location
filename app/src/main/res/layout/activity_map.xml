@@ -37,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
-            android:text="@string/search_hint"
+            android:text="@string/click_place_name"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -46,7 +46,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
-            android:text="@string/placeName"
+            android:text="@string/click_place_address"
             android:textSize="15sp" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>

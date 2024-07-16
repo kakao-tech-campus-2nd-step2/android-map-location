@@ -10,4 +10,6 @@
     <string name="deleteSavePlace">검색기록삭제</string>
     <string name="search_btn">검색 버튼</string>
     <string name="place_icon">place_icon</string>
+    <string name="click_place_name">클릭 된 장소</string>
+    <string name="click_place_address">클릭된 장소 주소</string>
 </resources>
