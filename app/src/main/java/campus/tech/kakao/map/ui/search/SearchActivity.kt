@@ -6,7 +6,9 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import campus.tech.kakao.map.databinding.ActivitySearchBinding
 import campus.tech.kakao.map.model.Place
@@ -199,12 +201,14 @@ class SearchActivity : AppCompatActivity() {
      */
     private fun collectSearchResults() {
         lifecycleScope.launch {
-            placeViewModel.searchResults.collectLatest { places ->
-                (binding.searchResultRecyclerView.adapter as? ResultRecyclerViewAdapter)?.submitList(
-                    places,
-                )
-                binding.noSearchResultTextView.visibility =
-                    if (places.isEmpty()) View.VISIBLE else View.GONE
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                placeViewModel.searchResults.collectLatest { places ->
+                    (binding.searchResultRecyclerView.adapter as? ResultRecyclerViewAdapter)?.submitList(
+                        places,
+                    )
+                    binding.noSearchResultTextView.visibility =
+                        if (places.isEmpty()) View.VISIBLE else View.GONE
+                }
             }
         }
     }
@@ -214,13 +218,16 @@ class SearchActivity : AppCompatActivity() {
      */
     private fun collectSavedSearchWords() {
         lifecycleScope.launch {
-            savedSearchWordViewModel.savedSearchWords.collectLatest { savedSearchWords ->
-                (binding.savedSearchWordRecyclerView.adapter as? SavedSearchWordRecyclerViewAdapter)?.submitList(
-                    savedSearchWords,
-                )
-                binding.savedSearchWordRecyclerView.visibility =
-                    if (savedSearchWords.isEmpty()) View.GONE else View.VISIBLE
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                savedSearchWordViewModel.savedSearchWords.collectLatest { savedSearchWords ->
+                    (binding.savedSearchWordRecyclerView.adapter as? SavedSearchWordRecyclerViewAdapter)?.submitList(
+                        savedSearchWords,
+                    )
+                    binding.savedSearchWordRecyclerView.visibility =
+                        if (savedSearchWords.isEmpty()) View.GONE else View.VISIBLE
+                }
             }
         }
     }
+
 }
