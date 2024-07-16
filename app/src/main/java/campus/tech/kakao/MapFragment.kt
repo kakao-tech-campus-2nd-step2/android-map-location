@@ -87,9 +87,8 @@ class MapFragment : Fragment() {
                     (activity as? MainActivity)?.showSearchFragment()
                 }
 
-                // Check if arguments are set and update marker
                 arguments?.let {
-                    setCoordinates(it.getDouble("x", x), it.getDouble("y", y))
+                    setCoordinates(it.getDouble("x", x), it.getDouble("y", y), it.getString("placeName", ""), it.getString("roadAddressName", ""))
                 }
             }
         })
@@ -127,7 +126,7 @@ class MapFragment : Fragment() {
         return Pair(lat, lng)
     }
 
-    fun setCoordinates(newX: Double, newY: Double) {
+    fun setCoordinates(newX: Double, newY: Double, placeName: String, roadAddressName: String) {
         x = newX
         y = newY
         kakaoMap?.let { map ->
@@ -135,11 +134,14 @@ class MapFragment : Fragment() {
             val cameraUpdate = CameraUpdateFactory.newCenterPosition(latLng)
             map.moveCamera(cameraUpdate)
             setMarker(map, x, y)
+
+            PlaceInfoBottomSheet.newInstance(placeName, roadAddressName)
+                .show(parentFragmentManager, PlaceInfoBottomSheet::class.java.simpleName)
         }
     }
 
     private fun setMarker(kakaoMap: KakaoMap, x: Double, y: Double) {
-        kakaoMap.labelManager?.clearAll() // 기존 마커 제거
+        kakaoMap.labelManager?.clearAll()
         val styles = kakaoMap.labelManager?.addLabelStyles(
             LabelStyles.from(LabelStyle.from(R.drawable.mapmarker))
         )

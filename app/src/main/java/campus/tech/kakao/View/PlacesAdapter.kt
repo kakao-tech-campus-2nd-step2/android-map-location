@@ -26,14 +26,16 @@ class PlacesAdapter(private var places: List<Place>, private val onItemClick: (S
 
         val x = place.x
         val y = place.y
-        holder.nameTextView.text = place.placeName
-        holder.addressTextView.text = place.roadAddressName
+        val placeName = place.placeName
+        val roadAddressName = place.roadAddressName
+        holder.nameTextView.text = placeName
+        holder.addressTextView.text = roadAddressName
         holder.categoryTextView.text = categoryGroupCode.CodeToCategory[place.categoryName] ?: ""
         holder.itemView.setOnClickListener {
-            onItemClick(place.placeName)
+            onItemClick(placeName)
 
             (holder.itemView.context as? MainActivity)?.lifecycleScope?.launch {
-                navigateToMapFragment(x, y, holder.itemView.context as MainActivity)
+                navigateToMapFragment(x, y, placeName, roadAddressName!!, holder.itemView.context as MainActivity)
             }
         }
     }
@@ -53,13 +55,14 @@ class PlacesAdapter(private var places: List<Place>, private val onItemClick: (S
         val categoryTextView: TextView = itemView.findViewById(R.id.categoryTextView)
     }
 
-    private suspend fun navigateToMapFragment(x: Double?, y: Double?, activity: MainActivity) {
-        withContext(Dispatchers.Main) {
-            activity.clearBackStack()
+    private suspend fun navigateToMapFragment(x: Double?, y: Double?, placeName: String, roadAddressName: String, activity: MainActivity) {
+        withContext(Dispatchers.Main) {activity.clearBackStack()
             val fragment = MapFragment().apply {
                 arguments = Bundle().apply {
                     putDouble("x", x!!)
                     putDouble("y", y!!)
+                    putString("placeName", placeName)
+                    putString("roadAddressName", roadAddressName)
                 }
             }
 
@@ -68,10 +71,9 @@ class PlacesAdapter(private var places: List<Place>, private val onItemClick: (S
                 .addToBackStack(null)
                 .commit()
 
-            activity.supportFragmentManager.executePendingTransactions() // Ensure fragment transaction is completed
+            activity.supportFragmentManager.executePendingTransactions()
 
             val mapFragment = activity.supportFragmentManager.findFragmentById(R.id.fragmentContainer) as? MapFragment
-            mapFragment?.setCoordinates(x!!, y!!)
+            mapFragment?.setCoordinates(x!!, y!!, placeName, roadAddressName)
         }
-    }
-}
+    }}
