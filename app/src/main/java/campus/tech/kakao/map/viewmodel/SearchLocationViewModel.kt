@@ -30,7 +30,7 @@ class SearchLocationViewModel : ViewModel() {
     fun searchLocationByHistory(locationName: String) {
         _searchInput.value = locationName
     }
-
+    
     fun searchLocation(category: String) {
         viewModelScope.launch {
             _location.value = repository.searchLocation(category)
