@@ -10,8 +10,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import campus.tech.kakao.map.Adapter.DocumentAdapter
-import campus.tech.kakao.map.Adapter.WordAdapter
+import campus.tech.kakao.map.adapter.DocumentAdapter
+import campus.tech.kakao.map.adapter.WordAdapter
 
 class SearchActivity : AppCompatActivity() {
 
@@ -29,9 +29,12 @@ class SearchActivity : AppCompatActivity() {
         setupUI()
         searchResult.layoutManager = LinearLayoutManager(this)
         searchWordResult.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        documentAdapter = DocumentAdapter(){ Document ->
+        documentAdapter = DocumentAdapter({ Document ->
             model.addWord(Document)
-        }
+        },{Document ->
+            model.getMapInfo(Document)
+            finish()
+        })
         wordAdapter = WordAdapter() { SearchWord ->
             model.deleteWord(SearchWord)
         }

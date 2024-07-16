@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingStart="20dp"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+    app:behavior_hideable = "true"
+    app:behavior_peekHeight="100dp"
+    android:focusable="true"
+    android:id="@+id/bottom_sheet"
+    android:background="@color/white">
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="@string/bottom_sheet_default_name"
+        android:gravity="start|center"
+        android:textSize="30sp"/>
+    <TextView
+        android:id="@+id/address"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="@string/bottom_sheet_default_address"
+        android:gravity="start|center"
+        android:textSize="20sp"/>
+
+</LinearLayout>
