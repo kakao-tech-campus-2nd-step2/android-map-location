@@ -1,5 +1,7 @@
 package campus.tech.kakao.View
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -29,6 +31,7 @@ class MapFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         mapView = view.findViewById(R.id.KakaoMapView)
         searchView = view.findViewById(R.id.searchView)
+
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 requireActivity().finish()
@@ -39,9 +42,16 @@ class MapFragment : Fragment() {
             override fun onMapDestroy() {
             }
 
-            override fun onMapError(error: Exception) {
+            override fun onMapError(p0: Exception) {
+                    val intent = Intent(requireContext(), OnMapErrorActivity::class.java)
+                    intent.putExtra("ErrorType","${p0}")
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    requireContext().startActivity(intent)
+                    requireActivity().finish()
             }
-        }, object : KakaoMapReadyCallback() {
+
+
+            }, object : KakaoMapReadyCallback() {
             override fun onMapReady(kakaoMap: KakaoMap) {
                 kakaoMap.setOnMapClickListener { _, _, _, _ ->
                     (activity as? MainActivity)?.showSearchFragment()
