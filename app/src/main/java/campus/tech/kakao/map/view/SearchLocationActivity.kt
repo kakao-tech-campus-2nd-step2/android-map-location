@@ -63,5 +63,14 @@ class SearchLocationActivity : AppCompatActivity() {
                 binding.executePendingBindings()
             }
         }
+
+        viewModel.markerLocation.observe(this) {
+            it?.let { location ->
+                val intent = intent
+                intent.putExtra("markerLocation", location)
+                setResult(RESULT_OK, intent)
+                finish()
+            }
+        }
     }
 }
