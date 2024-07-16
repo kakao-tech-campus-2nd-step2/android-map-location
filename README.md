@@ -4,11 +4,8 @@
 
 ## flow chart
 
-<<<<<<< HEAD
 ![map_location](https://github.com/user-attachments/assets/d21a7043-48eb-4f44-acd9-c03ffa19e22f)
 
-=======
->>>>>>> 9c29d0a (chore: bring Code From Week 3 Assignment)
 ## feature
 
 ### 이전 단계
