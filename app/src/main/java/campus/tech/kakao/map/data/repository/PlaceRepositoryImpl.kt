@@ -29,7 +29,9 @@ class PlaceRepositoryImpl(private val context: Context) : PlaceRepository {
                         PlaceVO(
                             placeName = it.placeName,
                             addressName = it.addressName,
-                            categoryName = it.categoryGroupName
+                            categoryName = it.categoryGroupName,
+                            latitude = it.y.toDouble(),
+                            longitude = it.x.toDouble()
                         )
                     }
                     callback(places)

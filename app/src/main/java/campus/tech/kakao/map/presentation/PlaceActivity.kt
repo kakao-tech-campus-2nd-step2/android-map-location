@@ -1,5 +1,6 @@
 package campus.tech.kakao.map.presentation
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -12,6 +13,8 @@ import campus.tech.kakao.map.data.repository.PlaceRepositoryImpl
 import campus.tech.kakao.map.data.usecase.*;
 import campus.tech.kakao.map.databinding.ActivityPlaceBinding
 import campus.tech.kakao.map.domain.model.PlaceVO
+import com.kakao.vectormap.LatLng
+import com.kakao.vectormap.camera.CameraPosition
 
 class PlaceActivity : AppCompatActivity() {
     private lateinit var placeViewModel: PlaceViewModel
@@ -19,6 +22,7 @@ class PlaceActivity : AppCompatActivity() {
     private lateinit var historyAdapter: SearchHistoryAdapter
 
     private lateinit var binding: ActivityPlaceBinding
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,6 +96,7 @@ class PlaceActivity : AppCompatActivity() {
     private fun initializeAdapters() {
         placeAdapter = PlaceAdapter { place ->
             placeViewModel.saveSearchQuery(place)
+            sendPositiontoMap(place)
         }
 
         historyAdapter = SearchHistoryAdapter(
@@ -104,6 +109,13 @@ class PlaceActivity : AppCompatActivity() {
                 placeViewModel.searchPlaces(query)
             }
         )
+    }
+    private fun sendPositiontoMap(place: PlaceVO) {
+        val latlng = placeViewModel.getPlaceLocation(place)
+        val intent = Intent(this, MapActivity::class.java).apply {
+            putExtra("place", place)
+        }
+        startActivity(intent)
     }
 
     private fun setUpSearchEditText() {

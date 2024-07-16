@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import campus.tech.kakao.map.domain.model.PlaceVO
+import com.kakao.vectormap.LatLng
 
 
 class PlaceViewModel(
@@ -37,6 +38,11 @@ class PlaceViewModel(
     fun removeSearchQuery(query: String) {
         removeSearchQueryUseCase(query)
         loadSearchHistory()
+    }
+
+    fun getPlaceLocation(place: PlaceVO): LatLng {
+        // PlaceVO에서 위치 정보를 가져오는 로직
+        return LatLng.from(place.latitude, place.longitude)
     }
 
 }
