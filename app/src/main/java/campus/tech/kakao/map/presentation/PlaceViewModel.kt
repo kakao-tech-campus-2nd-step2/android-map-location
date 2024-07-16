@@ -12,7 +12,7 @@ class PlaceViewModel(
     private val getSearchPlacesUseCase: GetSearchPlacesUseCase,
     private val saveSearchQueryUseCase: SaveSearchQueryUseCase,
     private val getSearchHistoryUseCase: GetSearchHistoryUseCase,
-    private val removeSearchQueryUseCase: RemoveSearchQueryUseCase
+    private val removeSearchQueryUseCase: RemoveSearchQueryUseCase,
 ) : ViewModel() {
     private val _places = MutableLiveData<List<PlaceVO>>()
     val places: LiveData<List<PlaceVO>> get() = _places

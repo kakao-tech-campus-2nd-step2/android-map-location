@@ -8,9 +8,19 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
+import androidx.lifecycle.ViewModelProvider
 import campus.tech.kakao.map.R
+import campus.tech.kakao.map.data.repository.PlaceRepositoryImpl
+import campus.tech.kakao.map.data.usecase.GetLastPlaceUseCaseImpl
+import campus.tech.kakao.map.data.usecase.GetSearchHistoryUseCaseImpl
+import campus.tech.kakao.map.data.usecase.GetSearchPlacesUseCaseImpl
+import campus.tech.kakao.map.data.usecase.RemoveSearchQueryUseCaseImpl
+import campus.tech.kakao.map.data.usecase.SaveLastPlaceUseCaseImpl
+import campus.tech.kakao.map.data.usecase.SaveSearchQueryUseCaseImpl
 import campus.tech.kakao.map.databinding.ActivityMapBinding
 import campus.tech.kakao.map.domain.model.PlaceVO
+import campus.tech.kakao.map.domain.usecase.GetLastPlaceUseCase
+import campus.tech.kakao.map.domain.usecase.SaveLastPlaceUseCase
 import campus.tech.kakao.map.utils.ApiKeyProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kakao.vectormap.KakaoMap
@@ -33,6 +43,7 @@ class MapActivity : AppCompatActivity() {
     private lateinit var mapView: MapView
     private lateinit var searchBox: CardView
     private lateinit var kakaoMap: KakaoMap
+    private lateinit var mapViewModel: MapViewModel
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
 
 
@@ -43,14 +54,9 @@ class MapActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         bindingViews()
+        initializeViewModel()
         setUpSearchBox()
-
-        val place = intent.getSerializableExtra("place") as? PlaceVO
-        if (place != null) {
-            startMap(place)
-        } else {
-            startDefaultMap()
-        }
+        setUpMap()
     }
 
     private fun bindingViews() {
@@ -62,6 +68,30 @@ class MapActivity : AppCompatActivity() {
     private fun setUpSearchBox() {
         searchBox.setOnClickListener {
             startActivity(Intent(this, PlaceActivity::class.java))
+        }
+    }
+
+    private fun initializeViewModel() {
+        val placeRepository = PlaceRepositoryImpl(context = this)
+        val factory = MapViewModelFactory(
+            SaveLastPlaceUseCaseImpl(placeRepository),
+            GetLastPlaceUseCaseImpl(placeRepository)
+        )
+        mapViewModel = ViewModelProvider(this, factory).get(MapViewModel::class.java)
+    }
+
+    private fun setUpMap() {
+        // 만약 마지막으로 찍은 장소 있으면 get, 없으면 null
+        var place = mapViewModel.getLastPlace() ?: null
+        // intent로 받은 장소가 있으면 그 장소로 지도 시작, 없으면 place 에 저장된 장소로 지도 시작(null or LastPlace)
+        place = intent.getSerializableExtra("place") as? PlaceVO ?: place
+
+        if (place != null) {
+            // place 가 null 이 아니면 해당 장소로 맵 뷰 표시
+            startMap(place)
+        } else {
+            // place 가 null 이면(아마 첫 어플 시작) 기본 위치로 맵 뷰 표시
+            startDefaultMap()
         }
     }
 
@@ -80,6 +110,7 @@ class MapActivity : AppCompatActivity() {
                 setCameraPosition(place.latitude, place.longitude)
                 addMarker(place.latitude, place.longitude, place.placeName)
                 displayBottomSheet(place)
+                mapViewModel.saveLastPlace(place)
             }
         })
 
@@ -90,6 +121,7 @@ class MapActivity : AppCompatActivity() {
             override fun onMapDestroy() {
                 //no-op
             }
+
             override fun onMapError(error: Exception) {
                 handleError(error)
             }

@@ -7,4 +7,6 @@ interface PlaceRepository {
     fun saveSearchQuery(place: PlaceVO)
     fun getSearchHistory(): List<String>
     fun removeSearchQuery(query: String)
+    fun saveLastPlace(place: PlaceVO)
+    fun getLastPlace(): PlaceVO?
 }
