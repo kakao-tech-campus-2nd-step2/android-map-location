@@ -55,8 +55,9 @@ class MainActivity : AppCompatActivity() {
                 showErrorScreen(error)
             }
         }, object : KakaoMapReadyCallback() {
-            override fun onMapReady(kakaoMap: KakaoMap) {
-                // 인증 후 API가 정상적으로 실행될 때 호출됨
+            override fun onMapReady(map: KakaoMap) {
+                kakaoMap = map
+                labelLayer = kakaoMap.labelManager?.layer!!
             }
         })
 
@@ -64,7 +65,7 @@ class MainActivity : AppCompatActivity() {
         val searchEditText = findViewById<EditText>(R.id.search_edit_text)
         searchEditText.setOnClickListener {
             val intent = Intent(this, SearchActivity::class.java)
-            startActivity(intent)
+            startActivityForResult(intent, SEARCH_REQUEST_CODE)
         }
 
         //에러 화면 초기화
@@ -109,7 +110,50 @@ class MainActivity : AppCompatActivity() {
             }
         }, object : KakaoMapReadyCallback() {
             override fun onMapReady(kakaoMap: KakaoMap) {
+                this@MainActivity.kakaoMap = kakaoMap
+                labelLayer = kakaoMap.labelManager?.layer!!
             }
         })
+    }
+
+    //label marker
+    private fun addLabel(placeName: String?, roadAddressName: String?, x: Double, y: Double) {
+        if (placeName != null && roadAddressName != null) {
+            val position = LatLng.from(y, x)
+            val styles = kakaoMap.labelManager?.addLabelStyles(
+                LabelStyles.from(
+                    LabelStyle.from(R.drawable.new_marker).setZoomLevel(1),
+                    LabelStyle.from(R.drawable.new_marker)
+                        .setTextStyles(LabelTextStyle.from(this, R.style.labelTextStyle_1))
+                        .setZoomLevel(1)
+                )
+            )
+
+            labelLayer.addLabel(
+                LabelOptions.from(placeName, position).setStyles(styles).setTexts(placeName)
+            )
+
+            kakaoMap.setOnLabelClickListener { map, layer, label ->
+                bottomSheetTitle.text = placeName
+                bottomSheetAddress.text = roadAddressName
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+                true
+            }
+
+            // 카메라 이동
+            moveCamera(position)
+
+        }
+    }
+
+    private fun moveCamera(position: LatLng) {
+        kakaoMap.moveCamera(
+            CameraUpdateFactory.newCenterPosition(position),
+            CameraAnimation.from(10, false, false)
+        )
+    }
+
+    companion object {
+        private const val SEARCH_REQUEST_CODE = 1
     }
 }
