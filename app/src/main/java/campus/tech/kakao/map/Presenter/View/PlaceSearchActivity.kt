@@ -110,7 +110,7 @@ class PlaceSearchActivity : AppCompatActivity() {
                 viewModel.addFavorite(it)
                 val intent = Intent(this,MapActivity ::class.java)
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                intent.putExtra("id",it)
+                intent.putExtra(INTENT_ID,it)
                 startActivity(intent)
                 finish()
 
@@ -132,6 +132,9 @@ class PlaceSearchActivity : AppCompatActivity() {
         }
     }
 
+    companion object{
+        const val INTENT_ID = "id"
+    }
 }
 
 

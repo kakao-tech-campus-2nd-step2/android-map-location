@@ -126,7 +126,7 @@ class MapActivity : AppCompatActivity() {
             if(id != NO_ID) viewModel.initPlace(id)
         } else {
             //검색을 통해 넘어옴
-            intent.extras?.getInt("id")?.let {
+            intent.extras?.getInt(PlaceSearchActivity.INTENT_ID)?.let {
                 viewModel.initPlace(it)
             }
         }
