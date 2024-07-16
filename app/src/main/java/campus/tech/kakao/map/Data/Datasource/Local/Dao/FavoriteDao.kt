@@ -4,6 +4,7 @@ import campus.tech.kakao.map.Domain.Model.Place
 
 interface FavoriteDao {
     fun getCurrentFavorite(): MutableList<Place>
-    fun deleteFavorite(name: String)
+    fun deleteFavorite(id : Int)
     fun addFavorite(place: Place)
+    fun getFavoriteById(id: Int): Place
 }

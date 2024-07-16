@@ -13,24 +13,31 @@ import campus.tech.kakao.map.Domain.Model.Place
 import campus.tech.kakao.map.R
 
 class FavoriteAdapter(
-    val onClickDelete: (name: String) -> Unit
+    val onClickDelete: (id : Int) -> Unit
 ) : ListAdapter<Place, FavoriteAdapter.ViewHolder>(PlaceDiffUtil()) {
-    class ViewHolder(itemView: View, onClickDelete: (name: String) -> Unit) :
+    class ViewHolder(itemView: View, onClickDelete: (id : Int) -> Unit) :
         RecyclerView.ViewHolder(itemView) {
         private var placeName: TextView
         private var deleteFavorite: ImageView
+        private var curId : Int?
 
         init {
             placeName = itemView.findViewById<TextView>(R.id.favoriteName)
             deleteFavorite = itemView.findViewById<ImageView>(R.id.deleteFavorite)
+            curId = null
 
             deleteFavorite.setOnClickListener {
-                onClickDelete.invoke(placeName.text.toString())
+                curId?.let {
+                    onClickDelete.invoke(it)
+                }
             }
+
         }
+
 
         fun bind(place: Place){
             placeName.text = place.name
+            curId = place.id
         }
     }
 

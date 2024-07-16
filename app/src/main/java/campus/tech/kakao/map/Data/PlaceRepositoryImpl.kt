@@ -26,8 +26,12 @@ class PlaceRepositoryImpl(
         return placeDao.getSimilarPlacesByName(name)
     }
 
-    override fun getPlaceByName(name: String): Place {
-        return placeDao.getPlaceByName(name)
+    override fun getPlaceById(id : Int): Place {
+        return placeDao.getPlaceById(id)
+    }
+
+    override fun getFavoriteById(id: Int) : Place{
+        return favoriteDao.getFavoriteById(id)
     }
 
     override fun addFavorite(place : Place) : List<Place> {
@@ -35,8 +39,8 @@ class PlaceRepositoryImpl(
         return getCurrentFavorite()
     }
 
-    override fun deleteFavorite(name: String) : List<Place>{
-        favoriteDao.deleteFavorite(name)
+    override fun deleteFavorite(id : Int) : List<Place>{
+        favoriteDao.deleteFavorite(id)
         return getCurrentFavorite()
     }
 

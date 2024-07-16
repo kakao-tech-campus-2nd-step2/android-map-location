@@ -154,7 +154,7 @@ class HttpUrlConnect : RemoteService{
     private fun parseSameName(sameNameJsonObject : JSONObject) : SameName {
         return SameName(
             sameNameJsonObject.get("keyword").toString(),
-            sameNameJsonObject.getJSONArray("region").toString(),
+            listOf(sameNameJsonObject.getJSONArray("region").toString()),
             sameNameJsonObject.get("selected_region").toString()
         )
     }
