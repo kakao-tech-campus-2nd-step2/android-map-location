@@ -51,6 +51,43 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/error_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone"
+        android:background="#FFFFFF">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/auth_error"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:padding="16dp"
+            android:textColor="@android:color/darker_gray"/>
+
+        <TextView
+            android:id="@+id/error_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="MapAuthException(401): Unauthorized"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:padding="16dp"
+            android:textColor="@android:color/darker_gray" />
+
+        <ImageView
+            android:id="@+id/refreshImageView"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/refresh" />
+
+    </LinearLayout>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 
