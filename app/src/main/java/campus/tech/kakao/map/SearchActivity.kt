@@ -51,7 +51,10 @@ class SearchActivity : AppCompatActivity() {
             adapter = searchAdapter
         }
 
-        selectedAdapter = SelectedAdapter { item -> viewModel.removeSelectedItem(item) }
+        selectedAdapter = SelectedAdapter(
+            onItemRemoved = { item -> viewModel.removeSelectedItem(item) },
+            onItemClicked = { item -> performSearch(item.place_name) }
+        )
         binding.selectedItemsRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@SearchActivity, RecyclerView.HORIZONTAL, false)
             adapter = selectedAdapter
@@ -109,5 +112,10 @@ class SearchActivity : AppCompatActivity() {
         viewModel.selectedItems.observe(this, Observer { selectedItems ->
             selectedAdapter.submitList(selectedItems)
         })
+    }
+
+    private fun performSearch(query: String) {
+        binding.searchEditText.setText(query)
+        viewModel.searchQuery.value = query
     }
 }
