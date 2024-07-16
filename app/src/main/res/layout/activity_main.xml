@@ -5,15 +5,63 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".view.search.MainActivity"
+    android:background="@color/white">
+
+    <EditText
+        android:id="@+id/SearchEditTextInMain"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:hint="검색어를 입력해주세요."
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/black"
+        android:inputType="text"
+        android:layout_margin="15dp"
+        android:paddingLeft="15dp"
+        android:background="@drawable/edittext_shadow"/>
+
+    <ImageView
+        android:id="@+id/clearButton"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/x_mark"
+        app:layout_constraintBottom_toBottomOf="@+id/SearchEditTextInMain"
+        app:layout_constraintEnd_toEndOf="@+id/SearchEditTextInMain"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginRight="10dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/savedLocationRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/SearchEditTextInMain"
+        android:visibility="visible"
+        android:orientation="horizontal"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/locationRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/savedLocationRecyclerView" />
 
     <TextView
+        android:id="@+id/NoResultTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:text="검색 결과가 없습니다."
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/SearchEditTextInMain"
+        android:textColor="@color/black"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
