@@ -1,7 +1,6 @@
 package campus.tech.kakao.map
 
 import android.content.ContentValues
-import android.content.Context
 import android.database.Cursor
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -17,7 +16,7 @@ class MapModel(dbHelper: MapDbHelper) {
     private val _searchResult = MutableLiveData(getAllLocation())
     val searchResult: LiveData<List<Location>> = _searchResult
     private val _searchHistory = MutableLiveData(getAllHistory())
-    val searchHistory: LiveData<List<String>> = _searchHistory
+    val searchHistory: LiveData<List<Location>> = _searchHistory
 
     fun searchByKeywordFromServer(keyword: String, isExactMatch: Boolean) {
         clearDb()
@@ -26,6 +25,12 @@ class MapModel(dbHelper: MapDbHelper) {
 
     fun insertLocation(location: Location) {
         val writableDb = helper.writableDatabase
+        val content = getLocationContent(location)
+
+        writableDb.insert(MapContract.MapEntry.TABLE_NAME, null, content)
+    }
+
+    private fun getLocationContent(location: Location): ContentValues {
         val content = ContentValues()
         content.put(MapContract.MapEntry.COLUMN_NAME_ID, location.id)
         content.put(MapContract.MapEntry.COLUMN_NAME_NAME, location.name)
@@ -34,7 +39,7 @@ class MapModel(dbHelper: MapDbHelper) {
         content.put(MapContract.MapEntry.COLUMN_NAME_X, location.x)
         content.put(MapContract.MapEntry.COLUMN_NAME_Y, location.y)
 
-        writableDb.insert(MapContract.MapEntry.TABLE_NAME, null, content)
+        return content
     }
 
     fun getSearchedLocation(locName: String, isExactMatch: Boolean): List<Location> {
@@ -117,20 +122,20 @@ class MapModel(dbHelper: MapDbHelper) {
         return Location(id, name, category, address, x, y)
     }
 
-    fun insertHistory(locName: String) {
+    fun insertHistory(newHistory: Location) {
 
-        if (isHistoryExist(locName))
-            deleteHistory(locName)
+        if (isHistoryExist(newHistory))
+            deleteHistory(newHistory)
         val writeableDb = helper.writableDatabase
-        val content = ContentValues()
-        content.put(MapContract.MapEntry.COLUMN_NAME_NAME, locName)
+        val content = getLocationContent(newHistory)
+
         writeableDb.insert(MapContract.MapEntry.TABLE_NAME_HISTORY, null, content)
     }
 
-    private fun isHistoryExist(locName: String): Boolean {
+    private fun isHistoryExist(newHistory: Location): Boolean {
         val readableDb = helper.readableDatabase
-        val selection = "${MapContract.MapEntry.COLUMN_NAME_NAME} = ?"
-        val selectionArgs = arrayOf(locName)
+        val selection = "${MapContract.MapEntry.COLUMN_NAME_ID} = ?"
+        val selectionArgs = arrayOf(newHistory.id)
         val cursor = readableDb.query(
             MapContract.MapEntry.TABLE_NAME_HISTORY,
             null,
@@ -145,15 +150,15 @@ class MapModel(dbHelper: MapDbHelper) {
         return isExist
     }
 
-    fun deleteHistory(locName: String) {
+    fun deleteHistory(oldHistory: Location) {
         val writeableDb = helper.writableDatabase
-        val selection = "${MapContract.MapEntry.COLUMN_NAME_NAME} = ?"
-        val selectionArgs = arrayOf(locName)
+        val selection = "${MapContract.MapEntry.COLUMN_NAME_ID} = ?"
+        val selectionArgs = arrayOf(oldHistory.id)
 
         writeableDb.delete(MapContract.MapEntry.TABLE_NAME_HISTORY, selection, selectionArgs)
     }
 
-    fun getAllHistory(): List<String> {
+    fun getAllHistory(): List<Location> {
         val readableDb = helper.readableDatabase
         val cursor = readableDb.query(
             MapContract.MapEntry.TABLE_NAME_HISTORY,
@@ -165,9 +170,9 @@ class MapModel(dbHelper: MapDbHelper) {
             null
         )
 
-        val res = mutableListOf<String>()
+        val res = mutableListOf<Location>()
         while (cursor.moveToNext()) {
-            res.add(cursor.getString(cursor.getColumnIndexOrThrow(MapContract.MapEntry.COLUMN_NAME_NAME)))
+            res.add(getLocation(cursor))
         }
         cursor.close()
         return res

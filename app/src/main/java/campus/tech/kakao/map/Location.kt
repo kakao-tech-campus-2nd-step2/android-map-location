@@ -1,5 +1,7 @@
 package campus.tech.kakao.map
 
+import java.io.Serializable
+
 data class Location(
     val id: String,
     val name: String,
@@ -7,11 +9,9 @@ data class Location(
     val address: String,
     val x: Double,
     val y: Double
-) {
+) : Serializable {
     companion object {
-        const val CAFE: String = "카페"
-        const val PHARMACY: String = "약국"
-        const val RESTAURANT: String = "식당"
+        const val LOCATION: String = "LOCATION"
         const val NORMAL: String = "일반"
     }
 }

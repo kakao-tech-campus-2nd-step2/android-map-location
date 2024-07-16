@@ -19,21 +19,21 @@ class MapDbHelper(mContext: Context) :
         onCreate(db)
     }
 
-    private fun initializeDb(db: SQLiteDatabase?) {
-        for (idx in 1..10) {
-            val exampleCafeValue = ContentValues()
-            exampleCafeValue.put(MapContract.MapEntry.COLUMN_NAME_NAME, "카페$idx")
-            exampleCafeValue.put(MapContract.MapEntry.COLUMN_NAME_CATEGORY, Location.CAFE)
-            exampleCafeValue.put(MapContract.MapEntry.COLUMN_NAME_ADDRESS, "서울 성동구 성수동 $idx")
-            db?.insert(MapContract.MapEntry.TABLE_NAME, null, exampleCafeValue)
-
-            val examplePharValue = ContentValues()
-            examplePharValue.put(MapContract.MapEntry.COLUMN_NAME_NAME, "약국$idx")
-            examplePharValue.put(MapContract.MapEntry.COLUMN_NAME_CATEGORY, Location.PHARMACY)
-            examplePharValue.put(MapContract.MapEntry.COLUMN_NAME_ADDRESS, "서울 성동구 성수동 $idx")
-            db?.insert(MapContract.MapEntry.TABLE_NAME, null, examplePharValue)
-        }
-    }
+//    private fun initializeDb(db: SQLiteDatabase?) {
+//        for (idx in 1..10) {
+//            val exampleCafeValue = ContentValues()
+//            exampleCafeValue.put(MapContract.MapEntry.COLUMN_NAME_NAME, "카페$idx")
+//            exampleCafeValue.put(MapContract.MapEntry.COLUMN_NAME_CATEGORY, Location.CAFE)
+//            exampleCafeValue.put(MapContract.MapEntry.COLUMN_NAME_ADDRESS, "서울 성동구 성수동 $idx")
+//            db?.insert(MapContract.MapEntry.TABLE_NAME, null, exampleCafeValue)
+//
+//            val examplePharValue = ContentValues()
+//            examplePharValue.put(MapContract.MapEntry.COLUMN_NAME_NAME, "약국$idx")
+//            examplePharValue.put(MapContract.MapEntry.COLUMN_NAME_CATEGORY, Location.PHARMACY)
+//            examplePharValue.put(MapContract.MapEntry.COLUMN_NAME_ADDRESS, "서울 성동구 성수동 $idx")
+//            db?.insert(MapContract.MapEntry.TABLE_NAME, null, examplePharValue)
+//        }
+//    }
 
     fun clearDb(db: SQLiteDatabase?) {
         db?.execSQL(SQL_DELETE_ENTRIES)

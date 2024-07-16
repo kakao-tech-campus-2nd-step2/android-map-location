@@ -1,6 +1,5 @@
 package campus.tech.kakao.map
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -10,13 +9,13 @@ class MapViewModel(dbHelper: MapDbHelper) : ViewModel() {
     private val model: MapModel = MapModel(dbHelper)
     private val _searchResult = MutableLiveData<List<Location>>()
     val searchResult: LiveData<List<Location>> = _searchResult
-    private val _searchHistory = MutableLiveData<List<String>>()
-    val searchHistory: LiveData<List<String>> = _searchHistory
+    private val _searchHistory = MutableLiveData<List<Location>>()
+    val searchHistory: LiveData<List<Location>> = _searchHistory
 
     private val resultObserver = Observer<List<Location>> {
         _searchResult.value = it
     }
-    private val historyObserver = Observer<List<String>> {
+    private val historyObserver = Observer<List<Location>> {
         _searchHistory.value = it
     }
 
@@ -42,17 +41,17 @@ class MapViewModel(dbHelper: MapDbHelper) : ViewModel() {
         return model.getAllLocation()
     }
 
-    fun deleteHistory(historyName: String) {
-        model.deleteHistory(historyName)
+    fun deleteHistory(oldHistory: Location) {
+        model.deleteHistory(oldHistory)
         _searchHistory.value = model.getAllHistory()
     }
 
-    fun insertHistory(historyName: String) {
-        model.insertHistory(historyName)
+    fun insertHistory(newHistory: Location) {
+        model.insertHistory(newHistory)
         _searchHistory.value = model.getAllHistory()
     }
 
-    fun getAllHistory(): List<String> {
+    fun getAllHistory(): List<Location> {
         return model.getAllHistory()
     }
 

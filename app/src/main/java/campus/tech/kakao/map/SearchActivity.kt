@@ -1,5 +1,6 @@
 package campus.tech.kakao.map
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.EditText
 import android.widget.ImageButton
@@ -53,12 +54,15 @@ class SearchActivity : AppCompatActivity(), DatabaseListener {
         observeData()
     }
 
-    override fun deleteHistory(historyName: String) {
-        viewModel.deleteHistory(historyName)
+    override fun deleteHistory(oldHistory: Location) {
+        viewModel.deleteHistory(oldHistory)
     }
 
-    override fun insertHistory(historyName: String) {
-        viewModel.insertHistory(historyName)
+    override fun insertHistory(newHistory: Location) {
+        viewModel.insertHistory(newHistory)
+        val locInfo = Intent(this, MapActivity::class.java)
+        locInfo.putExtra(Location.LOCATION, newHistory)
+        startActivity(locInfo)
     }
 
     private fun hideResult() {
