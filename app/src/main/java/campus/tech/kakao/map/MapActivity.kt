@@ -6,6 +6,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
+import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.MapView
 import java.lang.Exception
@@ -29,6 +30,10 @@ class MapActivity : AppCompatActivity() {
 
         }, object : KakaoMapReadyCallback(){
             override fun onMapReady(p0: KakaoMap) {
+            }
+
+            override fun getPosition(): LatLng {
+                return super.getPosition()
             }
         })
 

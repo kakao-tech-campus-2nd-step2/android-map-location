@@ -11,7 +11,6 @@ class MapDbHelper(mContext: Context) :
     override fun onCreate(db: SQLiteDatabase?) {
         db?.execSQL(SQL_CREATE_ENTRIES)
         db?.execSQL(SQL_CREATE_ENTRIES_HISTORY)
-//        initializeDb(db)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
@@ -47,10 +46,12 @@ class MapDbHelper(mContext: Context) :
 
         private const val SQL_CREATE_ENTRIES = """
             CREATE TABLE ${MapContract.MapEntry.TABLE_NAME} (
-            ${BaseColumns._ID} INTEGER PRIMARY KEY AUTOINCREMENT,
+            ${MapContract.MapEntry.COLUMN_NAME_ID} TEXT,
             ${MapContract.MapEntry.COLUMN_NAME_NAME} TEXT,
             ${MapContract.MapEntry.COLUMN_NAME_CATEGORY} TEXT,
-            ${MapContract.MapEntry.COLUMN_NAME_ADDRESS} TEXT); 
+            ${MapContract.MapEntry.COLUMN_NAME_ADDRESS} TEXT,
+            ${MapContract.MapEntry.COLUMN_NAME_X} TEXT, 
+            ${MapContract.MapEntry.COLUMN_NAME_Y} TEXT);
             """
 
         private const val SQL_DELETE_ENTRIES =
@@ -58,8 +59,12 @@ class MapDbHelper(mContext: Context) :
 
         private const val SQL_CREATE_ENTRIES_HISTORY = """
             CREATE TABLE ${MapContract.MapEntry.TABLE_NAME_HISTORY} (
-            ${BaseColumns._ID} INTEGER PRIMARY KEY AUTOINCREMENT,
-            ${MapContract.MapEntry.COLUMN_NAME_NAME} TEXT);
+            ${MapContract.MapEntry.COLUMN_NAME_ID} TEXT,
+            ${MapContract.MapEntry.COLUMN_NAME_NAME} TEXT,
+            ${MapContract.MapEntry.COLUMN_NAME_CATEGORY} TEXT,
+            ${MapContract.MapEntry.COLUMN_NAME_ADDRESS} TEXT,
+            ${MapContract.MapEntry.COLUMN_NAME_X} TEXT, 
+            ${MapContract.MapEntry.COLUMN_NAME_Y} TEXT);
             """
 
         private const val SQL_DELETE_ENTRIES_HISTORY =

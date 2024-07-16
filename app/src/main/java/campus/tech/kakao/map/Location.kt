@@ -1,9 +1,12 @@
 package campus.tech.kakao.map
 
 data class Location(
+    val id: String,
     val name: String,
     val category: String,
-    val address: String
+    val address: String,
+    val x: Double,
+    val y: Double
 ) {
     companion object {
         const val CAFE: String = "카페"

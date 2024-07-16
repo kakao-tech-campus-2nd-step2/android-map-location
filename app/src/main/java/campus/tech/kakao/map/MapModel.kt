@@ -27,9 +27,12 @@ class MapModel(dbHelper: MapDbHelper) {
     fun insertLocation(location: Location) {
         val writableDb = helper.writableDatabase
         val content = ContentValues()
+        content.put(MapContract.MapEntry.COLUMN_NAME_ID, location.id)
         content.put(MapContract.MapEntry.COLUMN_NAME_NAME, location.name)
         content.put(MapContract.MapEntry.COLUMN_NAME_CATEGORY, location.category)
         content.put(MapContract.MapEntry.COLUMN_NAME_ADDRESS, location.address)
+        content.put(MapContract.MapEntry.COLUMN_NAME_X, location.x)
+        content.put(MapContract.MapEntry.COLUMN_NAME_Y, location.y)
 
         writableDb.insert(MapContract.MapEntry.TABLE_NAME, null, content)
     }
@@ -75,17 +78,24 @@ class MapModel(dbHelper: MapDbHelper) {
     }
 
     private fun getLocation(cursor: Cursor): Location {
+        val id =
+            cursor.getString(cursor.getColumnIndexOrThrow(MapContract.MapEntry.COLUMN_NAME_ID))
         val name =
             cursor.getString(cursor.getColumnIndexOrThrow(MapContract.MapEntry.COLUMN_NAME_NAME))
         val category =
             cursor.getString(cursor.getColumnIndexOrThrow(MapContract.MapEntry.COLUMN_NAME_CATEGORY))
         val address =
             cursor.getString(cursor.getColumnIndexOrThrow(MapContract.MapEntry.COLUMN_NAME_ADDRESS))
+        val x =
+            cursor.getString(cursor.getColumnIndexOrThrow(MapContract.MapEntry.COLUMN_NAME_X)).toDouble()
+        val y =
+            cursor.getString(cursor.getColumnIndexOrThrow(MapContract.MapEntry.COLUMN_NAME_Y)).toDouble()
 
-        return Location(name, category, address)
+        return Location(id, name, category, address, x, y)
     }
 
     private fun getLocation(document: Document): Location {
+        val id = document.id
         val name = document.placeName
         val category =
             if (document.categoryGroupName != "") {
@@ -101,8 +111,10 @@ class MapModel(dbHelper: MapDbHelper) {
                 document.addressName
         }
 
+        val x = document.x.toDouble()
+        val y = document.y.toDouble()
 
-        return Location(name, category, address)
+        return Location(id, name, category, address, x, y)
     }
 
     fun insertHistory(locName: String) {
@@ -189,6 +201,7 @@ class MapModel(dbHelper: MapDbHelper) {
         serverResult.docList.forEach { document ->
             val location = getLocation(document)
             insertLocation(location)
+            Log.d("KaKaoResponse", document.toString())
         }
         if (!serverResult.meta.isEnd) {
             requestNextPage(serverResult, page)
