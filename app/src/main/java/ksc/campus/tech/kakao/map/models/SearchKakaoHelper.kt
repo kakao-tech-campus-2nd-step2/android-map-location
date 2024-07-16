@@ -78,7 +78,7 @@ object SearchKakaoHelper {
                         doc.categoryGroupCode,
                         parseCategory(doc.categoryName)
                     ),
-                    doc.x.toDoubleOrNull()?:0.0,
+                    doc.y.toDoubleOrNull()?:0.0,
                     doc.x.toDoubleOrNull()?:0.0
                 )
             )

@@ -1,6 +1,7 @@
 package ksc.campus.tech.kakao.map.view_models
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -60,11 +61,13 @@ class SearchActivityViewModel(application: Application) : AndroidViewModel(appli
 
     private fun updateLocation(address:String, name:String, latitude:Double, longitude:Double){
         mapViewRepository.updateSelectedLocation(LocationInfo(address, name, latitude, longitude))
+        mapViewRepository.updateCameraPositionWithFixedZoom(latitude, longitude)
     }
 
     fun clickSearchResultItem(selectedItem: SearchResult) {
-        locationUpdateForTest()
         addKeyword(selectedItem.name)
+        Log.d("KSC", "lat: ${selectedItem.latitude}, lon: ${selectedItem.longitude}")
+        updateLocation(selectedItem.address, selectedItem.name, selectedItem.latitude, selectedItem.longitude)
         switchContent(ContentType.MAP)
     }
 
@@ -83,10 +86,6 @@ class SearchActivityViewModel(application: Application) : AndroidViewModel(appli
 
     fun switchContent(type: ContentType) {
         _activeContent.postValue(type)
-    }
-
-    fun locationUpdateForTest(){
-        updateLocation("대구 복현동", "경북대학교", 35.8905341232321, 128.61213266480294)
     }
 
     fun updateCameraPosition(position: CameraPosition){
