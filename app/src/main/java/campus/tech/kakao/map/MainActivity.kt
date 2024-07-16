@@ -12,6 +12,19 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.app.Activity
+import android.widget.FrameLayout
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.kakao.vectormap.LatLng
+import com.kakao.vectormap.label.Label
+import com.kakao.vectormap.label.LabelLayer
+import com.kakao.vectormap.label.LabelOptions
+import com.kakao.vectormap.label.LabelStyle
+import com.kakao.vectormap.label.LabelStyles
+import com.kakao.vectormap.label.LabelTextStyle
+import com.kakao.vectormap.camera.CameraAnimation
+import com.kakao.vectormap.camera.CameraUpdateFactory
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -20,6 +33,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var errorMessage: TextView
     private lateinit var errorDetails: TextView
     private lateinit var retryButton: ImageButton
+    private lateinit var kakaoMap: KakaoMap
+    private lateinit var labelLayer: LabelLayer
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<FrameLayout>
+    private lateinit var bottomSheetTitle: TextView
+    private lateinit var bottomSheetAddress: TextView
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +72,12 @@ class MainActivity : AppCompatActivity() {
         errorMessage = findViewById(R.id.error_message)
         errorDetails = findViewById(R.id.error_details)
         retryButton = findViewById(R.id.retry_button)
+
+        //Bottomsheet 초기화
+        val bottomSheet = findViewById<FrameLayout>(R.id.bottomSheetLayout)
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+        bottomSheetTitle = findViewById(R.id.bottomSheetTitle)
+        bottomSheetAddress = findViewById(R.id.bottomSheetAddress)
     }
 
     override fun onResume() {
