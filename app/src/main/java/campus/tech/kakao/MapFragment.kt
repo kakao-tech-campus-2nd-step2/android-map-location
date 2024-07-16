@@ -13,12 +13,24 @@ import androidx.fragment.app.Fragment
 import campus.tech.kakao.map.R
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
+import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.MapView
+import com.kakao.vectormap.camera.CameraUpdateFactory
 
 class MapFragment : Fragment() {
     private lateinit var mapView: MapView
     private lateinit var searchView: SearchView
+    private var x: Double = 127.108621
+    private var y: Double = 37.402005
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            x = it.getDouble("x", 127.108621)
+            y = it.getDouble("y", 37.402005 )
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,20 +51,23 @@ class MapFragment : Fragment() {
         })
 
         mapView.start(object : MapLifeCycleCallback() {
-            override fun onMapDestroy() {
-            }
+            override fun onMapDestroy() {}
 
             override fun onMapError(p0: Exception) {
-                    val intent = Intent(requireContext(), OnMapErrorActivity::class.java)
-                    intent.putExtra("ErrorType","${p0}")
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    requireContext().startActivity(intent)
-                    requireActivity().finish()
+                val intent = Intent(requireContext(), OnMapErrorActivity::class.java)
+                intent.putExtra("ErrorType", "${p0}")
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                requireContext().startActivity(intent)
+                requireActivity().finish()
             }
-
-
-            }, object : KakaoMapReadyCallback() {
+        }, object : KakaoMapReadyCallback() {
             override fun onMapReady(kakaoMap: KakaoMap) {
+                val latLng = LatLng.from(y, x)
+                Log.d("latlng", "onMapReady: $y $x")
+
+                val cameraUpdate = CameraUpdateFactory.newCenterPosition(latLng)
+                kakaoMap.moveCamera(cameraUpdate)
+
                 kakaoMap.setOnMapClickListener { _, _, _, _ ->
                     (activity as? MainActivity)?.showSearchFragment()
                 }

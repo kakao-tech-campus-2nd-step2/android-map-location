@@ -1,12 +1,17 @@
 package campus.tech.kakao.View
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.Model.Place
 import campus.tech.kakao.map.R
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class PlacesAdapter(private var places: List<Place>, private val onItemClick: (String) -> Unit) : RecyclerView.Adapter<PlacesAdapter.PlaceViewHolder>() {
 
@@ -19,10 +24,18 @@ class PlacesAdapter(private var places: List<Place>, private val onItemClick: (S
         val place = places[position]
         val categoryGroupCode = CategoryGroupCode()
 
+        val x  = place.x
+        val y  = place.y
         holder.nameTextView.text = place.placeName
         holder.addressTextView.text = place.roadAddressName
         holder.categoryTextView.text = categoryGroupCode.CodeToCategory[place.categoryName] ?: ""
-        holder.itemView.setOnClickListener { onItemClick(place.placeName) }
+        holder.itemView.setOnClickListener {
+            onItemClick(place.placeName)
+
+            (holder.itemView.context as? MainActivity)?.lifecycleScope?.launch {
+                navigateToMapFragment(x, y, holder.itemView.context as MainActivity)
+            }
+        }
     }
 
     override fun getItemCount(): Int {
@@ -38,5 +51,21 @@ class PlacesAdapter(private var places: List<Place>, private val onItemClick: (S
         val nameTextView: TextView = itemView.findViewById(R.id.nameTextView)
         val addressTextView: TextView = itemView.findViewById(R.id.addressTextView)
         val categoryTextView: TextView = itemView.findViewById(R.id.categoryTextView)
+    }
+
+    private suspend fun navigateToMapFragment(x: Double?, y: Double?, activity: MainActivity) {
+        withContext(Dispatchers.Main) {
+            val fragment = MapFragment().apply {
+                arguments = Bundle().apply {
+                    putDouble("x", x!!)
+                    putDouble("y", y!!)
+                }
+            }
+
+            activity.supportFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainer, fragment)
+                .addToBackStack(null)
+                .commit()
+        }
     }
 }
