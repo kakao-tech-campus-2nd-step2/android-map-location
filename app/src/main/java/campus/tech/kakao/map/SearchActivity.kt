@@ -29,16 +29,16 @@ class SearchActivity : AppCompatActivity() {
         setupUI()
         searchResult.layoutManager = LinearLayoutManager(this)
         searchWordResult.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        documentAdapter = DocumentAdapter({ Document ->
-            model.addWord(Document)
-        },{Document ->
-            model.getMapInfo(Document)
+        documentAdapter = DocumentAdapter({ document ->
+            model.addWord(document)
+        },{document ->
+            model.getMapInfo(document)
             finish()
         })
-        wordAdapter = WordAdapter() { SearchWord ->
-            model.deleteWord(SearchWord)
+        wordAdapter = WordAdapter { searchWord ->
+            model.deleteWord(searchWord)
         }
-        search.doOnTextChanged { text, start, before, count ->
+        search.doOnTextChanged { text, _, _, _ ->
             val query = text.toString()
             if (query.isEmpty()){
                 noResult.visibility = View.VISIBLE
@@ -74,7 +74,7 @@ class SearchActivity : AppCompatActivity() {
         })
     }
 
-    fun setupUI(){
+    private fun setupUI(){
         search = findViewById(R.id.search)
         clear = findViewById(R.id.search_clear)
         noResult = findViewById(R.id.no_search_result)
