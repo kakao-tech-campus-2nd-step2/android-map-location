@@ -44,6 +44,7 @@ class SearchActivityViewModel(application: Application) : AndroidViewModel(appli
 
     init {
         keywordRepository.getKeywords()
+        mapViewRepository.loadFromSharedPreference(application)
     }
 
     private fun search(query: String) {
@@ -60,7 +61,7 @@ class SearchActivityViewModel(application: Application) : AndroidViewModel(appli
     }
 
     private fun updateLocation(address:String, name:String, latitude:Double, longitude:Double){
-        mapViewRepository.updateSelectedLocation(LocationInfo(address, name, latitude, longitude))
+        mapViewRepository.updateSelectedLocation(getApplication(),LocationInfo(address, name, latitude, longitude))
         mapViewRepository.updateCameraPositionWithFixedZoom(latitude, longitude)
     }
 
@@ -89,7 +90,7 @@ class SearchActivityViewModel(application: Application) : AndroidViewModel(appli
     }
 
     fun updateCameraPosition(position: CameraPosition){
-        mapViewRepository.updateCameraPosition(position)
+        mapViewRepository.updateCameraPosition(getApplication(), position)
     }
 
     enum class ContentType { MAP, SEARCH_LIST }
