@@ -9,6 +9,7 @@ import campus.tech.kakao.map.databinding.SavedSearchKeywordItemBinding
 class SavedSearchKeywordsAdapter(
     private val savedSearchKeywords: List<SearchKeyword>,
     private val layoutInflater: LayoutInflater,
+    private val getSearchResults: (SearchKeyword) -> Unit,
     private val delSavedSearchKeyword: (SearchKeyword) -> Unit
 ) :
     RecyclerView.Adapter<SavedSearchKeywordsAdapter.ViewHolder>() {
@@ -17,6 +18,10 @@ class SavedSearchKeywordsAdapter(
         val savedSearchKeyword: TextView = binding.SavedSearchKeyword
 
         init {
+            binding.SavedSearchKeyword.setOnClickListener {
+                val searchKeyword = SearchKeyword(savedSearchKeyword.text.toString())
+                getSearchResults(searchKeyword)
+            }
             binding.delSavedSearchKeyword.setOnClickListener {
                 val searchKeyword = SearchKeyword(savedSearchKeyword.text.toString())
                 delSavedSearchKeyword(searchKeyword)
@@ -25,7 +30,7 @@ class SavedSearchKeywordsAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view =  SavedSearchKeywordItemBinding.inflate(layoutInflater, parent, false)
+        val view = SavedSearchKeywordItemBinding.inflate(layoutInflater, parent, false)
         return ViewHolder(view)
     }
 

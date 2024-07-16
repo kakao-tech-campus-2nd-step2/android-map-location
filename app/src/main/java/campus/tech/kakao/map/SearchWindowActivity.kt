@@ -84,7 +84,12 @@ class SearchWindowActivity : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.savedSearchKeywords.collect {
                     binding.savedSearchKeywordsList.adapter =
-                        SavedSearchKeywordsAdapter(it, layoutInflater, viewModel::delSavedSearchKeyword)
+                        SavedSearchKeywordsAdapter(
+                            it,
+                            layoutInflater,
+                            viewModel::getSearchResults,
+                            viewModel::delSavedSearchKeyword
+                        )
                     binding.savedSearchKeywordsList.layoutManager = LinearLayoutManager(
                         this@SearchWindowActivity,
                         LinearLayoutManager.HORIZONTAL,
