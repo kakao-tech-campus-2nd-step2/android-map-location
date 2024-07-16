@@ -8,4 +8,5 @@ data class MapItem(
     val category_group_name: String,
     val x: Double,
     val y: Double
+
 )

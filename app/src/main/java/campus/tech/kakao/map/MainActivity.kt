@@ -1,15 +1,18 @@
 package campus.tech.kakao.map
 
+
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import com.kakao.vectormap.MapView
 import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.KakaoMap
+
 import android.view.View
 import android.widget.ImageButton
 import android.widget.RelativeLayout
@@ -25,6 +28,7 @@ import com.kakao.vectormap.label.LabelStyles
 import com.kakao.vectormap.label.LabelTextStyle
 import com.kakao.vectormap.camera.CameraAnimation
 import com.kakao.vectormap.camera.CameraUpdateFactory
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -50,6 +54,7 @@ class MainActivity : AppCompatActivity() {
         private const val PREF_ROAD_ADDRESS_NAME = "lastRoadAddressName"
     }
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -62,6 +67,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onMapError(error: Exception) {
+
                 showErrorScreen(error)
             }
         }, object : KakaoMapReadyCallback() {
@@ -70,6 +76,7 @@ class MainActivity : AppCompatActivity() {
                 labelLayer = kakaoMap.labelManager?.layer!!
                 // 마지막 마커 위치 불러오기
                 loadLastMarkerPosition()
+
             }
         })
 
@@ -77,6 +84,7 @@ class MainActivity : AppCompatActivity() {
         val searchEditText = findViewById<EditText>(R.id.search_edit_text)
         searchEditText.setOnClickListener {
             val intent = Intent(this, SearchActivity::class.java)
+
             intent.putExtra("selectedItemsSize", selectedItems.size)
             selectedItems.forEachIndexed { index, mapItem ->
                 intent.putExtra("id_$index", mapItem.id)
@@ -111,6 +119,7 @@ class MainActivity : AppCompatActivity() {
         val y = intent.getDoubleExtra("y", 0.0)
         if (placeName != null && roadAddressName != null) {
             addLabel(placeName, roadAddressName, x, y)
+
         }
     }
 
@@ -122,6 +131,7 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         mapView.pause()  // MapView의 pause 호출
+
     }
 
     private fun showErrorScreen(error: Exception) {

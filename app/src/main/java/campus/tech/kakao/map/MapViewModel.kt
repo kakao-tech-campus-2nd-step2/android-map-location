@@ -56,4 +56,5 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
     fun setSelectedItems(items: List<MapItem>) {
         _selectedItems.value = items
     }
+
 }

@@ -14,6 +14,7 @@ class MapAccess(context: Context) {
 
             val apiKey = Constants.KAKAO_API_KEY
 
+
             val response = RetrofitInstance.api.searchPlaces(apiKey, query, page, size)
 
             //응답여부 체크

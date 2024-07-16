@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import android.app.Activity
 import android.content.Intent
 
+
 class SearchActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySearchBinding
@@ -37,6 +38,7 @@ class SearchActivity : AppCompatActivity() {
         setupSearchEditText()
         setupClearTextButton()
         observeViewModel()
+
 
         // 선택된 항목 복원
         val selectedItemsSize = intent.getIntExtra("selectedItemsSize", 0)
@@ -69,10 +71,12 @@ class SearchActivity : AppCompatActivity() {
             adapter = searchAdapter
         }
 
+
         selectedAdapter = SelectedAdapter(
             onItemRemoved = { item -> viewModel.removeSelectedItem(item) },
             onItemClicked = { item -> performSearch(item.place_name) }
         )
+
         binding.selectedItemsRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@SearchActivity, RecyclerView.HORIZONTAL, false)
             adapter = selectedAdapter
