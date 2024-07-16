@@ -87,14 +87,19 @@ class SearchActivity : AppCompatActivity() {
     /**
      * 검색 결과를 표시하는 RecyclerView를 설정하는 함수.
      *
-     * - `placeItemClickListener` : placeItem을 누르면 검색어가 저장되도록 하는 클릭 리스너 interface 구현 객체
+     * - `placeItemClickListener` : placeItem을 누르면 검색어가 저장되고 해당 위치를 전달하여 MapActivity로 이동하는 클릭 리스너 interface 구현 객체
      */
     private fun setSearchResultRecyclerView() {
         val placeItemClickListener =
             object : OnPlaceItemClickListener {
                 override fun onPlaceItemClicked(place: Place) {
                     insertSearchWord(place)
-                    navigateToMapActivity(place)
+                    navigateToMapActivity(
+                        place.name,
+                        place.address,
+                        place.longitude,
+                        place.latitude,
+                    )
                 }
             }
         binding.searchResultRecyclerView.adapter = ResultRecyclerViewAdapter(placeItemClickListener)
@@ -123,14 +128,22 @@ class SearchActivity : AppCompatActivity() {
      *
      * Intent에 Place의 정보를 담아 전달.
      *
-     * @param place 이동할 장소의 정보를 담고 있는 Place 객체.
+     * @param placeName 지도에 표시할 장소의 이름.
+     * @param placeAddress 지도에 표시할 장소의 주소.
+     * @param placeLongitude 지도에 표시할 장소의 경도.
+     * @param placeLatitude 지도에 표시할 장소의 위도.
      */
-    private fun navigateToMapActivity(place: Place) {
+    private fun navigateToMapActivity(
+        placeName: String,
+        placeAddress: String,
+        placeLongitude: String,
+        placeLatitude: String,
+    ) {
         val intent = Intent()
-        intent.putExtra(EXTRA_PLACE_NAME, place.name)
-        intent.putExtra(EXTRA_PLACE_ADDRESS, place.address)
-        intent.putExtra(EXTRA_PLACE_LONGITUDE, place.longitude)
-        intent.putExtra(EXTRA_PLACE_LATITUDE, place.latitude)
+        intent.putExtra(EXTRA_PLACE_NAME, placeName)
+        intent.putExtra(EXTRA_PLACE_ADDRESS, placeAddress)
+        intent.putExtra(EXTRA_PLACE_LONGITUDE, placeLongitude)
+        intent.putExtra(EXTRA_PLACE_LATITUDE, placeLatitude)
         setResult(RESULT_OK, intent)
         finish()
     }
@@ -139,10 +152,15 @@ class SearchActivity : AppCompatActivity() {
         fun onSavedSearchWordClearImageViewClicked(savedSearchWord: SavedSearchWord)
     }
 
+    interface OnSavedSearchWordTextViewClickListener {
+        fun onSavedSearchWordTextViewClicked(savedSearchWord: SavedSearchWord)
+    }
+
     /**
      * SavedSearchWordRecyclerView를 설정하는 함수.
      *
-     * - `savedSearchWordClearImageViewClickListener` : clear 버튼을 누르면 해당 저장된 검색어가 사라지도록 하는 클릭리스너 interface 구현 객체
+     * - `savedSearchWordClearImageViewClickListener` : clear 버튼을 누르면 해당 저장된 검색어가 사라지도록 하는 클릭리스너 interface 구현 객체.
+     * - `savedSearchWordTextViewClickListener` : textView를 누르면 해당 위치를 전달하여 MapActivity로 이동하는 클릭 리스너 interface 구현 객체.
      */
     private fun setSavedSearchWordRecyclerView() {
         val savedSearchWordClearImageViewClickListener =
@@ -151,8 +169,19 @@ class SearchActivity : AppCompatActivity() {
                     savedSearchWordViewModel.deleteSearchWordById(savedSearchWord)
                 }
             }
+        val savedSearchWordTextViewClickListener =
+            object : OnSavedSearchWordTextViewClickListener {
+                override fun onSavedSearchWordTextViewClicked(savedSearchWord: SavedSearchWord) {
+                    navigateToMapActivity(
+                        savedSearchWord.name,
+                        savedSearchWord.address,
+                        savedSearchWord.longitude,
+                        savedSearchWord.latitude,
+                    )
+                }
+            }
         binding.savedSearchWordRecyclerView.adapter =
-            SavedSearchWordRecyclerViewAdapter(savedSearchWordClearImageViewClickListener)
+            SavedSearchWordRecyclerViewAdapter(savedSearchWordClearImageViewClickListener, savedSearchWordTextViewClickListener)
         binding.savedSearchWordRecyclerView.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
     }
@@ -171,8 +200,11 @@ class SearchActivity : AppCompatActivity() {
     private fun collectSearchResults() {
         lifecycleScope.launch {
             placeViewModel.searchResults.collectLatest { places ->
-                (binding.searchResultRecyclerView.adapter as? ResultRecyclerViewAdapter)?.submitList(places)
-                binding.noSearchResultTextView.visibility = if (places.isEmpty()) View.VISIBLE else View.GONE
+                (binding.searchResultRecyclerView.adapter as? ResultRecyclerViewAdapter)?.submitList(
+                    places,
+                )
+                binding.noSearchResultTextView.visibility =
+                    if (places.isEmpty()) View.VISIBLE else View.GONE
             }
         }
     }
@@ -183,7 +215,9 @@ class SearchActivity : AppCompatActivity() {
     private fun collectSavedSearchWords() {
         lifecycleScope.launch {
             savedSearchWordViewModel.savedSearchWords.collectLatest { savedSearchWords ->
-                (binding.savedSearchWordRecyclerView.adapter as? SavedSearchWordRecyclerViewAdapter)?.submitList(savedSearchWords)
+                (binding.savedSearchWordRecyclerView.adapter as? SavedSearchWordRecyclerViewAdapter)?.submitList(
+                    savedSearchWords,
+                )
                 binding.savedSearchWordRecyclerView.visibility =
                     if (savedSearchWords.isEmpty()) View.GONE else View.VISIBLE
             }

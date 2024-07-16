@@ -4,4 +4,7 @@ data class SavedSearchWord(
     val id: Long = 0,
     val name: String,
     val placeId: String,
+    val address: String,
+    val longitude: String,
+    val latitude: String,
 )
