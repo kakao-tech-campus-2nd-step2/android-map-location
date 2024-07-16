@@ -1,6 +1,8 @@
 package campus.tech.kakao.map.domain.model
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
+
 
 data class Place(
     @SerializedName("id") var id: String,
@@ -9,4 +11,4 @@ data class Place(
     @SerializedName("category_name")var category: String,
     @SerializedName("x") var xPos: String,
     @SerializedName("y") var yPos: String
-)
+): Serializable
