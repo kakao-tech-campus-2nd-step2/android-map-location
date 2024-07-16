@@ -5,10 +5,12 @@
 ## content
 
 - 실행 영상
+  
 ![week4_1](https://github.com/user-attachments/assets/d05c8ac7-06cf-48c3-ac21-809567de23c3)
 
 - 인증 에러시 화면
-![week4_1](https://github.com/user-attachments/assets/9320fc90-a4ae-4733-a306-ba16974b1b09)
+  
+![week4_1](https://github.com/user-attachments/assets/7c9bc6f0-c163-4058-83cc-1299120c7230)
 
 ## flow chart
 
