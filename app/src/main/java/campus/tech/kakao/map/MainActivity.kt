@@ -16,7 +16,6 @@ import android.app.Activity
 import android.widget.FrameLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kakao.vectormap.LatLng
-import com.kakao.vectormap.label.Label
 import com.kakao.vectormap.label.LabelLayer
 import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.label.LabelStyle
@@ -38,6 +37,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<FrameLayout>
     private lateinit var bottomSheetTitle: TextView
     private lateinit var bottomSheetAddress: TextView
+    private lateinit var bottomSheetLayout: FrameLayout
     private var selectedItems = mutableListOf<MapItem>()
 
 
@@ -84,10 +84,13 @@ class MainActivity : AppCompatActivity() {
         retryButton = findViewById(R.id.retry_button)
 
         //Bottomsheet 초기화
-        val bottomSheet = findViewById<FrameLayout>(R.id.bottomSheetLayout)
-        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+        bottomSheetLayout = findViewById(R.id.bottomSheetLayout)
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout)
         bottomSheetTitle = findViewById(R.id.bottomSheetTitle)
         bottomSheetAddress = findViewById(R.id.bottomSheetAddress)
+
+        //처음에는 bottomsheet 숨기기
+        bottomSheetLayout.visibility=View.GONE
     }
 
     //지도 -> 검색페이지 돌아갈 때 저장된 검색어 목록 그대로 저장
@@ -183,6 +186,7 @@ class MainActivity : AppCompatActivity() {
                 bottomSheetTitle.text = placeName
                 bottomSheetAddress.text = roadAddressName
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+                bottomSheetLayout.visibility = View.VISIBLE
                 true
             }
 
@@ -193,6 +197,7 @@ class MainActivity : AppCompatActivity() {
             bottomSheetTitle.text = placeName
             bottomSheetAddress.text = roadAddressName
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            bottomSheetLayout.visibility = View.VISIBLE
         }
     }
 
