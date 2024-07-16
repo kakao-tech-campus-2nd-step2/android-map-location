@@ -29,6 +29,7 @@ class SearchActivity : AppCompatActivity() {
         val mainText = findViewById<TextView>(R.id.main_text)
         val cancelBtn = findViewById<ImageView>(R.id.cancelBtn)
 
+        //어댑터 설정
         val mapListAdapter = MapListAdapter(listOf(), LayoutInflater.from(this))
         val selectListAdapter = SelectListAdapter(listOf(), LayoutInflater.from(this))
 
@@ -38,19 +39,26 @@ class SearchActivity : AppCompatActivity() {
         selectList.adapter = selectListAdapter
         selectList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
-        mapListAdapter.setItemClickListener(object : MapListAdapter.ItemClickListener {
+        //리스너 정의
+        mapListAdapter.setItemClickListener(object : ItemClickListener {
             override fun onClick(v: View, mapItem: KakaoMapItem) {
                 mapItemViewModel.insertSelectItem(mapItem)
             }
         })
 
-        selectListAdapter.setCancelBtnClickListener(object :
-            SelectListAdapter.CancelBtnClickListener {
+        selectListAdapter.setCancelBtnClickListener(object : ItemClickListener {
             override fun onClick(v: View, selectItem: KakaoMapItem) {
                 mapItemViewModel.deleteSelectItem(selectItem.id)
             }
         })
 
+        selectListAdapter.setItemClickListener(object : ItemClickListener {
+            override fun onClick(v: View, selectItem: KakaoMapItem) {
+                inputSpace.setText(selectItem.name)
+            }
+        })
+
+        // 옵저버 설정
         mapItemViewModel.kakaoMapItemList.observe(this) {
             mapListAdapter.updateMapItemList(it)
             if (mapItemViewModel.kakaoMapItemList.value.isNullOrEmpty()){
@@ -64,6 +72,7 @@ class SearchActivity : AppCompatActivity() {
             selectListAdapter.updateMapItemList(it)
         }
 
+        // EditText 리스너
         inputSpace.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
@@ -76,6 +85,7 @@ class SearchActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {}
         })
 
+        // x버튼 리스너
         cancelBtn.setOnClickListener {
             inputSpace.setText("")
         }

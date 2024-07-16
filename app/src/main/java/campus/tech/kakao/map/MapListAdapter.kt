@@ -19,20 +19,16 @@ class MapListAdapter(
             address = itemView.findViewById<TextView>(R.id.address)
             category = itemView.findViewById<TextView>(R.id.category)
             itemView.setOnClickListener {
-                recyclerListener.onClick(it, mapItemList[bindingAdapterPosition])
+                itemListener.onClick(it, mapItemList[bindingAdapterPosition])
             }
         }
     }
 
-    interface ItemClickListener {
-        fun onClick(v: View, mapItem: KakaoMapItem)
-    }
-
     fun setItemClickListener(itemClickListener: ItemClickListener) {
-        this.recyclerListener = itemClickListener
+        this.itemListener = itemClickListener
     }
 
-    lateinit var recyclerListener: ItemClickListener
+    lateinit var itemListener: ItemClickListener
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = layoutInflater.inflate(R.layout.map_item, parent, false)

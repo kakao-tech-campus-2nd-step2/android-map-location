@@ -21,18 +21,22 @@ class SelectListAdapter(
             cancelBtn.setOnClickListener {
                 cancelBtnListener.onClick(it, selectItemList[bindingAdapterPosition])
             }
+            itemView.setOnClickListener {
+                itemListener.onClick(it, selectItemList[bindingAdapterPosition])
+            }
         }
     }
 
-    interface CancelBtnClickListener {
-        fun onClick(v: View, selectItem: KakaoMapItem)
-    }
-
-    fun setCancelBtnClickListener(cancelBtnClickListener: CancelBtnClickListener) {
+    fun setCancelBtnClickListener(cancelBtnClickListener: ItemClickListener) {
         this.cancelBtnListener = cancelBtnClickListener
     }
 
-    lateinit var cancelBtnListener: CancelBtnClickListener
+    fun setItemClickListener(itemClickListener: ItemClickListener) {
+        this.itemListener = itemClickListener
+    }
+
+    lateinit var cancelBtnListener: ItemClickListener
+    lateinit var itemListener: ItemClickListener
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = layoutInflater.inflate(R.layout.select_item, parent, false)
