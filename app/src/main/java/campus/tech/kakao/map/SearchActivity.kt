@@ -41,8 +41,6 @@ class SearchActivity : AppCompatActivity() {
 
         db = SearchDbHelper(context = this)
 
-
-
         recyclerView = findViewById(R.id.recyclerView)
         searchWord = findViewById(R.id.searchWord)
         deleteSearchWord = findViewById(R.id.deleteSearchWord)
@@ -68,10 +66,7 @@ class SearchActivity : AppCompatActivity() {
         savedSearchWordRecyclerView.adapter = savedSearchAdapter
 
         initView()
-
         saveData()
-        loadData()
-
 
 
         searchWord.addTextChangedListener(object : TextWatcher {
@@ -171,30 +166,50 @@ class SearchActivity : AppCompatActivity() {
         })
     }
 
-    private fun deleteItem() {
-        savedSearchAdapter.setOnDeleteClickListener(object :
-            SavedSearchAdapter.OnDeleteClickListener {
+    private fun savedWordClick(){
+        savedSearchAdapter.setOnSavedWordClickListener(object : SavedSearchAdapter.OnSavedWordClickListener {
+            override fun onSavedWordClick(savedWord: String) {
+                filterBySavedWord(savedWord)
+            }
+
             override fun onDeleteClick(position: Int) {
-                val deletedWord = savedSearchAdapter.savedSearchList[position]
-                val wDb = db.writableDatabase
-                wDb.delete(
-                    SearchData.SAVED_SEARCH_TABLE_NAME,
-                    "${SearchData.SAVED_SEARCH_COLUMN_NAME} = ?",
-                    arrayOf(deletedWord)
-                )
-
-                savedSearchAdapter.savedSearchList.removeAt(position)
-                savedSearchAdapter.notifyItemRemoved(position)
-
+                deleteSavedWord(position)
             }
         })
     }
 
+    private fun filterBySavedWord(savedWord: String) {
+        val filteredList = searchDataList.filter { it.name == savedWord }
+        adapter.searchDataList = filteredList
+        adapter.notifyDataSetChanged()
+
+        if (filteredList.isEmpty()) {
+            recyclerView.visibility = View.GONE
+            searchNothing.visibility = View.VISIBLE
+        } else {
+            recyclerView.visibility = View.VISIBLE
+            searchNothing.visibility = View.GONE
+        }
+    }
+
+    private fun deleteSavedWord(position: Int) {
+        val deletedWord = savedSearchAdapter.savedSearchList[position]
+        val wDb = db.writableDatabase
+        wDb.delete(
+            SearchData.SAVED_SEARCH_TABLE_NAME,
+            "${SearchData.SAVED_SEARCH_COLUMN_NAME} = ?",
+            arrayOf(deletedWord)
+        )
+
+        savedSearchAdapter.savedSearchList.removeAt(position)
+        savedSearchAdapter.notifyItemRemoved(position)
+    }
+
     private fun initView() {
         itemClickSaveWord()
-        deleteItem()
         deleteWord()
         loadSavedWords()
+        savedWordClick()
     }
 
 }

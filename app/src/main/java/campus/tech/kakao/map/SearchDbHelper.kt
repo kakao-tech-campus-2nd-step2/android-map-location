@@ -75,6 +75,8 @@ class SearchDbHelper(context: Context) : SQLiteOpenHelper(context, "searchDb", n
             val radius = 20000
             val format = "json"
 
+            clearTable()
+
             for (categoryGroupCode in categoryGroupCodes) {
                 try {
                     val response = retrofitService.requestProducts(
@@ -96,7 +98,10 @@ class SearchDbHelper(context: Context) : SQLiteOpenHelper(context, "searchDb", n
                             saveDb(placeName, addressName, categoryGroupName)
                         }
                     } else {
-                        Log.e("Retrofit", "API 요청 실패, 응답 코드: ${response.code()}, 메시지: ${response.message()}")
+                        Log.e(
+                            "Retrofit",
+                            "API 요청 실패, 응답 코드: ${response.code()}, 메시지: ${response.message()}"
+                        )
                     }
                 } catch (e: Exception) {
                     Log.e("Retrofit", "API 요청 실패, 네트워크 에러: ${e.message}")
@@ -114,6 +119,7 @@ class SearchDbHelper(context: Context) : SQLiteOpenHelper(context, "searchDb", n
         values.put(SearchData.TABLE_COLUMN_CATEGORY, categoryGroupName)
         wDb.insert(SearchData.TABLE_NAME, null, values)
         values.clear()
+
     }
 
     fun loadDb(): List<SearchData> {
@@ -145,5 +151,10 @@ class SearchDbHelper(context: Context) : SQLiteOpenHelper(context, "searchDb", n
         }
         cursor.close()
         return searchDataList
+    }
+
+    private fun clearTable() {
+        val wDb = writableDatabase
+        wDb.delete(SearchData.TABLE_NAME, null, null)
     }
 }
