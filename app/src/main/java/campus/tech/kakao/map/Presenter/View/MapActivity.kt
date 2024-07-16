@@ -31,10 +31,10 @@ class MapActivity : AppCompatActivity() {
     private lateinit var bottomSheet : ConstraintLayout
     private lateinit var placeName : TextView
     private lateinit var placeAddress : TextView
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
+        var latLng : LatLng = LatLng.from(0.0,0.0)
 
         repository = (application as MyApplication).appContainer.repository
         mapView = findViewById<MapView>(R.id.mapView)
