@@ -2,4 +2,6 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="location_pin_green">#1DCE9C</color>
+    <color name="colorDivision">#e0e0e0</color>
 </resources>
