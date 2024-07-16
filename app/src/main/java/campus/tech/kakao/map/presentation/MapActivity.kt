@@ -72,7 +72,7 @@ class MapActivity : AppCompatActivity() {
             }
 
             override fun onMapError(error: Exception) {
-                Log.d("testt", "맵 에러 발생 ${error.message}")
+                handleError(error)
             }
         }, object : KakaoMapReadyCallback() {
             override fun onMapReady(kakaoMap: KakaoMap) {
@@ -90,9 +90,8 @@ class MapActivity : AppCompatActivity() {
             override fun onMapDestroy() {
                 //no-op
             }
-
-            override fun onMapError(p0: java.lang.Exception?) {
-                // no-op
+            override fun onMapError(error: Exception) {
+                handleError(error)
             }
         }, object : KakaoMapReadyCallback() {
             override fun onMapReady(kakaoMap: KakaoMap) {
@@ -137,5 +136,15 @@ class MapActivity : AppCompatActivity() {
         binding.nameTextaView.text = place.placeName
         binding.addressTextView.text = place.addressName
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+    }
+
+    private fun handleError(error: Exception) {
+        Log.d("testt", error.message ?: "Unknown error")
+        runOnUiThread {
+            Thread.sleep(1000)
+            val intent = Intent(this@MapActivity, ErrorActivity::class.java)
+            intent.putExtra("error", error.message)
+            startActivity(intent)
+        }
     }
 }
