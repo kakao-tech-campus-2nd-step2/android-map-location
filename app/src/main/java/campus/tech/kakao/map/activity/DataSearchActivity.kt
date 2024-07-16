@@ -16,12 +16,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.map.R
+import campus.tech.kakao.map.RecentAdapterListener
 import campus.tech.kakao.map.adapter.RecentSearchAdapter
 import campus.tech.kakao.map.adapter.SearchDataAdapter
 import campus.tech.kakao.map.viewModel.RecentViewModel
 import campus.tech.kakao.map.viewModel.SearchViewModel
 
-class DataSearchActivity : AppCompatActivity() {
+class DataSearchActivity : AppCompatActivity(), RecentAdapterListener {
     private lateinit var searchViewModel: SearchViewModel
     private lateinit var recentViewModel: RecentViewModel
     private lateinit var editText: EditText
@@ -62,7 +63,7 @@ class DataSearchActivity : AppCompatActivity() {
         setTextWatcher()
 
         recentViewModel.getRecentDataLiveData().observe(this, Observer { recentData ->
-            recentSearchListView.adapter = RecentSearchAdapter(recentData, recentViewModel)
+            recentSearchListView.adapter = RecentSearchAdapter(recentData, recentViewModel, this)
         })
 
         searchViewModel.searchResults.observe(this, Observer { documentsList ->
@@ -109,5 +110,10 @@ class DataSearchActivity : AppCompatActivity() {
         deleteBtn.setOnClickListener {
             editText.text.clear()
         }
+    }
+
+    //클릭한 검색어가 자동으로 입력되는 기능 구현
+    override fun autoSearch(searchData: String) {
+        editText.setText(searchData)
     }
 }

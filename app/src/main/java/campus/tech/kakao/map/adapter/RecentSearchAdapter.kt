@@ -8,11 +8,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.map.data.RecentSearchData
 import campus.tech.kakao.map.R
+import campus.tech.kakao.map.RecentAdapterListener
 import campus.tech.kakao.map.viewModel.RecentViewModel
 
 class RecentSearchAdapter(
     private val recentDataList: List<RecentSearchData>,
-    private val viewModel: RecentViewModel
+    private val viewModel: RecentViewModel,
+    private val adapterListener: RecentAdapterListener
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     class RecentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -34,6 +36,10 @@ class RecentSearchAdapter(
         viewHolder.name.text = item.name
         viewHolder.deleteBtn.setOnClickListener {
             viewModel.deleteRecentData(item.name, item.address)
+        }
+
+        viewHolder.name.setOnClickListener {
+            adapterListener.autoSearch(item.name)
         }
     }
 }
