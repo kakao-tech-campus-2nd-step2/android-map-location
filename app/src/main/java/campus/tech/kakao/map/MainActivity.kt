@@ -84,9 +84,14 @@ class MainActivity : AppCompatActivity() {
             viewModel.addSearch(result.place_name)
         }
 
-        savedSearchAdapter = SavedSearchAdapter { place ->
-            viewModel.removeSearch(place)
-        }
+        savedSearchAdapter = SavedSearchAdapter (
+            onSearchClicked = { searchQuery ->
+                viewModel.searchSavedPlace(searchQuery)
+            },
+            onDeleteClicked = { searchQuery ->
+                viewModel.removeSearch(searchQuery)
+            }
+        )
 
         binding.searchRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.searchRecyclerView.adapter = searchAdapter

@@ -55,4 +55,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private fun saveSearchesToPreferences(searches: List<String>) {
         sharedPreferences.edit().putStringSet("saved_searches", searches.toSet()).apply()
     }
+
+    fun searchSavedPlace(savedQuery: String) {
+        searchPlaces(savedQuery)
+    }
 }
