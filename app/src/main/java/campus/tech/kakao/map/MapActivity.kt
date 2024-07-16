@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDragHandleView
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
@@ -22,6 +24,7 @@ class MapActivity : AppCompatActivity() {
     private val TAG = "KAKAOMAP"
     private lateinit var kakaoMapView: MapView
     private lateinit var searchBox: TextView
+    private lateinit var infoSheet: BottomSheetDragHandleView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,11 +55,13 @@ class MapActivity : AppCompatActivity() {
                     val labelManager = kakaoMap.labelManager
                     labelManager?.let {
                         val style = labelManager.addLabelStyles(
-                            LabelStyles.from(LabelStyle.from(R.drawable.location_label))
+                            LabelStyles.from(LabelStyle.from(R.drawable.location_label)
+                                .setTextStyles(30, Color.BLACK))
                         )
                         labelManager.layer?.addLabel(
                             LabelOptions.from(LatLng.from(targetLocation.y, targetLocation.x))
                                 .setStyles(style)
+                                .setTexts(targetLocation.name)
                         )
                     }
                 }
