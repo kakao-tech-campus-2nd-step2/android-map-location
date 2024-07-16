@@ -12,5 +12,14 @@ class MapErrorActivity : AppCompatActivity() {
         binding = ActivityMapErrorBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.errorDescriptionTextView.text =
+            intent.getStringExtra("errorDescription") ?: "Unknown error"
+
+        binding.errorCodeTextView.text =
+            intent.getStringExtra("errorCode") ?: "Unknown error code"
+
+        binding.refreshBackgroundView.setOnClickListener {
+            finish()
+        }
     }
 }
