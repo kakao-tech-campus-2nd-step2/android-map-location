@@ -9,9 +9,12 @@ import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import campus.tech.kakao.map.R
+import campus.tech.kakao.map.dataStore
 import campus.tech.kakao.map.databinding.ActivityMapBinding
 import campus.tech.kakao.map.model.Location
+import campus.tech.kakao.map.viewmodel.MapViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HIDDEN
@@ -30,6 +33,7 @@ import com.kakao.vectormap.label.LabelStyles
 import com.kakao.vectormap.label.LabelTextBuilder
 
 class MapActivity : AppCompatActivity() {
+    private lateinit var viewModel: MapViewModel
     private lateinit var binding: ActivityMapBinding
     private lateinit var searchLocationLauncher: ActivityResultLauncher<Intent>
     private lateinit var mapErrorLauncher: ActivityResultLauncher<Intent>
@@ -38,6 +42,8 @@ class MapActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this)[MapViewModel::class.java]
+        viewModel.setDataStore(dataStore)
         binding = ActivityMapBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -68,6 +74,7 @@ class MapActivity : AppCompatActivity() {
                     setMarker(location)
                     moveMapCamera(location.latitude, location.longitude)
                     setBottomSheet(location)
+                    viewModel.saveLastLocation(location.latitude, location.longitude)
                 }
             }
         }
@@ -106,8 +113,8 @@ class MapActivity : AppCompatActivity() {
             }
         }, object : KakaoMapReadyCallback() {
             override fun onMapReady(map: KakaoMap) {
-                Log.d("MapActivity", "onMapReady")
                 myKakaoMap = map
+                viewModel.loadLastLocation(::moveMapCamera)
             }
         })
     }
@@ -136,9 +143,14 @@ class MapActivity : AppCompatActivity() {
         }
     }
 
-    private fun moveMapCamera(latitude: Double, longitude: Double) {
+    private fun moveMapCamera(latitude: Double, longitude: Double, isAnimation: Boolean = true) {
         val cameraUpdate = CameraUpdateFactory.newCenterPosition(LatLng.from(latitude, longitude), 15)
-        myKakaoMap.moveCamera(cameraUpdate, CameraAnimation.from(500, true, true))
+
+        if (isAnimation) {
+            myKakaoMap.moveCamera(cameraUpdate, CameraAnimation.from(500, true, true))
+        } else {
+            myKakaoMap.moveCamera(cameraUpdate)
+        }
     }
 
     private fun setBottomSheet(location: Location) {
