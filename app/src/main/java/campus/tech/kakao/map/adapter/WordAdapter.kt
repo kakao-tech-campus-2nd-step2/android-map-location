@@ -12,7 +12,8 @@ import campus.tech.kakao.map.R
 import campus.tech.kakao.map.dto.SearchWord
 
 class WordAdapter(
-	val deleteWord: (SearchWord) -> Unit
+	val deleteWord: (SearchWord) -> Unit,
+	val clickWord: (SearchWord) -> Unit
 ): ListAdapter<SearchWord, WordAdapter.ViewHolder>(
 	object : DiffUtil.ItemCallback<SearchWord>(){
 		override fun areItemsTheSame(oldItem: SearchWord, newItem: SearchWord): Boolean {
@@ -34,6 +35,9 @@ class WordAdapter(
 			delete.setOnClickListener {
 				deletedWords(bindingAdapterPosition)
 			}
+			searchWord.setOnClickListener {
+				clickedWord(bindingAdapterPosition)
+			}
 		}
 	}
 
@@ -50,4 +54,10 @@ class WordAdapter(
 		val word = getItem(position)
 		deleteWord(word)
 	}
+
+	private val clickedWord = { position:Int ->
+		val word = getItem(position)
+		clickWord(word)
+	}
+
 }

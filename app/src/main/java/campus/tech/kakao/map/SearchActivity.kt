@@ -35,9 +35,13 @@ class SearchActivity : AppCompatActivity() {
             model.getMapInfo(document)
             finish()
         })
-        wordAdapter = WordAdapter { searchWord ->
-            model.deleteWord(searchWord)
-        }
+        wordAdapter = WordAdapter(
+            { searchWord ->
+                model.deleteWord(searchWord)
+            },{ searchWord ->
+                model.searchLocalAPI(searchWord.name)
+            }
+        )
         search.doOnTextChanged { text, _, _, _ ->
             val query = text.toString()
             if (query.isEmpty()){
