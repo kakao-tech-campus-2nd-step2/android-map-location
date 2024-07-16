@@ -121,10 +121,12 @@ class MapActivity : AppCompatActivity() {
 
     private fun initViewModel(){
         if(intent.extras == null){
+            //첫 진입, SharedPreference로 초기화
             val sharedPreferences = getSharedPreferences(CURRENT_PLACE, Context.MODE_PRIVATE)
-            val id = sharedPreferences.getInt(COLUMN_ID,-1)
-            viewModel.initPlace(id)
+            val id = sharedPreferences.getInt(COLUMN_ID, NO_ID)
+            if(id != NO_ID) viewModel.initPlace(id)
         } else {
+            //검색을 통해 넘어옴
             intent.extras?.getInt("id")?.let {
                 viewModel.initPlace(it)
             }
@@ -143,6 +145,7 @@ class MapActivity : AppCompatActivity() {
         private const val LABEL_ZOOM_LEVEL = 8
         private const val CURRENT_PLACE = "current_place"
         private const val COLUMN_ID = "id"
+        private const val NO_ID = -1
     }
 
 }
