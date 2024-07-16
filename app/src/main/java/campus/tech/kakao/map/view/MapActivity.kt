@@ -5,12 +5,16 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import campus.tech.kakao.map.R
 import campus.tech.kakao.map.databinding.ActivityMapBinding
 import campus.tech.kakao.map.model.Location
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
+import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HIDDEN
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
@@ -29,6 +33,7 @@ class MapActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMapBinding
     private lateinit var searchLocationLauncher: ActivityResultLauncher<Intent>
     private lateinit var mapErrorLauncher: ActivityResultLauncher<Intent>
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
     private lateinit var myKakaoMap: KakaoMap
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +43,11 @@ class MapActivity : AppCompatActivity() {
 
         searchLocationLauncher = createSearchLocationLauncher()
         mapErrorLauncher = createMapErrorLauncher()
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet.bottomSheet)
         setKakaoMap(binding.kakaoMapView)
+
+        bottomSheetBehavior.state = STATE_HIDDEN
+        bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
 
         binding.searchBackgroundView.setOnClickListener {
             val intent = Intent(this@MapActivity, SearchLocationActivity::class.java)
@@ -58,6 +67,7 @@ class MapActivity : AppCompatActivity() {
                 markerLocation?.let { location ->
                     setMarker(location)
                     moveMapCamera(location.latitude, location.longitude)
+                    setBottomSheet(location)
                 }
             }
         }
@@ -108,12 +118,16 @@ class MapActivity : AppCompatActivity() {
     )
     private var previousLabel: Label? = null
 
+    private fun removePreviousMarker() {
+        previousLabel?.let {
+            myKakaoMap.labelManager?.layer?.remove(it)
+            previousLabel = null
+        }
+    }
+
     private fun setMarker(location: Location) {
         myKakaoMap.labelManager?.let { labelManager ->
-            // 이전에 추가한 마커가 있다면 삭제
-            previousLabel?.let { prevLabel ->
-                labelManager.layer?.remove(prevLabel)
-            }
+            removePreviousMarker()
 
             val style = labelManager.addLabelStyles(markerImageStyle)
             val options = LabelOptions.from(LatLng.from(location.latitude, location.longitude))
@@ -125,5 +139,19 @@ class MapActivity : AppCompatActivity() {
     private fun moveMapCamera(latitude: Double, longitude: Double) {
         val cameraUpdate = CameraUpdateFactory.newCenterPosition(LatLng.from(latitude, longitude), 15)
         myKakaoMap.moveCamera(cameraUpdate, CameraAnimation.from(500, true, true))
+    }
+
+    private fun setBottomSheet(location: Location) {
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        binding.bottomSheet.bottomSheetNameTextView.text = location.name
+        binding.bottomSheet.bottomSheetAddressTextView.text = location.address
+    }
+
+    private val bottomSheetCallback = object : BottomSheetCallback() {
+        override fun onStateChanged(bottomSheet: View, newState: Int) {
+            if (newState == STATE_HIDDEN) removePreviousMarker()
+        }
+
+        override fun onSlide(bottomSheet: View, slideOffset: Float) {}
     }
 }
