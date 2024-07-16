@@ -9,8 +9,6 @@ import android.provider.BaseColumns
 import ksc.campus.tech.kakao.map.models.contracts.SearchKeywordContract
 import ksc.campus.tech.kakao.map.models.contracts.SearchResultContract
 
-data class SearchResult(val id: String, val name: String, val address: String, val type: String, val latitude: Double, val longitude: Double)
-
 class SearchDbHelper(context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     override fun onCreate(db: SQLiteDatabase?) {
