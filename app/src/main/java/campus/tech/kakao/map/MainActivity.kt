@@ -116,6 +116,20 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+    //결과 반환
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == SEARCH_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            data?.let {
+                val placeName = it.getStringExtra("place_name")
+                val roadAddressName = it.getStringExtra("road_address_name")
+                val x = it.getDoubleExtra("x", 0.0)
+                val y = it.getDoubleExtra("y", 0.0)
+                addLabel(placeName, roadAddressName, x, y)
+            }
+        }
+    }
+
     //label marker
     private fun addLabel(placeName: String?, roadAddressName: String?, x: Double, y: Double) {
         if (placeName != null && roadAddressName != null) {
@@ -143,6 +157,10 @@ class MainActivity : AppCompatActivity() {
             // 카메라 이동
             moveCamera(position)
 
+            // bottom sheet 업데이트
+            bottomSheetTitle.text = placeName
+            bottomSheetAddress.text = roadAddressName
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
     }
 

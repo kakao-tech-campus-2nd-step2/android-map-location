@@ -11,6 +11,8 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import android.app.Activity
+import android.content.Intent
 
 class SearchActivity : AppCompatActivity() {
 
@@ -43,6 +45,7 @@ class SearchActivity : AppCompatActivity() {
                 Toast.makeText(this, getString(R.string.item_already_selected), Toast.LENGTH_SHORT).show()
             } else {
                 viewModel.selectItem(item)
+                returnResult(item)
             }
         }
 
@@ -117,5 +120,17 @@ class SearchActivity : AppCompatActivity() {
     private fun performSearch(query: String) {
         binding.searchEditText.setText(query)
         viewModel.searchQuery.value = query
+    }
+
+    //결과 반환 -> MainActivity로 돌아가기
+    private fun returnResult(item: MapItem) {
+        val resultIntent = Intent().apply {
+            putExtra("place_name", item.place_name)
+            putExtra("road_address_name", item.road_address_name)
+            putExtra("x", item.x)
+            putExtra("y", item.y)
+        }
+        setResult(Activity.RESULT_OK, resultIntent)
+        finish()
     }
 }
