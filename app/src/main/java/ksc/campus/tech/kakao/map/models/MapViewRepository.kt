@@ -11,7 +11,7 @@ data class LocationInfo(val address:String, val name:String, val latitude:Double
 
 class MapViewRepository {
     private val _selectedLocation: MutableLiveData<LocationInfo?> = MutableLiveData<LocationInfo?>(null)
-    private val _cameraPosition: MutableLiveData<CameraPosition> = MutableLiveData(defaultCameraPosition)
+    private val _cameraPosition: MutableLiveData<CameraPosition> = MutableLiveData(initialCameraPosition)
 
     val selectedLocation: LiveData<LocationInfo?>
         get() = _selectedLocation
@@ -19,14 +19,14 @@ class MapViewRepository {
     val cameraPosition: LiveData<CameraPosition>
         get() = _cameraPosition
 
+    private fun getZoomCameraPosition(latitude: Double, longitude: Double) = CameraPosition.from(latitude, longitude, 18, 0.0,0.0, -1.0)
+
     fun updateSelectedLocation(locationInfo: LocationInfo){
         _selectedLocation.postValue(locationInfo)
     }
 
     fun updateCameraPositionWithFixedZoom(latitude: Double, longitude: Double){
-        val default = defaultCameraPosition
-        val newPosition = CameraPosition.from(latitude, longitude, default.zoomLevel, default.tiltAngle, default.rotationAngle, default.height)
-        _cameraPosition.postValue(newPosition)
+        _cameraPosition.postValue(getZoomCameraPosition(latitude, longitude))
     }
 
     fun updateCameraPosition(position: CameraPosition){
@@ -46,6 +46,6 @@ class MapViewRepository {
             return _instance as MapViewRepository
         }
 
-        val defaultCameraPosition: CameraPosition = CameraPosition.from(35.8905341232321, 128.61213266480294, 15, 0.0,0.0, -1.0)
+        val initialCameraPosition: CameraPosition = CameraPosition.from(35.8905341232321, 128.61213266480294, 15, 0.0,0.0, -1.0)
     }
 }

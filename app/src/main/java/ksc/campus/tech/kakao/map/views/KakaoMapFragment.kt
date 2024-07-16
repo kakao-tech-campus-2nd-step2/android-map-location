@@ -96,7 +96,7 @@ class KakaoMapFragment : Fragment() {
     }
 
     private fun restorePosition(kakaoMap: KakaoMap){
-        moveCamera(kakaoMap, viewModel.cameraPosition.value?:MapViewRepository.defaultCameraPosition)
+        moveCamera(kakaoMap, viewModel.cameraPosition.value?:MapViewRepository.initialCameraPosition)
     }
 
     private fun updateSelectedLocation(locationInfo: LocationInfo?){
@@ -133,9 +133,4 @@ class KakaoMapFragment : Fragment() {
         val layer = kakaoMap?.labelManager?.layer
         layer?.addLabel(options)
     }
-
-    private fun addTestLabel(){
-        addLabel(LatLng.from(35.8905341232321, 128.61213266480294))
-    }
-
 }
