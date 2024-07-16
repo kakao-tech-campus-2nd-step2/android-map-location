@@ -32,7 +32,9 @@ class MainActivity : AppCompatActivity() {
     fun showSearchFragment() {
         replaceFragment(SearchFragment())
     }
-
+    fun clearBackStack() {
+        supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+    }
     private fun replaceFragment(fragment: Fragment) {
         val fragmentManager: FragmentManager = supportFragmentManager
         val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()

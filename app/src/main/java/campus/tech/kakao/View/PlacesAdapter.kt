@@ -24,8 +24,8 @@ class PlacesAdapter(private var places: List<Place>, private val onItemClick: (S
         val place = places[position]
         val categoryGroupCode = CategoryGroupCode()
 
-        val x  = place.x
-        val y  = place.y
+        val x = place.x
+        val y = place.y
         holder.nameTextView.text = place.placeName
         holder.addressTextView.text = place.roadAddressName
         holder.categoryTextView.text = categoryGroupCode.CodeToCategory[place.categoryName] ?: ""
@@ -55,6 +55,8 @@ class PlacesAdapter(private var places: List<Place>, private val onItemClick: (S
 
     private suspend fun navigateToMapFragment(x: Double?, y: Double?, activity: MainActivity) {
         withContext(Dispatchers.Main) {
+            activity.clearBackStack()
+
             val fragment = MapFragment().apply {
                 arguments = Bundle().apply {
                     putDouble("x", x!!)

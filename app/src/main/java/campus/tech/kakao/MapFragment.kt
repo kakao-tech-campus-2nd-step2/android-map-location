@@ -26,9 +26,14 @@ class MapFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val lastLocation = getLastLocation(requireContext())
+        y = lastLocation.first
+        x = lastLocation.second
+
         arguments?.let {
-            x = it.getDouble("x", 127.108621)
-            y = it.getDouble("y", 37.402005 )
+            x = it.getDouble("x", x)
+            y = it.getDouble("y", y)
         }
     }
 
@@ -67,6 +72,10 @@ class MapFragment : Fragment() {
 
                 val cameraUpdate = CameraUpdateFactory.newCenterPosition(latLng)
                 kakaoMap.moveCamera(cameraUpdate)
+                kakaoMap.setOnCameraMoveEndListener { _, _, _ ->
+                    val position = kakaoMap.cameraPosition!!.position
+                    saveLastLocation(position.latitude, position.longitude)
+                }
 
                 kakaoMap.setOnMapClickListener { _, _, _, _ ->
                     (activity as? MainActivity)?.showSearchFragment()
@@ -89,5 +98,21 @@ class MapFragment : Fragment() {
     override fun onPause() {
         super.onPause()
         mapView.pause()
+    }
+
+    private fun saveLastLocation(lat: Double, lng: Double) {
+        val sharedPreferences = requireContext().getSharedPreferences("MapPrefs", Context.MODE_PRIVATE)
+        with(sharedPreferences.edit()) {
+            putFloat("lastX", lng.toFloat())
+            putFloat("lastY", lat.toFloat())
+            apply()
+        }
+    }
+
+    private fun getLastLocation(context: Context): Pair<Double, Double> {
+        val sharedPreferences = context.getSharedPreferences("MapPrefs", Context.MODE_PRIVATE)
+        val lat = sharedPreferences.getFloat("lastY", 37.402005f).toDouble()
+        val lng = sharedPreferences.getFloat("lastX", 127.108621f).toDouble()
+        return Pair(lat, lng)
     }
 }
