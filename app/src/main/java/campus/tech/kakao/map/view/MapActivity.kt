@@ -1,6 +1,7 @@
 package campus.tech.kakao.map.view
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -12,9 +13,15 @@ import campus.tech.kakao.map.databinding.ActivityMapBinding
 import campus.tech.kakao.map.model.Location
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
+import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapAuthException
 import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.MapView
+import com.kakao.vectormap.label.Label
+import com.kakao.vectormap.label.LabelOptions
+import com.kakao.vectormap.label.LabelStyle
+import com.kakao.vectormap.label.LabelStyles
+import com.kakao.vectormap.label.LabelTextBuilder
 
 class MapActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMapBinding
@@ -46,9 +53,8 @@ class MapActivity : AppCompatActivity() {
                     it.data?.getSerializableExtra("markerLocation") as Location?
                 }
 
-                markerLocation?.let {
-                    // TODO: 마커 찍기
-
+                markerLocation?.let { location ->
+                    setMarker(location)
                 }
             }
         }
@@ -91,5 +97,25 @@ class MapActivity : AppCompatActivity() {
                 myKakaoMap = map
             }
         })
+    }
+
+    private val markerImageStyle = LabelStyles.from(
+        LabelStyle.from(R.drawable.map_marker)
+            .setTextStyles(30, Color.BLACK, 5, Color.WHITE)
+    )
+    private var previousLabel: Label? = null
+
+    private fun setMarker(location: Location) {
+        myKakaoMap.labelManager?.let { labelManager ->
+            // 이전에 추가한 마커가 있다면 삭제
+            previousLabel?.let { prevLabel ->
+                labelManager.layer?.remove(prevLabel)
+            }
+
+            val style = labelManager.addLabelStyles(markerImageStyle)
+            val options = LabelOptions.from(LatLng.from(location.latitude, location.longitude))
+                .setStyles(style).setTexts(LabelTextBuilder().setTexts(location.name))
+            previousLabel = labelManager.layer?.addLabel(options)
+        }
     }
 }
