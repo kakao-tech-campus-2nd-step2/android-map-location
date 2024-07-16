@@ -8,10 +8,18 @@ import com.kakao.vectormap.MapView
 import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.KakaoMap
+import android.view.View
+import android.widget.ImageButton
+import android.widget.RelativeLayout
+import android.widget.TextView
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mapView: MapView
+    private lateinit var errorLayout: RelativeLayout
+    private lateinit var errorMessage: TextView
+    private lateinit var errorDetails: TextView
+    private lateinit var retryButton: ImageButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +33,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onMapError(error: Exception) {
-                // 인증 실패 및 지도 사용 중 에러가 발생할 때 호출됨
+                showErrorScreen(error)
             }
         }, object : KakaoMapReadyCallback() {
             override fun onMapReady(kakaoMap: KakaoMap) {
@@ -39,6 +47,12 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, SearchActivity::class.java)
             startActivity(intent)
         }
+
+        //에러 화면 초기화
+        errorLayout = findViewById(R.id.error_layout)
+        errorMessage = findViewById(R.id.error_message)
+        errorDetails = findViewById(R.id.error_details)
+        retryButton = findViewById(R.id.retry_button)
     }
 
     override fun onResume() {
@@ -49,5 +63,28 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         mapView.pause()  // MapView의 pause 호출
+    }
+
+    private fun showErrorScreen(error: Exception) {
+        errorLayout.visibility = View.VISIBLE
+        errorDetails.text = error.message
+        mapView.visibility = View.GONE
+    }
+
+    fun onRetryButtonClick(view: View) {
+        errorLayout.visibility = View.GONE
+        mapView.visibility = View.VISIBLE
+        //지도 다시 시작
+        mapView.start(object : MapLifeCycleCallback() {
+            override fun onMapDestroy() {
+            }
+
+            override fun onMapError(error: Exception) {
+                showErrorScreen(error)
+            }
+        }, object : KakaoMapReadyCallback() {
+            override fun onMapReady(kakaoMap: KakaoMap) {
+            }
+        })
     }
 }
