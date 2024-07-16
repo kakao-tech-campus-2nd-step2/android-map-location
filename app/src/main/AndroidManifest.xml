@@ -21,6 +21,10 @@
         android:theme="@style/Theme.Map"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+
+        <meta-data
+            android:name="com.kakao.vectormap.APP_KEY"
+            android:value="${KAKAO_API_KEY}"/>
         <activity
             android:name=".ErrorActivity"
             android:exported="false" />
