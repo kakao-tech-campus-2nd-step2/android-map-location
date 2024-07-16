@@ -62,6 +62,13 @@ class MapActivity : AppCompatActivity() {
         super.onPause()
         mapView.pause()
     }
+    private fun save(id: Int){
+        val sharedPreferences = getSharedPreferences(CURRENT_PLACE, Context.MODE_PRIVATE)
+        val editor : SharedPreferences.Editor = sharedPreferences.edit()
+
+        editor.putInt(COLUMN_ID,id)
+        editor.commit()
+    }
     private fun settingMap(){
         var latLng = LatLng.from(0.0,0.0)
         var name = ""
@@ -113,8 +120,16 @@ class MapActivity : AppCompatActivity() {
     }
 
     private fun initViewModel(){
+        if(intent.extras == null){
+            val sharedPreferences = getSharedPreferences(CURRENT_PLACE, Context.MODE_PRIVATE)
+            val id = sharedPreferences.getInt(COLUMN_ID,-1)
+            viewModel.initPlace(id)
+        } else {
             intent.extras?.getInt("id")?.let {
                 viewModel.initPlace(it)
+            }
+        }
+    }
 
     private fun setSearchListener(){
         searchText.setOnClickListener {
@@ -126,6 +141,8 @@ class MapActivity : AppCompatActivity() {
     companion object{
         private const val LABEL_TEXT_SIZE = 24
         private const val LABEL_ZOOM_LEVEL = 8
+        private const val CURRENT_PLACE = "current_place"
+        private const val COLUMN_ID = "id"
     }
 
 }
