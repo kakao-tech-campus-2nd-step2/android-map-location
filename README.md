@@ -4,13 +4,16 @@
 
 **Kakao map**
 
-Kakao map view
+Display kakao Map
 
-- display the kakao map screen
+- Display selected search result using `bottom sheet`
+- When onMapError() is called, print error message
+- Save last  location before app closed, and when app is started, focusing that location
 
 Search window button
 
-- button to go `Save search keyword`
+- If Search window button is clicked, go to *Save search keyword*
+  - *Stack Save search keyword* on top of the this window
 
 **Save search keyword**
 
@@ -33,11 +36,18 @@ Search result list
 
 **Kakao map**
 
-Requirements Rule
+**Kakao map**
 
-- When app is start, display Kakao map layout
-- If Search window button is clicked, go to `Save search keyword`
-  - Stack `Save search keyword` on top of the this window
+Display kakao Map
+
+- Display selected search result using `bottom sheet`
+- When onMapError() is called, print error message
+- Save last  location before app closed, and when app is started, focusing that location
+
+Go to *Save serach keyword*
+
+- If Search window button is clicked, go to *Save search keyword*
+  - *Stack Save search keyword* on top of the this window
 
 **Save search keyword**
 
@@ -55,11 +65,12 @@ Input search keyword
 
 Saved search keyword list
 
-- Words are not duplicated and recently serached word are added later
-- When clicked x button, saved search word is erased
+- Keywords are not duplicated and recently serached keyword are added later
+- Can search to select saved search keyword
+- When clicked x button, saved search keyword is erased
 
 Search result list
 
 - There are at least 15 search results
 - Search results have search word as categories
-- Selected item is added to the saved search word list
+- Selected item is added to the saved search word list, and display location on the kakao map
