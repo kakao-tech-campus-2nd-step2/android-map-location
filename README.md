@@ -2,6 +2,14 @@
 
 - 카카오 테크 캠퍼스 과제(위치 검색 - 네트워크 통신) 수행을 위한 저장소입니다.
 
+## content
+
+- 실행 영상
+![week4_1](https://github.com/user-attachments/assets/d05c8ac7-06cf-48c3-ac21-809567de23c3)
+
+- 인증 에러시 화면
+![week4_1](https://github.com/user-attachments/assets/9320fc90-a4ae-4733-a306-ba16974b1b09)
+
 ## flow chart
 
 ![map_location](https://github.com/user-attachments/assets/05e64aed-bcc6-4a3f-9a08-9bb5d2377702)
