@@ -31,23 +31,6 @@ class MapActivity : AppCompatActivity() {
         }
     }
 
-    private fun setActivityLauncher(): ActivityResultLauncher<Intent> {
-        return registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (it.resultCode == RESULT_OK) {
-                val markerLocation = if (Build.VERSION.SDK_INT >= 33) {
-                    it.data?.getSerializableExtra("markerLocation", Location::class.java)
-                } else {
-                    it.data?.getSerializableExtra("markerLocation") as Location?
-                }
-
-                markerLocation?.let {
-                    // TODO: 마커 찍기
-
-                }
-            }
-        }
-    }
-
     override fun onStart() {
         super.onStart()
 
@@ -78,5 +61,22 @@ class MapActivity : AppCompatActivity() {
                 Log.d("MapActivity", "onMapReady")
             }
         })
+    }
+
+    private fun setActivityLauncher(): ActivityResultLauncher<Intent> {
+        return registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == RESULT_OK) {
+                val markerLocation = if (Build.VERSION.SDK_INT >= 33) {
+                    it.data?.getSerializableExtra("markerLocation", Location::class.java)
+                } else {
+                    it.data?.getSerializableExtra("markerLocation") as Location?
+                }
+
+                markerLocation?.let {
+                    // TODO: 마커 찍기
+
+                }
+            }
+        }
     }
 }
