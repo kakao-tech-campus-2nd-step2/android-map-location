@@ -12,6 +12,8 @@ object PlaceContract {
         const val COLUMN_NAME = "name"
         const val COLUMN_ADDRESS = "address"
         const val COLUMN_CATEGORY = "category"
+        const val COLUMN_X = "x"
+        const val COLUMN_Y = "y"
         private const val NAME_LENGTH = 30
         private const val ADDRESS_LENGTH = 30
 
@@ -19,7 +21,9 @@ object PlaceContract {
                 "$COLUMN_ID int not null," +
                 "$COLUMN_NAME varchar($NAME_LENGTH) not null," +
                 "$COLUMN_ADDRESS varchar($ADDRESS_LENGTH)," +
-                "$COLUMN_CATEGORY int);";
+                "$COLUMN_CATEGORY int," +
+                "$COLUMN_X double," +
+                "$COLUMN_Y double);";
 
         const val SQL_DROP_TABLE = "DROP TABLE if exists $TABLE_NAME"
     }
@@ -30,6 +34,8 @@ object PlaceContract {
         const val COLUMN_NAME = "name"
         const val COLUMN_ADDRESS = "address"
         const val COLUMN_CATEGORY = "category"
+        const val COLUMN_X = "x"
+        const val COLUMN_Y = "y"
         private const val NAME_LENGTH = 30
         private const val ADDRESS_LENGTH = 30
 
@@ -37,7 +43,9 @@ object PlaceContract {
                 "$COLUMN_ID int not null," +
                 "$COLUMN_NAME varchar($NAME_LENGTH) not null," +
                 "$COLUMN_ADDRESS varchar($ADDRESS_LENGTH)," +
-                "$COLUMN_CATEGORY int);";
+                "$COLUMN_CATEGORY int," +
+                "$COLUMN_X double," +
+                "$COLUMN_Y double);";
 
         val SQL_DROP_TABLE = "DROP TABLE if exists $TABLE_NAME"
 
@@ -63,6 +71,12 @@ object PlaceContract {
                 cursor.getInt(
                     cursor.getColumnIndexOrThrow(PlaceEntry.COLUMN_CATEGORY)
                 )
+            ),
+            cursor.getDouble(
+                cursor.getColumnIndexOrThrow(PlaceEntry.COLUMN_X)
+            ),
+            cursor.getDouble(
+                cursor.getColumnIndexOrThrow(PlaceEntry.COLUMN_Y)
             )
         )
     }
@@ -85,6 +99,12 @@ object PlaceContract {
                     cursor.getInt(
                         cursor.getColumnIndexOrThrow(PlaceEntry.COLUMN_CATEGORY)
                     )
+                ),
+                cursor.getDouble(
+                    cursor.getColumnIndexOrThrow(PlaceEntry.COLUMN_X)
+                ),
+                cursor.getDouble(
+                    cursor.getColumnIndexOrThrow(PlaceEntry.COLUMN_Y)
                 )
             )
             result.add(place)

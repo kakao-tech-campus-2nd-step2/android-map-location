@@ -23,10 +23,12 @@ class FavoriteDaoImpl(private val db : SQLiteDatabase) : FavoriteDao {
 
     override fun addFavorite(place: Place) {
         val values = ContentValues().apply {
-            this.put(PlaceContract.PlaceEntry.COLUMN_ID, place.id)
-            this.put(PlaceContract.PlaceEntry.COLUMN_NAME, place.name)
-            this.put(PlaceContract.PlaceEntry.COLUMN_ADDRESS, place.address)
-            this.put(PlaceContract.PlaceEntry.COLUMN_CATEGORY, place.category?.ordinal)
+            this.put(PlaceContract.FavoriteEntry.COLUMN_ID, place.id)
+            this.put(PlaceContract.FavoriteEntry.COLUMN_NAME, place.name)
+            this.put(PlaceContract.FavoriteEntry.COLUMN_ADDRESS, place.address)
+            this.put(PlaceContract.FavoriteEntry.COLUMN_X,place.x)
+            this.put(PlaceContract.FavoriteEntry.COLUMN_Y,place.y)
+            this.put(PlaceContract.FavoriteEntry.COLUMN_CATEGORY, place.category?.ordinal)
         }
 
         db.insert(PlaceContract.FavoriteEntry.TABLE_NAME, null, values)

@@ -45,6 +45,8 @@ fun Document.toVO() : Place {
         this.id?.toInt() ?: -1,
         this.placeName ?: "Unknown",
         this.addressName ?: "Unknown",
-        groupCodeToPlaceCategory(this.categoryGroupCode ?: "Unknown")
+        groupCodeToPlaceCategory(this.categoryGroupCode ?: "Unknown"),
+        this.x?.toDouble() ?: 0.0,
+        this.y?.toDouble() ?: 0.0
     )
 }
