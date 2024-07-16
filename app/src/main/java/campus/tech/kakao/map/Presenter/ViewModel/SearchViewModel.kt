@@ -28,11 +28,7 @@ class SearchViewModel(private val repository: PlaceRepository) : ViewModel() {
     }
 
     fun addFavorite(id : Int) {
-        val place = _currentResult.value?.find {
-            it.id == id
-        }
-
-        if (isPlaceInFavorite(id)) return
+        val place = findPlaceById(id)
 
         place?.let {
             repository.addFavorite(it).run {
@@ -47,9 +43,13 @@ class SearchViewModel(private val repository: PlaceRepository) : ViewModel() {
         }
     }
 
-    private fun isPlaceInFavorite(id : Int): Boolean {
-        return (favoritePlace.value?.find { it.id == id }) != null
+    fun findPlaceById(id:Int) : Place?{
+        return currentResult.value?.find{
+            it.id == id
+        }
     }
 
-
+    fun findFavoriteById(id:Int) : Place?{
+        return repository.getFavoriteById(id)
+    }
 }
