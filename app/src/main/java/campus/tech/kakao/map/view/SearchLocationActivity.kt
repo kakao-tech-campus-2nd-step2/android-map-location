@@ -33,6 +33,13 @@ class SearchLocationActivity : AppCompatActivity() {
             }
         })
 
+        viewModel.searchInput.observe(this) {
+            it?.let { searchInput ->
+                binding.searchInputEditText.setText(searchInput)
+                binding.searchInputEditText.setSelection(searchInput.length)
+            }
+        }
+
         viewModel.location.observe(this) {
             it?.let { locationData ->
                 binding.searchResultRecyclerView.adapter =
