@@ -1,8 +1,9 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.view
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import campus.tech.kakao.map.BuildConfig
 import campus.tech.kakao.map.databinding.ActivityMainBinding
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback

@@ -1,7 +1,9 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import campus.tech.kakao.map.repository.SavedSearchKeywordRepository
+import campus.tech.kakao.map.repository.SearchRepository
 
 class SearchViewModelFactory(
     private val searchRepository: SearchRepository,

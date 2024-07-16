@@ -1,5 +1,8 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.repository
 
+import campus.tech.kakao.map.BuildConfig
+import campus.tech.kakao.map.model.Place
+import campus.tech.kakao.map.model.SearchKeyword
 import kotlinx.coroutines.coroutineScope
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

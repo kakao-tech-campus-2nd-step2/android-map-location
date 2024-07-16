@@ -1,10 +1,12 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.view
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.map.databinding.SearchResultItemBinding
+import campus.tech.kakao.map.model.Place
+import campus.tech.kakao.map.model.SearchKeyword
 
 
 class SearchResultsAdapter(

@@ -1,4 +1,4 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.view
 
 import android.os.Bundle
 import android.text.Editable
@@ -11,7 +11,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
+import campus.tech.kakao.map.repository.SavedSearchKeywordRepository
+import campus.tech.kakao.map.model.SearchKeyword
+import campus.tech.kakao.map.repository.SearchRepository
 import campus.tech.kakao.map.databinding.ActivitySearchWindowBinding
+import campus.tech.kakao.map.viewmodel.SearchViewModel
+import campus.tech.kakao.map.viewmodel.SearchViewModelFactory
 import kotlinx.coroutines.launch
 
 class SearchWindowActivity : AppCompatActivity() {

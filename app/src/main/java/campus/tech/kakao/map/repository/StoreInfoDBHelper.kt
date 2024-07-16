@@ -1,9 +1,10 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.repository
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
+import campus.tech.kakao.map.model.SearchKeywordEntry
 
 private const val SQL_SEARCH_KEYWORD_CREATE_ENTRIES =
     "CREATE TABLE ${SearchKeywordEntry.TABLE_NAME} (" +
