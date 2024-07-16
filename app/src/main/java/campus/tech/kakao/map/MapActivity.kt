@@ -1,6 +1,7 @@
 package campus.tech.kakao.map
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -11,9 +12,11 @@ import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.MapView
-import com.kakao.vectormap.camera.CameraUpdate
 import com.kakao.vectormap.camera.CameraUpdateFactory
-import java.lang.Exception
+import com.kakao.vectormap.label.LabelOptions
+import com.kakao.vectormap.label.LabelStyle
+import com.kakao.vectormap.label.LabelStyles
+
 
 class MapActivity : AppCompatActivity() {
     private val TAG = "KAKAOMAP"
@@ -46,6 +49,16 @@ class MapActivity : AppCompatActivity() {
                 targetLocation?.let {
                     val cameraUpdate = CameraUpdateFactory.newCenterPosition(LatLng.from(targetLocation.y, targetLocation.x))
                     kakaoMap.moveCamera(cameraUpdate)
+                    val labelManager = kakaoMap.labelManager
+                    labelManager?.let {
+                        val style = labelManager.addLabelStyles(
+                            LabelStyles.from(LabelStyle.from(R.drawable.location_label))
+                        )
+                        labelManager.layer?.addLabel(
+                            LabelOptions.from(LatLng.from(targetLocation.y, targetLocation.x))
+                                .setStyles(style)
+                        )
+                    }
                 }
             }
         })
