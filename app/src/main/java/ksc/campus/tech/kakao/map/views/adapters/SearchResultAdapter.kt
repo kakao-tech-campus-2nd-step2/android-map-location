@@ -24,15 +24,23 @@ class SearchResultAdapter(
 
     }) {
     class SearchResultViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val resultName: TextView
-        val resultAddress: TextView
-        val resultType: TextView
-        var resultId: String = ""
+        var holdingData: SearchResult = SearchResult("-1", "", "", "", 0.0, 0.0)
+            private set
+        private val resultName: TextView
+        private val resultAddress: TextView
+        private val resultType: TextView
 
         init {
             resultName = itemView.findViewById(R.id.text_result_name)
             resultAddress = itemView.findViewById(R.id.text_result_address)
             resultType = itemView.findViewById(R.id.text_result_type)
+        }
+
+        fun bindData(item: SearchResult){
+            holdingData = item
+            resultName.text = item.name
+            resultAddress.text = item.address
+            resultType.text = item.type
         }
     }
 
@@ -42,12 +50,7 @@ class SearchResultAdapter(
         val holder = SearchResultViewHolder(view)
         view.setOnClickListener {
             onItemClicked(
-                SearchResult(
-                    holder.resultId,
-                    holder.resultName.text.toString(),
-                    holder.resultAddress.text.toString(),
-                    holder.resultType.text.toString()
-                ),
+                holder.holdingData,
                 holder.bindingAdapterPosition
             )
         }
@@ -57,9 +60,6 @@ class SearchResultAdapter(
 
     override fun onBindViewHolder(holder: SearchResultViewHolder, position: Int) {
         val item = currentList[position]
-        holder.resultId = item.id
-        holder.resultAddress.text = item.address
-        holder.resultName.text = item.name
-        holder.resultType.text = item.type
+        holder.bindData(item)
     }
 }
