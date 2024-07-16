@@ -14,27 +14,56 @@ import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.MapAuthException
 import com.kakao.vectormap.MapLifeCycleCallback
+import com.kakao.vectormap.MapView
 
 class MapActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMapBinding
-    private lateinit var activityLauncher: ActivityResultLauncher<Intent>
+    private lateinit var searchLocationLauncher: ActivityResultLauncher<Intent>
+    private lateinit var mapErrorLauncher: ActivityResultLauncher<Intent>
+    private lateinit var myKakaoMap: KakaoMap
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMapBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        activityLauncher = setActivityLauncher()
+
+        searchLocationLauncher = createSearchLocationLauncher()
+        mapErrorLauncher = createMapErrorLauncher()
+        setKakaoMap(binding.kakaoMapView)
 
         binding.searchBackgroundView.setOnClickListener {
             val intent = Intent(this@MapActivity, SearchLocationActivity::class.java)
-            activityLauncher.launch(intent)
+            searchLocationLauncher.launch(intent)
         }
     }
 
-    override fun onStart() {
-        super.onStart()
+    private fun createSearchLocationLauncher(): ActivityResultLauncher<Intent> {
+        return registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == RESULT_OK) {
+                val markerLocation = if (Build.VERSION.SDK_INT >= 33) {
+                    it.data?.getSerializableExtra("markerLocation", Location::class.java)
+                } else {
+                    it.data?.getSerializableExtra("markerLocation") as Location?
+                }
 
-        binding.kakaoMapView.start(object : MapLifeCycleCallback() {
+                markerLocation?.let {
+                    // TODO: 마커 찍기
+
+                }
+            }
+        }
+    }
+
+    private fun createMapErrorLauncher(): ActivityResultLauncher<Intent> {
+        return registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == RESULT_OK) {
+                setKakaoMap(binding.kakaoMapView)
+            }
+        }
+    }
+
+    private fun setKakaoMap(mapView: MapView) {
+        mapView.start(object : MapLifeCycleCallback() {
             override fun onMapDestroy() {
                 Log.d("MapActivity", "onMapDestroy")
             }
@@ -54,29 +83,13 @@ class MapActivity : AppCompatActivity() {
                 intent.putExtra("errorDescription", errorDescription)
                 intent.putExtra("errorCode", e.message)
 
-                startActivity(intent)
+                mapErrorLauncher.launch(intent)
             }
         }, object : KakaoMapReadyCallback() {
             override fun onMapReady(map: KakaoMap) {
                 Log.d("MapActivity", "onMapReady")
+                myKakaoMap = map
             }
         })
-    }
-
-    private fun setActivityLauncher(): ActivityResultLauncher<Intent> {
-        return registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (it.resultCode == RESULT_OK) {
-                val markerLocation = if (Build.VERSION.SDK_INT >= 33) {
-                    it.data?.getSerializableExtra("markerLocation", Location::class.java)
-                } else {
-                    it.data?.getSerializableExtra("markerLocation") as Location?
-                }
-
-                markerLocation?.let {
-                    // TODO: 마커 찍기
-
-                }
-            }
-        }
     }
 }
