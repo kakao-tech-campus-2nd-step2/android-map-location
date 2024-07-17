@@ -7,12 +7,15 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import campus.tech.kakao.map.databinding.ActivityMainBinding
 import campus.tech.kakao.map.model.Place
 import campus.tech.kakao.map.viewModel.MapRepository
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
@@ -23,14 +26,22 @@ import com.kakao.vectormap.label.Label
 import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.label.LabelStyle
 import com.kakao.vectormap.label.LabelStyles
+import com.kakao.vectormap.label.Transition
 import java.lang.Exception
 
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var kakaoMap: KakaoMap
-    private var marker: Bitmap? = null
+    private lateinit var marker: Bitmap
     private lateinit var label: Label
+    private lateinit var styles: LabelStyles
+
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
+    private val bottomSheetLayout by lazy { findViewById<ConstraintLayout>(R.id.bottom_sheet_layout) }
+    private val bottomSheetName by lazy { findViewById<TextView>(R.id.name) }
+    private val bottomSheetAddress by lazy { findViewById<TextView>(R.id.address) }
+    private val bottomSheetCategory by lazy { findViewById<TextView>(R.id.category) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +65,7 @@ class MainActivity : AppCompatActivity() {
             override fun onMapReady(p0: KakaoMap) {
                 Log.d("KakaoMap", "카카오맵 실행")
                 kakaoMap = p0
-                marker = vectorToBitmap(R.drawable.pin_drop_24px)
+                makeLabelStyle()
 //                addLabel(Place("dd", "xxx", "", "127.115587", "37.406960"))
             }
 
@@ -64,6 +75,7 @@ class MainActivity : AppCompatActivity() {
         })
 
         Log.d("onCreate", "")
+        initBottomSheet()
 
         binding.searchInput.setOnClickListener {
             val intent = Intent(this, SearchActivity::class.java)
@@ -78,16 +90,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun addLabel(place: Place) {
-
-        var styles = LabelStyles.from(
-            "myLabel",
-            LabelStyle.from(marker)
-                .setTextStyles(32, Color.BLACK, 1, Color.GRAY)
-                .setZoomLevel(kakaoMap.minZoomLevel)
-        )
-
-        styles = kakaoMap?.labelManager?.addLabelStyles(styles)
-
         val latLng = LatLng.from(place.latitude.toDouble(), place.longitude.toDouble())
         moveCamera(latLng)
         label = kakaoMap.labelManager!!.layer!!.addLabel(
@@ -100,20 +102,51 @@ class MainActivity : AppCompatActivity() {
         val cameraUpdate = CameraUpdateFactory.newCenterPosition(latLng)
         Log.d("kakaomap", "moveCamera: $kakaoMap")
         kakaoMap?.moveCamera(cameraUpdate, CameraAnimation.from(500, true, true))
-
     }
 
-    private fun vectorToBitmap(drawableId: Int): Bitmap? {
-        val drawable = ContextCompat.getDrawable(this, drawableId) ?: return null
+    private fun makeLabelStyle() {
+        vectorToBitmap(R.drawable.pin_drop_24px)
+
+        styles = LabelStyles.from(
+            "myLabel",
+            LabelStyle.from(marker)
+                .setTextStyles(32, Color.BLACK, 1, Color.GRAY)
+                .setZoomLevel(kakaoMap.minZoomLevel)
+        )
+        styles = kakaoMap?.labelManager?.addLabelStyles(styles)!!
+    }
+
+    private fun vectorToBitmap(drawableId: Int) {
+        val drawable = ContextCompat.getDrawable(this, drawableId)
         val bitmap = Bitmap.createBitmap(
-            drawable.intrinsicWidth,
-            drawable.intrinsicHeight,
+            drawable!!.intrinsicWidth,
+            drawable!!.intrinsicHeight,
             Bitmap.Config.ARGB_8888
         )
         val canvas = Canvas(bitmap)
         drawable.setBounds(0, 0, canvas.width, canvas.height)
         drawable.draw(canvas)
-        return bitmap
+        marker = bitmap
+    }
+
+    private fun showBottomSheet(place: Place) {
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        bottomSheetName.text = place.name
+        bottomSheetAddress.text = place.address
+        bottomSheetCategory.text = place.category
+    }
+
+    private fun initBottomSheet() {
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout)
+        bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+            }
+
+            override fun onSlide(p0: View, p1: Float) {
+            }
+        })
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
     }
 
     override fun onResume() {
@@ -138,6 +171,7 @@ class MainActivity : AppCompatActivity() {
             }
             place?.let {
                 addLabel(place)
+                showBottomSheet(place)
             }
         }
     }

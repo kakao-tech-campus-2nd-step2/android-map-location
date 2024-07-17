@@ -61,8 +61,12 @@ class SearchActivity : AppCompatActivity() {
     private fun setUpPlacesAdapter() {
         placesAdapter = PlacesAdapter { item: Place ->
             val itemName = item.name
-            viewModel.insertSearch(itemName)
-            viewModel.savePos(item.longitude, item.latitude)
+            lifecycleScope.launch {
+                viewModel.insertSearch(itemName)
+                viewModel.savePos(item.longitude, item.latitude)
+                Log.d("prefs", "lifecycle")
+            }
+            Log.d("prefs", "lifecycle2")
             goToSearch(item)
         }
         binding.placesRView.adapter = placesAdapter

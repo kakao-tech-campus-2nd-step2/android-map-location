@@ -128,6 +128,7 @@ class MapRepository(private val context: Context) {
     }
 
     private fun saveSearchHistory() {
+        Log.d("prefs", "saveHistory: ${Thread.currentThread().name}")
         val stringPrefs = GsonBuilder().create().toJson(
             searchHistoryList, object : TypeToken<ArrayList<RecentSearchWord>>() {}.type
         )
@@ -159,7 +160,7 @@ class MapRepository(private val context: Context) {
     }
 
     fun savePos(latLng: LatLng) {
-        Log.d("repository", "savePos: ${Thread.currentThread().name}")
+        Log.d("prefs", "savePos: ${Thread.currentThread().name}")
         val stringPrefs = GsonBuilder().create().toJson(
             latLng, object : TypeToken<LatLng>() {}.type
         )

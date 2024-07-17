@@ -51,7 +51,7 @@ class PlacesViewModel(private val repository: MapRepository) : ViewModel() {
     fun savePos(longitude: String, latitude: String) {
         viewModelScope.launch() {
             withContext(Dispatchers.IO) {
-                Log.d("viewmodel", "savePos: ${Thread.currentThread().name}")
+                Log.d("prefs", "savePos: ${Thread.currentThread().name}")
                 repository.savePos(LatLng.from(latitude.toDouble(), longitude.toDouble()))
             }
         }
@@ -64,7 +64,7 @@ class PlacesViewModel(private val repository: MapRepository) : ViewModel() {
     fun insertSearch(search: String) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                Log.d("viewmodel", "insetSearch: ${Thread.currentThread().name}")
+                Log.d("prefs", "insetSearch: ${Thread.currentThread().name}")
                 val foundIdx = repository.searchHistoryContains(search)
                 if (foundIdx != -1) {
                     repository.moveSearchToLast(foundIdx, search)
