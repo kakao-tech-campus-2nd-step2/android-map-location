@@ -7,6 +7,8 @@ data class Document(
     @SerializedName("category_name") val category: String,
     @SerializedName("address_name") val address: String,
     @SerializedName("category_group_code") val categoryCode: String,
+    @SerializedName("x") val longitude: String,
+    @SerializedName("y") val latitude: String,
     var categoryDescription: String? = null,
     var categoryTail: String? = null
 )

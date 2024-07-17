@@ -17,12 +17,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.map.R
 import campus.tech.kakao.map.RecentAdapterListener
+import campus.tech.kakao.map.SearchAdapterListener
 import campus.tech.kakao.map.adapter.RecentSearchAdapter
 import campus.tech.kakao.map.adapter.SearchDataAdapter
 import campus.tech.kakao.map.viewModel.RecentViewModel
 import campus.tech.kakao.map.viewModel.SearchViewModel
 
-class DataSearchActivity : AppCompatActivity(), RecentAdapterListener {
+class DataSearchActivity : AppCompatActivity(), RecentAdapterListener, SearchAdapterListener {
     private lateinit var searchViewModel: SearchViewModel
     private lateinit var recentViewModel: RecentViewModel
     private lateinit var editText: EditText
@@ -56,7 +57,7 @@ class DataSearchActivity : AppCompatActivity(), RecentAdapterListener {
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
         //어뎁터 초기화
-        resultDataAdapter = SearchDataAdapter(emptyList(), recentViewModel)
+        resultDataAdapter = SearchDataAdapter(emptyList(), recentViewModel, this)
         searchDataListView.adapter = resultDataAdapter
 
         resetButtonListener()
@@ -115,5 +116,20 @@ class DataSearchActivity : AppCompatActivity(), RecentAdapterListener {
     //클릭한 검색어가 자동으로 입력되는 기능 구현
     override fun autoSearch(searchData: String) {
         editText.setText(searchData)
+    }
+
+    override fun displaySearchLocation(
+        name: String,
+        address: String,
+        latitude: String,
+        longitude: String
+    ) {
+        val intent = Intent(this@DataSearchActivity, HomeMapActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        intent.putExtra("name", name)
+        intent.putExtra("address", address)
+        intent.putExtra("latitude", latitude)
+        intent.putExtra("longitude", longitude)
+        startActivity(intent)
     }
 }
