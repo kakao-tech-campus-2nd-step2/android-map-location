@@ -2,21 +2,36 @@ package campus.tech.kakao.map.view
 
 import android.app.ActivityOptions
 import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.isVisible
 import campus.tech.kakao.map.BuildConfig
 import campus.tech.kakao.map.R
+import campus.tech.kakao.map.model.Constants
+import campus.tech.kakao.map.model.Place
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.KakaoMapSdk
+import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.MapView
+import com.kakao.vectormap.MapViewInfo
+import com.kakao.vectormap.camera.CameraUpdate
+import com.kakao.vectormap.camera.CameraUpdateFactory
+import com.kakao.vectormap.label.LabelManager
+import com.kakao.vectormap.label.LabelOptions
+import com.kakao.vectormap.label.LabelStyle
+import com.kakao.vectormap.label.LabelStyles
 
 
 class MapActivity : AppCompatActivity() {
@@ -25,6 +40,8 @@ class MapActivity : AppCompatActivity() {
     lateinit var inputField: EditText
     lateinit var searchIcon: ImageView
     lateinit var errorTextView: TextView
+    lateinit var kakaoMap : KakaoMap
+    lateinit var resultLauncher : ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +51,29 @@ class MapActivity : AppCompatActivity() {
         initSDK()
         initMapView()
         initClickListener()
+
+        resultLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == RESULT_OK) {
+                    val place : Place? =
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        result.data?.getParcelableExtra(Constants.Keys.KEY_PLACE, Place::class.java)
+                    } else {
+                        result.data?.getParcelableExtra(Constants.Keys.KEY_PLACE)
+                    }
+                    Log.d("testt", "pos : ${place.toString()}")
+                    val pos = LatLng.from(place?.y?.toDouble() ?: 127.115587, place?.x?.toDouble()?: 37.406960)
+                    Log.d("testt", "pos : ${pos.toString()}")
+                    kakaoMap.moveCamera(CameraUpdateFactory.newCenterPosition(pos))
+                    val labelManager = kakaoMap.labelManager
+                    kakaoMap.labelManager?.clearAll()
+                    val style = labelManager
+                        ?.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.ic_location_marker_2).setAnchorPoint(0.5f, 1f)))
+                    var label = kakaoMap.getLabelManager()?.getLayer()?.addLabel(LabelOptions.from("center",pos).setStyles(style).setRank(1))
+
+
+                }
+            }
     }
 
     private fun initVar() {
@@ -65,9 +105,14 @@ class MapActivity : AppCompatActivity() {
             override fun onMapReady(kakaoMap: KakaoMap) {
                 Log.d("testt", "MapReady")
                 errorTextView.isVisible = false
+                this@MapActivity.kakaoMap = kakaoMap
+            }
 
+            override fun getPosition(): LatLng {
+                return LatLng.from(37.406960, 127.115587);
             }
         })
+
 
     }
 
@@ -84,10 +129,10 @@ class MapActivity : AppCompatActivity() {
 
     private fun moveSearchPage(view: View) {
         val intent = Intent(this, SearchActivity::class.java)
-        val options = ActivityOptions.makeSceneTransitionAnimation(
+        val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
             this, view, "inputFieldTransition"
         )
-        startActivity(intent, options.toBundle())
+        resultLauncher.launch(intent, options)
     }
 
     private fun showErrorMessageView(error: String) {
