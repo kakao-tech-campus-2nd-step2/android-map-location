@@ -11,6 +11,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import campus.tech.kakao.map.Application
+import campus.tech.kakao.map.MapErrorActivity
 import campus.tech.kakao.map.R
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kakao.vectormap.KakaoMap
@@ -21,6 +22,7 @@ import com.kakao.vectormap.MapView
 import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.label.LabelStyle
 import com.kakao.vectormap.label.LabelStyles
+import org.w3c.dom.Text
 
 class HomeMapActivity : AppCompatActivity() {
     private lateinit var mapView: MapView
@@ -29,6 +31,7 @@ class HomeMapActivity : AppCompatActivity() {
     private lateinit var bottomBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var placeNameTextView: TextView
     private lateinit var placeAddressTextView: TextView
+    private lateinit var errorMessage: TextView
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,6 +49,7 @@ class HomeMapActivity : AppCompatActivity() {
         placeAddressTextView = findViewById(R.id.placeAddress)
 
         bottomBehavior = BottomSheetBehavior.from(bottomSheet)
+        val intentError = Intent(this, MapErrorActivity::class.java)
 
         //KaKao Map UI에 띄우기
         mapView.start(object : MapLifeCycleCallback() {
@@ -53,6 +57,8 @@ class HomeMapActivity : AppCompatActivity() {
             }
 
             override fun onMapError(p0: Exception?) {
+                intentError.putExtra("errorMessage",p0.toString())
+                startActivity(intentError)
             }
 
         }, object : KakaoMapReadyCallback() {

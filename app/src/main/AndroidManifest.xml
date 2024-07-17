@@ -16,6 +16,9 @@
         android:theme="@style/Theme.Map"
         tools:targetApi="31">
         <activity
+            android:name=".MapErrorActivity"
+            android:exported="true" />
+        <activity
             android:name=".activity.HomeMapActivity"
             android:allowBackup="true"
             android:exported="true">
@@ -28,7 +31,7 @@
         <activity
             android:name=".activity.DataSearchActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>
