@@ -22,6 +22,7 @@ import campus.tech.kakao.map.viewModel.MapRepository
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
+import com.kakao.vectormap.KakaoMapSdk
 import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.camera.CameraAnimation
@@ -38,7 +39,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var kakaoMap: KakaoMap
     private lateinit var marker: Bitmap
-    private lateinit var label: Label
+    private var label: Label? = null
     private lateinit var styles: LabelStyles
 
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
@@ -52,8 +53,25 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val repository = MapRepository(this)
+        //KakaoMapSdk.init(this, "I'm nativeKey")     // 오류확인
 
+        Log.d("onCreate", "")
+        val lastPos = MapRepository(this).getLastPos()
+        drawMap(lastPos)
+        initBottomSheet()
+
+        binding.searchInput.setOnClickListener {
+            val intent = Intent(this, SearchActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.searchButton.setOnClickListener {
+            val intent = Intent(this, SearchActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
+    private fun drawMap(latLng: LatLng?) {
         binding.mapView.start(object : MapLifeCycleCallback() {
             override fun onMapDestroy() {
                 Log.d("KakaoMap", "카카오맵 종료")
@@ -70,27 +88,13 @@ class MainActivity : AppCompatActivity() {
                 Log.d("KakaoMap", "카카오맵 실행")
                 kakaoMap = p0
                 makeLabelStyle()
-//                addLabel(Place("dd", "xxx", "", "127.115587", "37.406960"))
+//          addLabel(Place("dd", "xxx", "", "127.115587", "37.406960"))
             }
 
             override fun getPosition(): LatLng {
-                return repository.getLastPos() ?: return super.getPosition()
+                return latLng ?: return super.getPosition()
             }
         })
-
-        Log.d("onCreate", "")
-        initBottomSheet()
-
-        binding.searchInput.setOnClickListener {
-            val intent = Intent(this, SearchActivity::class.java)
-            startActivity(intent)
-            Log.d("kakaomap", "kakaoMap initialized: $kakaoMap")
-        }
-
-        binding.searchButton.setOnClickListener {
-            val intent = Intent(this, SearchActivity::class.java)
-            startActivity(intent)
-        }
     }
 
     private fun addLabel(place: Place) {
@@ -104,6 +108,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun moveCamera(latLng: LatLng) {
         val cameraUpdate = CameraUpdateFactory.newCenterPosition(latLng)
+        Log.d("MainAct State", "Intent is: $intent")
         Log.d("kakaomap", "moveCamera: $kakaoMap")
         kakaoMap?.moveCamera(cameraUpdate, CameraAnimation.from(500, true, true))
     }
@@ -115,9 +120,9 @@ class MainActivity : AppCompatActivity() {
             "myLabel",
             LabelStyle.from(marker)
                 .setTextStyles(32, Color.BLACK, 1, Color.GRAY)
-                .setZoomLevel(kakaoMap.minZoomLevel)
+                .setZoomLevel(kakaoMap!!.minZoomLevel)
         )
-        styles = kakaoMap?.labelManager?.addLabelStyles(styles)!!
+        styles = kakaoMap.labelManager?.addLabelStyles(styles)!!
     }
 
     private fun vectorToBitmap(drawableId: Int) {
@@ -162,7 +167,7 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         binding.mapView.resume()
-        Log.d("Activity State", "Intent is: $intent")
+        Log.d("MainAct State", "Intent is: $intent")
     }
 
     override fun onPause() {
@@ -173,13 +178,14 @@ class MainActivity : AppCompatActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         intent?.let {
-            var place: Place? = null
+            var place: Place?
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 place = intent.getParcelableExtra("place", Place::class.java)
             } else {
                 place = intent.getParcelableExtra("place") as Place?
             }
             place?.let {
+                kakaoMap.labelManager!!.layer!!.remove(label)
                 addLabel(place)
                 showBottomSheet(place)
             }

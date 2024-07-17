@@ -91,7 +91,9 @@ class SearchActivity : AppCompatActivity() {
         val intent = Intent(this, MainActivity::class.java).apply {
             putExtra("place", place)
         }
-        Log.d("Activity State", "Intent is: $intent")
+        Log.d("searchAct State", "Intent is: $intent")
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
         startActivity(intent)
+        finish()
     }
 }
