@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class SelectListAdapter(
-    var selectItemList: List<KakaoMapItem>, val layoutInflater: LayoutInflater
+    var selectItemList: List<SelectMapItem>, val layoutInflater: LayoutInflater
 ) : RecyclerView.Adapter<SelectListAdapter.ViewHolder>() {
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val name: TextView
@@ -27,16 +27,16 @@ class SelectListAdapter(
         }
     }
 
-    fun setCancelBtnClickListener(cancelBtnClickListener: ItemClickListener) {
+    fun setCancelBtnClickListener(cancelBtnClickListener: SelectItemClickListener) {
         this.cancelBtnListener = cancelBtnClickListener
     }
 
-    fun setItemClickListener(itemClickListener: ItemClickListener) {
+    fun setItemClickListener(itemClickListener: SelectItemClickListener) {
         this.itemListener = itemClickListener
     }
 
-    lateinit var cancelBtnListener: ItemClickListener
-    lateinit var itemListener: ItemClickListener
+    lateinit var cancelBtnListener: SelectItemClickListener
+    lateinit var itemListener: SelectItemClickListener
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = layoutInflater.inflate(R.layout.select_item, parent, false)
@@ -51,7 +51,7 @@ class SelectListAdapter(
         return selectItemList.size
     }
 
-    fun updateMapItemList(mapItemList: List<KakaoMapItem>) {
+    fun updateMapItemList(mapItemList: List<SelectMapItem>) {
         this.selectItemList = mapItemList
         notifyDataSetChanged()
     }

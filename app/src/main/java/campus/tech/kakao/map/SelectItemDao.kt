@@ -5,11 +5,9 @@ import android.database.sqlite.SQLiteDatabase
 
 class SelectItemDao(private val wDb: SQLiteDatabase, private val rDb: SQLiteDatabase) {
 
-    fun insertSelectItem(name: String, address: String, category: String, id: String) {
+    fun insertSelectItem(name: String, id: String) {
         val values = ContentValues()
         values.put(SelectItemDB.TABLE_COLUMN_NAME, name)
-        values.put(SelectItemDB.TABLE_COLUMN_ADDRESS, address)
-        values.put(SelectItemDB.TABLE_COLUMN_CATEGORY, category)
         values.put(SelectItemDB.TABLE_COLUMN_MAP_ITEM_ID, id)
 
         wDb.insert(SelectItemDB.TABLE_NAME, null, values)
@@ -23,19 +21,17 @@ class SelectItemDao(private val wDb: SQLiteDatabase, private val rDb: SQLiteData
         )
     }
 
-    fun makeAllSelectItemList(): MutableList<KakaoMapItem> {
+    fun makeAllSelectItemList(): MutableList<SelectMapItem> {
         val cursor = rDb.rawQuery(
             "Select * from ${SelectItemDB.TABLE_NAME} order by ${SelectItemDB.TABLE_COLUMN_ID} desc",
             null
         )
-        val selectItemList = mutableListOf<KakaoMapItem>()
+        val selectItemList = mutableListOf<SelectMapItem>()
         while (cursor.moveToNext()) {
             selectItemList.add(
-                KakaoMapItem(
+                SelectMapItem(
                     cursor.getString(cursor.getColumnIndexOrThrow(SelectItemDB.TABLE_COLUMN_MAP_ITEM_ID)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(SelectItemDB.TABLE_COLUMN_NAME)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(SelectItemDB.TABLE_COLUMN_ADDRESS)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(SelectItemDB.TABLE_COLUMN_CATEGORY))
+                    cursor.getString(cursor.getColumnIndexOrThrow(SelectItemDB.TABLE_COLUMN_NAME))
                 )
             )
         }

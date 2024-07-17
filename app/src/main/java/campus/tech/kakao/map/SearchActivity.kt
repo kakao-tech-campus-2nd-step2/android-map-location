@@ -1,5 +1,6 @@
 package campus.tech.kakao.map
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -42,18 +43,24 @@ class SearchActivity : AppCompatActivity() {
         //리스너 정의
         mapListAdapter.setItemClickListener(object : ItemClickListener {
             override fun onClick(v: View, mapItem: KakaoMapItem) {
-                mapItemViewModel.insertSelectItem(mapItem)
+                mapItemViewModel.insertSelectItem(mapItem.name, mapItem.id)
+                val intent = Intent(this@SearchActivity, MapActivity::class.java)
+                intent.putExtra("x", mapItem.x.toDouble())
+                intent.putExtra("y", mapItem.y.toDouble())
+                intent.putExtra("name", mapItem.name)
+                startActivity(intent)
+                finish()
             }
         })
 
-        selectListAdapter.setCancelBtnClickListener(object : ItemClickListener {
-            override fun onClick(v: View, selectItem: KakaoMapItem) {
+        selectListAdapter.setCancelBtnClickListener(object : SelectItemClickListener {
+            override fun onClick(v: View, selectItem: SelectMapItem) {
                 mapItemViewModel.deleteSelectItem(selectItem.id)
             }
         })
 
-        selectListAdapter.setItemClickListener(object : ItemClickListener {
-            override fun onClick(v: View, selectItem: KakaoMapItem) {
+        selectListAdapter.setItemClickListener(object : SelectItemClickListener {
+            override fun onClick(v: View, selectItem: SelectMapItem) {
                 inputSpace.setText(selectItem.name)
             }
         })

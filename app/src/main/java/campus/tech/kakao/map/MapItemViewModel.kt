@@ -13,8 +13,8 @@ class MapItemViewModel(context: Context) : ViewModel() {
     private val _kakaoMapItemList: MutableLiveData<List<KakaoMapItem>> = MutableLiveData()
     val kakaoMapItemList : LiveData<List<KakaoMapItem>> get() = _kakaoMapItemList
 
-    private val _selectItemList: MutableLiveData<List<KakaoMapItem>> = MutableLiveData()
-    val selectItemList : LiveData<List<KakaoMapItem>> get() = _selectItemList
+    private val _selectItemList: MutableLiveData<List<SelectMapItem>> = MutableLiveData()
+    val selectItemList : LiveData<List<SelectMapItem>> get() = _selectItemList
 
     init {
         if(!mapItemDB.selectItemDao.checkTableExist()) {
@@ -39,13 +39,12 @@ class MapItemViewModel(context: Context) : ViewModel() {
         _kakaoMapItemList.postValue(networkService.searchKakaoMapItem(category))
     }
 
-    fun insertSelectItem(mapItem: KakaoMapItem) {
-        val id = mapItem.id
+    fun insertSelectItem(name: String, id: String) {
         val isExist = mapItemDB.selectItemDao.checkItemInDB(id)
         if(isExist) {
             mapItemDB.selectItemDao.deleteSelectItem(id)
         }
-        mapItemDB.selectItemDao.insertSelectItem(mapItem.name, mapItem.address, mapItem.category, id)
+        mapItemDB.selectItemDao.insertSelectItem(name, id)
         _selectItemList.postValue(mapItemDB.selectItemDao.makeAllSelectItemList())
     }
 
