@@ -82,11 +82,7 @@ class MainActivity : AppCompatActivity(), OnItemSelectedListener {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val query = s.toString()
                 locationViewModel.searchLocationsFromKakaoAPI(query) { searchLocationsSize ->
-                    if (searchLocationsSize > 0) {
-                        noResultTextView.visibility = View.GONE
-                    } else {
-                        noResultTextView.visibility = View.VISIBLE
-                    }
+                    handleNoResultMessage(searchLocationsSize)
                 }
             }
 
@@ -147,11 +143,15 @@ class MainActivity : AppCompatActivity(), OnItemSelectedListener {
 
     override fun onUpdateLocationRecyclerView(title: String) {
         locationViewModel.searchLocationsFromKakaoAPI(title){ searchLocationsSize ->
-            if (searchLocationsSize > 0) {
-                noResultTextView.visibility = View.GONE
-            } else {
-                noResultTextView.visibility = View.VISIBLE
-            }
+            handleNoResultMessage(searchLocationsSize)
+        }
+    }
+
+    private fun handleNoResultMessage(searchLocationsSize: Int) {
+        if (searchLocationsSize > 0) {
+            noResultTextView.visibility = View.GONE
+        } else {
+            noResultTextView.visibility = View.VISIBLE
         }
     }
 }
