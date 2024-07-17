@@ -5,8 +5,10 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDragHandleView
 import com.kakao.vectormap.KakaoMap
@@ -24,13 +26,18 @@ class MapActivity : AppCompatActivity() {
     private val TAG = "KAKAOMAP"
     private lateinit var kakaoMapView: MapView
     private lateinit var searchBox: TextView
-    private lateinit var infoSheet: BottomSheetDragHandleView
+    private lateinit var infoSheetLayout: LinearLayout
+    private lateinit var infoSheetName: TextView
+    private lateinit var infoSheetAddress: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
         kakaoMapView = findViewById(R.id.kakao_map_view)
         searchBox = findViewById(R.id.search_box)
+        infoSheetLayout = findViewById(R.id.info_sheet)
+        infoSheetName = findViewById(R.id.info_sheet_name)
+        infoSheetAddress = findViewById(R.id.info_sheet_address)
 
         kakaoMapView.start(object : MapLifeCycleCallback() {
             override fun onMapDestroy() {
@@ -64,6 +71,9 @@ class MapActivity : AppCompatActivity() {
                                 .setTexts(targetLocation.name)
                         )
                     }
+                    infoSheetLayout.isVisible = true
+                    infoSheetName.text = targetLocation.name
+                    infoSheetAddress.text = targetLocation.address
                 }
             }
         })
