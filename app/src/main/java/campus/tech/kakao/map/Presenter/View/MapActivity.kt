@@ -6,10 +6,12 @@ import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View.VISIBLE
+import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProvider
+import campus.tech.kakao.map.Base.ErrorEnum
 import campus.tech.kakao.map.Base.ViewModelFactory
 import campus.tech.kakao.map.Domain.PlaceRepository
 import campus.tech.kakao.map.MyApplication
@@ -33,6 +35,7 @@ class MapActivity : AppCompatActivity() {
     private lateinit var bottomSheet : ConstraintLayout
     private lateinit var placeName : TextView
     private lateinit var placeAddress : TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
@@ -90,6 +93,12 @@ class MapActivity : AppCompatActivity() {
             }
 
             override fun onMapError(error: Exception) {
+                val intent = Intent(this@MapActivity,ErrorActivity::class.java)
+                intent.putExtra("type", ErrorEnum.MAP_LOAD_ERROR)
+                intent.putExtra("msg",error.message)
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                startActivity(intent)
+
             }
         }, object : KakaoMapReadyCallback() {
 
