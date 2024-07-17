@@ -80,7 +80,7 @@ dependencies {
     androidTestImplementation("androidx.test:rules:1.5.0")
     androidTestImplementation("androidx.test.espresso:espresso-intents:3.5.1")
 
-
+    
     // https://developer.android.com/codelabs/android-preferences-datastore?hl=ko#4
     implementation ("androidx.datastore:datastore-preferences:1.0.0")   // prefs.getString() -> 동기 형태 : 개선필요
     implementation ("com.kakao.sdk:v2-all:2.20.3")

@@ -1,9 +1,9 @@
 package campus.tech.kakao.map.model
 
-import java.io.Serializable
-
 data class Place (
     val name: String,
     val address: String,
-    val category: String = ""
+    val category: String = "",
+    val longitude: String = "",
+    val latitude: String = ""
 )

@@ -49,7 +49,7 @@ class MapRepository(private val context: Context) {
                     val responseList = mutableListOf<Place>()
                     body?.documents?.forEach {
                         val category = it.categoryName.split(" \u003e ").last()
-                        responseList.add(Place(it.placeName, it.addressName, category))
+                        responseList.add(Place(it.placeName, it.addressName, category, it.x, it.y))
                     }
                     onPlaceResponse(responseList)
                 } else {
