@@ -1,8 +1,10 @@
 package campus.tech.kakao.map.view
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -10,9 +12,10 @@ import androidx.appcompat.app.AppCompatActivity
 import campus.tech.kakao.map.BuildConfig
 import campus.tech.kakao.map.R
 import campus.tech.kakao.map.databinding.ActivityKakaoMapBinding
-import campus.tech.kakao.map.databinding.ActivityMainBinding
 import campus.tech.kakao.map.model.Place
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.gson.Gson
+import com.google.gson.JsonParseException
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.KakaoMapSdk
@@ -29,11 +32,13 @@ class KakaoMapActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityKakaoMapBinding
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
+    private lateinit var sharedPreferences: SharedPreferences
     private lateinit var kakaoMap: KakaoMap
     private lateinit var mapView: MapView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        sharedPreferences = getSharedPreferences(ActivityKeys.KEY_PREFS, MODE_PRIVATE)
         binding = ActivityKakaoMapBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -58,7 +63,10 @@ class KakaoMapActivity : AppCompatActivity() {
         mapView = binding.mapView
         mapView.start(object : MapLifeCycleCallback() {
             override fun onMapDestroy() {
-
+                val position = kakaoMap.cameraPosition?.position
+                if (position != null) {
+                    saveKakaoMapLastPosition(position)
+                }
             }
 
             override fun onMapError(error: Exception?) {
@@ -68,11 +76,37 @@ class KakaoMapActivity : AppCompatActivity() {
         }, object : KakaoMapReadyCallback() {
             override fun onMapReady(kakaoMap: KakaoMap) {
                 this@KakaoMapActivity.kakaoMap = kakaoMap
+
+                val position = loadKakaoMapLastPosition()
+                if(position != null){
+                    moveCameraPosition(position)
+                }
             }
         })
     }
 
-    fun kakaoMapReloadListener(){
+    fun loadKakaoMapLastPosition(): LatLng? {
+        if (sharedPreferences.contains(ActivityKeys.KEY_PREFS_PLACE)) {
+            val gson = Gson()
+            val json = sharedPreferences.getString(ActivityKeys.KEY_PREFS_PLACE, "")
+            try {
+                return gson.fromJson(json, LatLng::class.java)
+            } catch (e: JsonParseException) {
+                e.printStackTrace()
+            }
+        }
+        return null
+    }
+
+    fun saveKakaoMapLastPosition(position: LatLng) {
+        val editor = sharedPreferences.edit()
+        val gson = Gson()
+        val json = gson.toJson(position)
+        editor.putString(ActivityKeys.KEY_INTENT_PLACE, json)
+        editor.apply()
+    }
+
+    fun kakaoMapReloadListener() {
         binding.reload.setOnClickListener {
             showView(binding.kakaomapErr, false)
             setUpKakaoMap()
@@ -84,9 +118,12 @@ class KakaoMapActivity : AppCompatActivity() {
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 if (it.resultCode == RESULT_OK) {
                     val place = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        it.data?.getParcelableExtra(IntentKeys.PLACE, Place::class.java)
+                        it.data?.getParcelableExtra(
+                            ActivityKeys.KEY_INTENT_PLACE,
+                            Place::class.java
+                        )
                     } else {
-                        it.data?.getParcelableExtra<Place>(IntentKeys.PLACE)
+                        it.data?.getParcelableExtra<Place>(ActivityKeys.KEY_INTENT_PLACE)
                     }
                     if (place != null) {
                         displayPlaceOnKakaoMap(place)
@@ -119,6 +156,7 @@ class KakaoMapActivity : AppCompatActivity() {
     fun moveCameraPosition(position: LatLng) {
         val cameraUpdate = CameraUpdateFactory.newCenterPosition(position)
         kakaoMap.moveCamera(cameraUpdate)
+        saveKakaoMapLastPosition(position)
     }
 
     fun displayPlaceInfoBottomSheet(place: Place) {
