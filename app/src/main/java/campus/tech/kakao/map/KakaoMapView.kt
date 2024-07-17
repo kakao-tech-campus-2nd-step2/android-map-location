@@ -2,6 +2,7 @@ package campus.tech.kakao.map
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -35,6 +36,11 @@ class KakaoMapView : AppCompatActivity() {
         val yCoordinate = sharedPref.getString("yCoordinate", null)?.toDoubleOrNull()
         Log.e("SharedPreff", "X:$xCoordinate, Y:$yCoordinate")
 
+        val sharedPref1 = getSharedPreferences("BottomSheet", Context.MODE_PRIVATE)
+        val name = sharedPref1.getString("name", null)
+        val address = sharedPref1.getString("address", null)
+        Log.e("SharedPreff", "이름:$name, 주소:$address")
+
         val defaultX = 37.402005
         val defaultY = 127.108621
 
@@ -66,11 +72,14 @@ class KakaoMapView : AppCompatActivity() {
                 val position = LatLng.from(initialY, initialX)
 
                 val style =
-                    kakaoMap.labelManager?.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.kakaomap_logo)))
+                    kakaoMap.labelManager?.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.kakaomap_logo).setTextStyles(20, Color.BLACK)))
+
                 val options: LabelOptions = LabelOptions.from(position)
                     .setStyles(style)
                 val layer = kakaoMap.labelManager?.layer
                 layer?.addLabel(options)
+                val label = layer?.addLabel(options)
+                label?.changeText(name)
 
                 Log.e("SharedPreff", "X1:$initialX, Y1:$initialY")
                 val cameraUpdate =

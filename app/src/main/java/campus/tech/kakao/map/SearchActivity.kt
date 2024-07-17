@@ -166,6 +166,7 @@ class SearchActivity : AppCompatActivity() {
                 savedSearchAdapter.notifyDataSetChanged()
 
                 saveCoordinates(searchData.x, searchData.y)
+                saveToBottomSheet(searchData.name, searchData.address)
 
                 val intent = Intent(this@SearchActivity, KakaoMapView::class.java)
                 startActivity(intent)
@@ -178,6 +179,15 @@ class SearchActivity : AppCompatActivity() {
         with(sharedPref.edit()) {
             putString("xCoordinate", x.toString())
             putString("yCoordinate", y.toString())
+            apply()
+        }
+    }
+
+    private fun saveToBottomSheet(name: String, Address: String) {
+        val sharedPref = getSharedPreferences("BottomSheet", Context.MODE_PRIVATE)
+        with(sharedPref.edit()) {
+            putString("name", name)
+            putString("address", Address)
             apply()
         }
     }
