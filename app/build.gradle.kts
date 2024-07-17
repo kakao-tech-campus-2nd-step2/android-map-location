@@ -5,6 +5,7 @@ fun getApiKey(key: String): String = gradleLocalProperties(rootDir, providers).g
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("kotlin-parcelize")
 }
 
 android {
