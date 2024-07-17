@@ -43,6 +43,8 @@ class MainActivity : AppCompatActivity() {
 
         bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet)
         binding.bottomSheet.visibility = View.GONE
+
+        binding.errorLayout.visibility = View.GONE
     }
 
     private fun initializeKakaoSdk() {
@@ -60,6 +62,9 @@ class MainActivity : AppCompatActivity() {
 
             override fun onMapError(error: Exception) {
                 Log.e("MainActivity", "onMapError: ${error.message}")
+                binding.errorLayout.visibility = View.VISIBLE
+                binding.errorDetails.text = error.message
+                binding.mapView.visibility = View.GONE
             }
         }, object : KakaoMapReadyCallback() {
             override fun onMapReady(map: KakaoMap) {
