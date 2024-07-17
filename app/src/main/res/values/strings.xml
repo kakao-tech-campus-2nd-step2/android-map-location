@@ -2,4 +2,5 @@
     <string name="app_name">Map</string>
     <string name="searchWindowHint">검색어를 입력해 주세요.</string>
     <string name="searchResultEmpty">검색 결과가 없습니다.</string>
+    <string name="kakaoMapErrMsg">지도 인증을 실패했습니다.\n다시 시도해주세요.</string>
 </resources>

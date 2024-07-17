@@ -3,6 +3,7 @@ package campus.tech.kakao.map.view
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -39,6 +40,7 @@ class KakaoMapActivity : AppCompatActivity() {
         setUpKakaoMap()
         getSearchResult()
         gotoSearchWindowBtnListener()
+        kakaoMapReloadListener()
     }
 
     override fun onResume() {
@@ -60,13 +62,21 @@ class KakaoMapActivity : AppCompatActivity() {
             }
 
             override fun onMapError(error: Exception?) {
-
+                binding.kakaomapErrDescription.text = error?.message.toString()
+                showView(binding.kakaomapErr, true)
             }
         }, object : KakaoMapReadyCallback() {
             override fun onMapReady(kakaoMap: KakaoMap) {
                 this@KakaoMapActivity.kakaoMap = kakaoMap
             }
         })
+    }
+
+    fun kakaoMapReloadListener(){
+        binding.reload.setOnClickListener {
+            showView(binding.kakaomapErr, false)
+            setUpKakaoMap()
+        }
     }
 
     fun getSearchResult() {
@@ -125,6 +135,10 @@ class KakaoMapActivity : AppCompatActivity() {
             val intent = Intent(this, SearchWindowActivity::class.java)
             activityResultLauncher.launch(intent)
         }
+    }
+
+    private fun showView(view: View, isShow: Boolean) {
+        view.visibility = if (isShow) View.VISIBLE else View.GONE
     }
 }
 
