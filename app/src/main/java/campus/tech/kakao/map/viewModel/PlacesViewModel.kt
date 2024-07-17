@@ -22,8 +22,6 @@ class PlacesViewModel(private val repository: MapRepository) : ViewModel() {
         MutableLiveData<ArrayList<RecentSearchWord>>()
     val searchHistoryData: LiveData<ArrayList<RecentSearchWord>> = _searchHistoryData
 
-    lateinit var kakaoMap: KakaoMap
-
     init {
         _searchHistoryData.value = repository.searchHistoryList
     }
