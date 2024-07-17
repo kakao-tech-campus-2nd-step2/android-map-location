@@ -15,8 +15,14 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.KakaoMapSdk
+import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.MapView
+import com.kakao.vectormap.camera.CameraUpdateFactory
+import com.kakao.vectormap.label.LabelLayer
+import com.kakao.vectormap.label.LabelOptions
+import com.kakao.vectormap.label.LabelStyle
+import com.kakao.vectormap.label.LabelStyles
 
 class MapActivity : AppCompatActivity() {
     private lateinit var mapView: MapView
@@ -77,7 +83,10 @@ class MapActivity : AppCompatActivity() {
         val clickedPlaceInfo = intent.getParcelableExtra<PlaceInfo>("placeInfo")
         clickedPlaceInfo.let {
             if (it != null) {
+                val pos: LatLng = LatLng.from(it.y.toDouble(), it.x.toDouble())
                 showClickedPlaceInfo(it.place_name, it.road_address_name)
+                showLabel(pos.latitude, pos.longitude)
+                moveClickedPlace(pos.latitude, pos.longitude)
             }
         }
     }
@@ -88,5 +97,16 @@ class MapActivity : AppCompatActivity() {
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
     }
 
+    private fun showLabel(latitude: Double, longitude: Double) {
+        val styles: LabelStyles? = kakaoMap.labelManager
+            ?.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.pink_marker)))
+        val options: LabelOptions =
+            LabelOptions.from(LatLng.from(latitude, longitude)).setStyles(styles)
+        val layer: LabelLayer? = kakaoMap.labelManager?.layer
+        layer?.addLabel(options)
+    }
 
+    private fun moveClickedPlace(latitude: Double, longitude: Double) {
+        kakaoMap.moveCamera(CameraUpdateFactory.newCenterPosition(LatLng.from(latitude, longitude)))
+    }
 }
