@@ -1,6 +1,7 @@
 package campus.tech.kakao.map.model.datasource
 
 import android.content.ContentValues
+import android.database.Cursor
 import android.util.Log
 import campus.tech.kakao.map.model.Contract.LocationEntry
 import campus.tech.kakao.map.model.Contract.SavedLocationEntry
@@ -46,14 +47,19 @@ class LocationLocalDataSource(private val dbHelper : LocationDbHelper) {
         val results = mutableListOf<Location>()
         with(cursor) {
             while (moveToNext()) {
-                val title = getString(getColumnIndexOrThrow(LocationEntry.COLUMN_NAME_TITLE))
-                val address = getString(getColumnIndexOrThrow(LocationEntry.COLUMN_NAME_ADDRESS))
-                val category = getString(getColumnIndexOrThrow(LocationEntry.COLUMN_NAME_CATEGORY))
-                results.add(Location(title, address, category))
+                val location = getLocation()
+                results.add(location)
             }
         }
         cursor.close()
         return results
+    }
+
+    private fun Cursor.getLocation(): Location {
+        val title = getString(getColumnIndexOrThrow(LocationEntry.COLUMN_NAME_TITLE))
+        val address = getString(getColumnIndexOrThrow(LocationEntry.COLUMN_NAME_ADDRESS))
+        val category = getString(getColumnIndexOrThrow(LocationEntry.COLUMN_NAME_CATEGORY))
+        return Location(title, address, category, "", "")
     }
 
     fun addSavedLocation(title: String): Long {
@@ -129,10 +135,8 @@ class LocationLocalDataSource(private val dbHelper : LocationDbHelper) {
         val results = mutableListOf<Location>()
         with(cursor) {
             while (moveToNext()) {
-                val title = getString(getColumnIndexOrThrow(LocationEntry.COLUMN_NAME_TITLE))
-                val address = getString(getColumnIndexOrThrow(LocationEntry.COLUMN_NAME_ADDRESS))
-                val category = getString(getColumnIndexOrThrow(LocationEntry.COLUMN_NAME_CATEGORY))
-                results.add(Location(title, address, category))
+                val location = getLocation()
+                results.add(location)
             }
         }
         cursor.close()
