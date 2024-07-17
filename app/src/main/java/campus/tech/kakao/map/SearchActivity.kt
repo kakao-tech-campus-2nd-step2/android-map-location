@@ -1,5 +1,6 @@
 package campus.tech.kakao.map
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -11,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import campus.tech.kakao.map.model.RecentSearchWord
 import campus.tech.kakao.map.databinding.ActivitySearchBinding
+import campus.tech.kakao.map.model.Place
 import campus.tech.kakao.map.viewModel.MapRepository
 import campus.tech.kakao.map.viewModel.PlacesViewModel
 import campus.tech.kakao.map.viewModel.PlacesViewModelFactory
@@ -56,9 +58,10 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun setUpPlacesAdapter() {
-        placesAdapter = PlacesAdapter { position: Int ->
-            val itemName = placesAdapter.getItemName(position)
-            viewModel.insertSearch(position, itemName)
+        placesAdapter = PlacesAdapter { item: Place ->
+            val itemName = item.name
+            viewModel.insertSearch(itemName)
+            goToSearch(item)
         }
         binding.placesRView.adapter = placesAdapter
         binding.placesRView.layoutManager = LinearLayoutManager(this)
@@ -76,5 +79,13 @@ class SearchActivity : AppCompatActivity() {
             searchHistoryAdapter.submitList(searchHistoryData.toList())
             binding.searchHistory.isVisible = searchHistoryData.isNotEmpty()
         })
+    }
+
+    private fun goToSearch(place: Place) {
+        val intent = Intent(this, MainActivity::class.java).apply {
+            putExtra("place", place)
+        }
+        Log.d("Activity State", "Intent is: $intent")
+        startActivity(intent)
     }
 }
