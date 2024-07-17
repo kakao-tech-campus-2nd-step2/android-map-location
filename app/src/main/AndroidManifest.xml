@@ -16,7 +16,7 @@
         android:theme="@style/Theme.Map"
         tools:targetApi="31">
         <activity
-            android:name=".MapErrorActivity"
+            android:name=".activity.MapErrorActivity"
             android:exported="true" />
         <activity
             android:name=".activity.HomeMapActivity"

@@ -4,14 +4,12 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.widget.EditText
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import campus.tech.kakao.map.Application
-import campus.tech.kakao.map.MapErrorActivity
 import campus.tech.kakao.map.R
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kakao.vectormap.KakaoMap
@@ -22,7 +20,6 @@ import com.kakao.vectormap.MapView
 import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.label.LabelStyle
 import com.kakao.vectormap.label.LabelStyles
-import org.w3c.dom.Text
 
 class HomeMapActivity : AppCompatActivity() {
     private lateinit var mapView: MapView
@@ -31,7 +28,6 @@ class HomeMapActivity : AppCompatActivity() {
     private lateinit var bottomBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var placeNameTextView: TextView
     private lateinit var placeAddressTextView: TextView
-    private lateinit var errorMessage: TextView
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,7 +74,6 @@ class HomeMapActivity : AppCompatActivity() {
                     val options =
                         LabelOptions.from(LatLng.from(latitude, longitude)).setStyles(style)
                             .setTexts(name)
-                    Log.d("yeong", "마커")
                     val layer = p0.labelManager?.layer
                     layer?.addLabel(options)
                 }

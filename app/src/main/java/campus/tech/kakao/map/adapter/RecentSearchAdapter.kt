@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.map.data.RecentSearchData
 import campus.tech.kakao.map.R
-import campus.tech.kakao.map.RecentAdapterListener
+import campus.tech.kakao.map.listener.RecentAdapterListener
 import campus.tech.kakao.map.viewModel.RecentViewModel
 
 class RecentSearchAdapter(

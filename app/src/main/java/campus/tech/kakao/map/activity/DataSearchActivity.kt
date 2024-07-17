@@ -16,8 +16,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.map.R
-import campus.tech.kakao.map.RecentAdapterListener
-import campus.tech.kakao.map.SearchAdapterListener
+import campus.tech.kakao.map.listener.RecentAdapterListener
+import campus.tech.kakao.map.listener.SearchAdapterListener
 import campus.tech.kakao.map.adapter.RecentSearchAdapter
 import campus.tech.kakao.map.adapter.SearchDataAdapter
 import campus.tech.kakao.map.viewModel.RecentViewModel
