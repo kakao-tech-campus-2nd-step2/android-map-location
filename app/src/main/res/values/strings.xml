@@ -2,4 +2,6 @@
     <string name="app_name">Map</string>
     <string name="search_hint">검색어를 입력해 주세요.</string>
     <string name="main_text">검색 결과가 없습니다.</string>
+    <string name="name_temp">"카카오"</string>
+    <string name="address_temp">"경기 성남시 분당구 백현동 532"</string>
 </resources>

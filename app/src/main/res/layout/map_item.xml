@@ -8,45 +8,55 @@
         android:id="@+id/mapImage"
         android:layout_width="65dp"
         android:layout_height="65dp"
+        android:layout_margin="10dp"
         android:src="@drawable/baseline_place_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_margin="10dp"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/name"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="카페1"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="@string/name_temp"
         android:textSize="20sp"
+        app:layout_constrainedWidth="true"
         app:layout_constraintBottom_toTopOf="@id/address"
+        app:layout_constraintEnd_toStartOf="@id/category"
         app:layout_constraintStart_toEndOf="@id/mapImage"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="10dp"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/address"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="서울 성동구 성수동 1"
-        android:textSize="15sp"
+        android:layout_marginBottom="10dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="@string/address_temp"
         android:textColor="@color/gray"
-        app:layout_constraintStart_toEndOf="@id/mapImage"
-        app:layout_constraintTop_toBottomOf="@id/name"
+        android:textSize="15sp"
+        app:layout_constrainedWidth="true"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="10dp"/>
+        app:layout_constraintEnd_toStartOf="@id/category"
+        app:layout_constraintStart_toEndOf="@id/mapImage"
+        app:layout_constraintTop_toBottomOf="@id/name" />
 
     <TextView
         android:id="@+id/category"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="카페"
-        android:textSize="15sp"
+        android:layout_marginEnd="20dp"
+        android:text="@string/name_temp"
         android:textColor="@color/gray"
+        android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/name"
-        android:layout_marginEnd="20dp"/>
+        app:layout_constraintStart_toEndOf="@id/name"
+        app:layout_constraintTop_toTopOf="@id/name" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
