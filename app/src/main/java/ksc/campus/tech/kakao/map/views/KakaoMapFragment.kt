@@ -29,9 +29,6 @@ import ksc.campus.tech.kakao.map.view_models.SearchActivityViewModel
 import java.lang.Exception
 
 class KakaoMapFragment : Fragment() {
-    private lateinit var locationInfoNameView: TextView
-    private lateinit var locationInfoAddressView: TextView
-
     private lateinit var errorTextView: TextView
     private lateinit var retryButton: ImageButton
     private lateinit var errorMessageGroup: Group
@@ -77,8 +74,6 @@ class KakaoMapFragment : Fragment() {
     private fun initiateViewModelCallbacks(){
         viewModel.selectedLocation.observe(viewLifecycleOwner){
             updateSelectedLocation(it)
-            setTextVisibility(it != null)
-            updateText(it?.name?:"", it?.address?:"")
         }
     }
 
@@ -92,13 +87,9 @@ class KakaoMapFragment : Fragment() {
 
     private fun initiateViews(parent: View){
         errorTextView = parent.findViewById(R.id.text_error)
-        locationInfoNameView = parent.findViewById(R.id.text_location_name)
-        locationInfoAddressView = parent.findViewById(R.id.text_location_address)
         errorMessageGroup = parent.findViewById(R.id.error_message_group)
 
         initiateRetryButton(parent)
-        setTextVisibility(viewModel.selectedLocation.value != null)
-        updateText(viewModel.selectedLocation.value?.name?:"", viewModel.selectedLocation.value?.address?:"")
     }
 
     override fun onCreateView(
@@ -144,16 +135,6 @@ class KakaoMapFragment : Fragment() {
         } else {
             changedSelectedPosition(LatLng.from(locationInfo.latitude, locationInfo.longitude))
         }
-    }
-
-    private fun setTextVisibility(visible: Boolean){
-        locationInfoAddressView.isVisible = visible
-        locationInfoNameView.isVisible = visible
-    }
-
-    private fun updateText(name:String, address:String){
-        locationInfoNameView.text = name
-        locationInfoAddressView.text = address
     }
 
     private fun changedSelectedPosition(coordinate: LatLng){
