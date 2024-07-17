@@ -72,7 +72,7 @@ class KakaoMapView : AppCompatActivity() {
                 val position = LatLng.from(initialY, initialX)
 
                 val style =
-                    kakaoMap.labelManager?.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.kakaomap_logo).setTextStyles(20, Color.BLACK)))
+                    kakaoMap.labelManager?.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.kakaomap_logo).setTextStyles(30, Color.BLUE)))
 
                 val options: LabelOptions = LabelOptions.from(position)
                     .setStyles(style)
