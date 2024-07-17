@@ -12,7 +12,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import campus.tech.kakao.map.BuildConfig
 import campus.tech.kakao.map.model.datasource.LocationLocalDataSource
 import campus.tech.kakao.map.model.datasource.LocationRemoteDataSource
 import campus.tech.kakao.map.R
@@ -82,7 +81,7 @@ class MainActivity : AppCompatActivity(), OnItemSelectedListener {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val query = s.toString()
-                locationViewModel.searchLocationsFromKakaoAPI(query) {searchLocationsSize ->
+                locationViewModel.searchLocationsFromKakaoAPI(query) { searchLocationsSize ->
                     if (searchLocationsSize > 0) {
                         noResultTextView.visibility = View.GONE
                     } else {
@@ -138,11 +137,21 @@ class MainActivity : AppCompatActivity(), OnItemSelectedListener {
         savedLocationRecyclerView.adapter = savedLocationAdapter
     }
 
-    override fun addSavedLocation(title: String) {
+    override fun onAddSavedLocation(title: String) {
         savedLocationViewModel.addSavedLocation(title)
     }
 
-    override fun deleteSavedLocation(item: SavedLocation) {
+    override fun onDeleteSavedLocation(item: SavedLocation) {
         savedLocationViewModel.deleteSavedLocation(item)
+    }
+
+    override fun onUpdateLocationRecyclerView(title: String) {
+        locationViewModel.searchLocationsFromKakaoAPI(title){ searchLocationsSize ->
+            if (searchLocationsSize > 0) {
+                noResultTextView.visibility = View.GONE
+            } else {
+                noResultTextView.visibility = View.VISIBLE
+            }
+        }
     }
 }

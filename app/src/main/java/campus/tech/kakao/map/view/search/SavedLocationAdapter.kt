@@ -35,8 +35,11 @@ class SavedLocationAdapter(
         }
 
         init {
+            itemView.setOnClickListener {
+                itemSelectedListener.onUpdateLocationRecyclerView(getItem(bindingAdapterPosition).title)
+            }
             savedLocationXButton.setOnClickListener {
-                itemSelectedListener.deleteSavedLocation(getItem(bindingAdapterPosition) as SavedLocation)
+                itemSelectedListener.onDeleteSavedLocation(getItem(bindingAdapterPosition) as SavedLocation)
             }
         }
     }
