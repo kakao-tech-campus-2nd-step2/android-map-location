@@ -48,8 +48,9 @@ class SearchActivity : AppCompatActivity() {
                 intent.putExtra("x", mapItem.x.toDouble())
                 intent.putExtra("y", mapItem.y.toDouble())
                 intent.putExtra("name", mapItem.name)
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 startActivity(intent)
-                finish()
+                //finish()
             }
         })
 
