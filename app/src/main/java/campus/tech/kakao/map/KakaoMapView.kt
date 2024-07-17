@@ -65,6 +65,13 @@ class KakaoMapView : AppCompatActivity() {
                 // 인증 후 API 가 정상적으로 실행될 때 호출됨
                 val position = LatLng.from(initialY, initialX)
 
+                val style =
+                    kakaoMap.labelManager?.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.kakaomap_logo)))
+                val options: LabelOptions = LabelOptions.from(position)
+                    .setStyles(style)
+                val layer = kakaoMap.labelManager?.layer
+                layer?.addLabel(options)
+
                 Log.e("SharedPreff", "X1:$initialX, Y1:$initialY")
                 val cameraUpdate =
                     CameraUpdateFactory.newCenterPosition(position)
