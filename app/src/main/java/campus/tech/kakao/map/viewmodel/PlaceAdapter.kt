@@ -1,11 +1,15 @@
 package campus.tech.kakao.map.viewmodel
 
+import android.app.Activity
+import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.map.databinding.ItemPlaceBinding
 import campus.tech.kakao.map.model.Document
+import campus.tech.kakao.map.view.MainActivity
 
 class PlaceAdapter(
     private var items: List<Document>,
@@ -16,7 +20,16 @@ class PlaceAdapter(
         fun bind(document: Document, onItemClick: (Document) -> Unit) {
             binding.placeName.text = document.placeName
             binding.placeLocation.text = document.addressName
-            binding.root.setOnClickListener { onItemClick(document) }
+            binding.root.setOnClickListener {
+                onItemClick(document)
+
+                val intent = Intent()
+                intent.putExtra(MainActivity.EXTRA_PLACE_LONGITUDE, document.x)
+                intent.putExtra(MainActivity.EXTRA_PLACE_LATITUDE, document.y)
+                (binding.root.context as Activity).setResult(Activity.RESULT_OK, intent)
+                (binding.root.context as Activity).finish()
+
+            }
         }
     }
 
