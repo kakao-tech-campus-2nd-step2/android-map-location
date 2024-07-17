@@ -1,7 +1,9 @@
 package campus.tech.kakao.map.view
 
 import android.app.ActivityOptions
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -42,10 +44,13 @@ class MapActivity : AppCompatActivity() {
     lateinit var errorTextView: TextView
     lateinit var kakaoMap : KakaoMap
     lateinit var resultLauncher : ActivityResultLauncher<Intent>
+    lateinit var sharedPreferences : SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
+
+        sharedPreferences = getSharedPreferences("table_name", Context.MODE_PRIVATE)
 
         initVar()
         initSDK()
@@ -62,7 +67,9 @@ class MapActivity : AppCompatActivity() {
                         result.data?.getParcelableExtra(Constants.Keys.KEY_PLACE)
                     }
                     Log.d("testt", "pos : ${place.toString()}")
-                    val pos = LatLng.from(place?.y?.toDouble() ?: 127.115587, place?.x?.toDouble()?: 37.406960)
+                    val latitude = place?.y?.toDouble() ?: 127.115587
+                    val longitude = place?.x?.toDouble()?: 37.406960
+                    val pos = LatLng.from(latitude, longitude)
                     Log.d("testt", "pos : ${pos.toString()}")
                     kakaoMap.moveCamera(CameraUpdateFactory.newCenterPosition(pos))
                     val labelManager = kakaoMap.labelManager
@@ -70,11 +77,18 @@ class MapActivity : AppCompatActivity() {
                     val style = labelManager
                         ?.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.ic_location_marker_2).setAnchorPoint(0.5f, 1f)))
                     var label = kakaoMap.getLabelManager()?.getLayer()?.addLabel(LabelOptions.from("center",pos).setStyles(style).setRank(1))
-
+                    val editor : SharedPreferences.Editor = sharedPreferences.edit()
+                    editor.putString("latitude", latitude.toString()) // key-value방식으로 데이터 저장
+                    editor.putString("longitude", longitude.toString())
+                    editor.apply()
 
                 }
             }
+
+
     }
+
+
 
     private fun initVar() {
         inputField = findViewById<EditText>(R.id.input_search_field)
@@ -109,7 +123,9 @@ class MapActivity : AppCompatActivity() {
             }
 
             override fun getPosition(): LatLng {
-                return LatLng.from(37.406960, 127.115587);
+                val latitude = sharedPreferences.getString("latitude", "37.406960")?.toDouble() ?: 37.406960
+                val longitude = sharedPreferences.getString("longitude", "127.115587")?.toDouble() ?: 127.115587
+                return LatLng.from(latitude, longitude)
             }
         })
 
