@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import campus.tech.kakao.map.Application
 import campus.tech.kakao.map.R
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kakao.vectormap.KakaoMap
@@ -28,7 +29,6 @@ class HomeMapActivity : AppCompatActivity() {
     private lateinit var bottomBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var placeNameTextView: TextView
     private lateinit var placeAddressTextView: TextView
-
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,8 +80,14 @@ class HomeMapActivity : AppCompatActivity() {
 
             // 지도 시작 시 위치 좌표 설정
             override fun getPosition(): LatLng {
+                val savedLatitude = Application.prefs.getString("latitude", null).toDoubleOrNull()
+                val savedLongitude =
+                    Application.prefs.getString("longitude", null).toDoubleOrNull()
+
                 return if (latitude != null && longitude != null) {
                     LatLng.from(latitude, longitude)
+                } else if (savedLatitude != null && savedLongitude != null) {
+                    LatLng.from(savedLatitude, savedLongitude)
                 } else {
                     super.getPosition()
                 }
@@ -111,5 +117,11 @@ class HomeMapActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         mapView.pause()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        intent.getStringExtra("latitude")?.let { Application.prefs.setString("latitude", it) }
+        intent.getStringExtra("longitude")?.let { Application.prefs.setString("longitude", it) }
     }
 }
