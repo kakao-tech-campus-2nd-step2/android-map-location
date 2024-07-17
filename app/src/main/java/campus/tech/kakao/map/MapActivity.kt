@@ -9,8 +9,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDragHandleView
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
@@ -94,5 +92,4 @@ class MapActivity : AppCompatActivity() {
         kakaoMapView.pause()
         Log.d("KAKAOMAP","onPause")
     }
-
 }

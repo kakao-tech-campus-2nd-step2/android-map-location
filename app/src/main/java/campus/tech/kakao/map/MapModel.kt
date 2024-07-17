@@ -19,8 +19,10 @@ class MapModel(dbHelper: MapDbHelper) {
     val searchHistory: LiveData<List<Location>> = _searchHistory
 
     fun searchByKeywordFromServer(keyword: String, isExactMatch: Boolean) {
+        Log.d("MAPMODEL", keyword.isEmpty().toString())
         clearDb()
-        request(keyword)
+        if (keyword.isNotEmpty())
+            request(keyword)
     }
 
     fun insertLocation(location: Location) {

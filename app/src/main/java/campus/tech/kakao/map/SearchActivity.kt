@@ -2,12 +2,13 @@ package campus.tech.kakao.map
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,7 +24,7 @@ class SearchActivity : AppCompatActivity(), DatabaseListener {
 
     private lateinit var searchResultAdapter: ResultRecyclerAdapter
     private lateinit var searchHistoryAdapter: HistoryRecyclerAdapter
-
+    private val searchBoxWatcher = getSearchBoxWatcher()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,13 +38,7 @@ class SearchActivity : AppCompatActivity(), DatabaseListener {
         message = findViewById(R.id.message)
         clear = findViewById(R.id.clear)
 
-        searchBox.doAfterTextChanged { text ->
-            if (text.isNullOrEmpty()) {
-                hideResult()
-            } else {
-                search(text.toString(), false)
-            }
-        }
+        searchBox.addTextChangedListener(searchBoxWatcher)
 
         clear.setOnClickListener {
             searchBox.text.clear()
@@ -60,9 +55,23 @@ class SearchActivity : AppCompatActivity(), DatabaseListener {
 
     override fun insertHistory(newHistory: Location) {
         viewModel.insertHistory(newHistory)
+    }
+
+    override fun showMap(newHistory: Location) {
         val locInfo = Intent(this, MapActivity::class.java)
         locInfo.putExtra(Location.LOCATION, newHistory)
         startActivity(locInfo)
+    }
+
+    override fun searchHistory(locName: String, isExactMatch: Boolean) {
+        searchBox.removeTextChangedListener(searchBoxWatcher)
+        searchBox.setText(locName)
+        searchBox.addTextChangedListener(searchBoxWatcher)
+        viewModel.searchByKeywordFromServer(locName, isExactMatch)
+    }
+
+    private fun search(locName: String, isExactMatch: Boolean) {
+        viewModel.searchByKeywordFromServer(locName, isExactMatch)
     }
 
     private fun hideResult() {
@@ -72,9 +81,6 @@ class SearchActivity : AppCompatActivity(), DatabaseListener {
     private fun showResult() {
         searchResultView.isVisible = true
         message.isVisible = false
-    }
-    private fun search(locName: String, isExactMatch: Boolean) {
-        viewModel.searchByKeywordFromServer(locName, isExactMatch)
     }
 
     private fun initSearchResultView() {
@@ -100,12 +106,30 @@ class SearchActivity : AppCompatActivity(), DatabaseListener {
         })
         viewModel.searchResult.observe(this, Observer {
             searchResultAdapter.searchResult = it
-            if (it.isNotEmpty() && (searchBox.text.toString() != "")) {
+            if (it.isNotEmpty() && searchBox.text.isNotEmpty()) {
                 showResult()
             } else {
                 hideResult()
             }
             searchResultAdapter.refreshList()
         })
+    }
+
+    private fun getSearchBoxWatcher(): TextWatcher {
+        return object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                if (s.isNullOrEmpty()) {
+                    hideResult()
+                } else {
+                    search(s.toString(), false)
+                }
+            }
+        }
     }
 }

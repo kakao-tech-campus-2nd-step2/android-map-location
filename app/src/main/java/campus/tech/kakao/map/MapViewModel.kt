@@ -1,5 +1,6 @@
 package campus.tech.kakao.map
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -21,6 +22,8 @@ class MapViewModel(dbHelper: MapDbHelper) : ViewModel() {
 
     init {
         observeData()
+//        _searchResult.value = model.getAllLocation()
+//        _searchHistory.value = model.getAllHistory()
     }
 
     override fun onCleared() {
@@ -57,6 +60,8 @@ class MapViewModel(dbHelper: MapDbHelper) : ViewModel() {
 
     fun searchByKeywordFromServer(keyword: String, isExactMatch: Boolean) {
         model.searchByKeywordFromServer(keyword, isExactMatch)
+//        _searchResult.value = model.getAllLocation()
+//        Log.d("ViewModel", model.getAllLocation().toString())
     }
 
     private fun observeData() {

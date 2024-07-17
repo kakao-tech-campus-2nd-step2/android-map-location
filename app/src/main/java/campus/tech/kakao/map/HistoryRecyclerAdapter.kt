@@ -23,6 +23,11 @@ class HistoryRecyclerAdapter(
                     databaseListener.deleteHistory(history[bindingAdapterPosition])
                 }
             }
+
+            itemView.setOnClickListener {
+                databaseListener.searchHistory(name.text.toString(), false)
+                databaseListener.insertHistory(history[bindingAdapterPosition])
+            }
         }
     }
 

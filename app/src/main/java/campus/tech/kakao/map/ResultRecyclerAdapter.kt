@@ -23,6 +23,7 @@ class ResultRecyclerAdapter(
                 if (bindingAdapterPosition != RecyclerView.NO_POSITION) {
                     val clickedResult = searchResult[bindingAdapterPosition]
                     databaseListener.insertHistory(clickedResult)
+                    databaseListener.showMap(clickedResult)
                 }
             }
         }
