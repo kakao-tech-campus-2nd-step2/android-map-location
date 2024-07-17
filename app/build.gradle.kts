@@ -45,6 +45,15 @@ android {
 }
 
 dependencies {
+
+        androidTestImplementation("androidx.test:core:1.5.0")
+        androidTestImplementation("androidx.test:core-ktx:1.5.0")
+        androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+        androidTestImplementation("androidx.test.ext:junit:1.1.5")
+        androidTestImplementation("androidx.test.ext:junit-ktx:1.1.5")
+        androidTestImplementation("androidx.test.ext:truth:1.5.0")
+        androidTestImplementation("androidx.test:runner:1.5.2")
+        androidTestUtil("androidx.test:orchestrator:1.4.2")
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1")
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1")
     implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.4.0")
