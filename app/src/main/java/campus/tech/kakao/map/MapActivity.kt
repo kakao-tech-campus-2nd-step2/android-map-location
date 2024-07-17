@@ -21,7 +21,6 @@ import java.lang.Exception
 import com.kakao.vectormap.label.LabelStyle
 import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.LatLng
-import com.kakao.vectormap.label.Label
 
 
 class MapActivity : AppCompatActivity() {
