@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import campus.tech.kakao.map.databinding.ActivityMainBinding
 import campus.tech.kakao.map.model.Place
+import campus.tech.kakao.map.viewModel.MapRepository
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
@@ -36,6 +37,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val repository = MapRepository(this)
+
         binding.mapView.start(object : MapLifeCycleCallback() {
             override fun onMapDestroy() {
                 Log.d("KakaoMap", "카카오맵 종료")
@@ -56,8 +59,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun getPosition(): LatLng {
-                return super.getPosition()
-//                return LatLng.from(37.406960, 127.115587);
+                return repository.getLastPos() ?: return super.getPosition()
             }
         })
 

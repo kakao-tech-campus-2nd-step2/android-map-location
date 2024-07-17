@@ -9,6 +9,7 @@ import campus.tech.kakao.map.model.Place
 import campus.tech.kakao.map.model.RecentSearchWord
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import com.kakao.vectormap.LatLng
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -18,7 +19,6 @@ class MapRepository(private val context: Context) {
 
     private lateinit var prefs: SharedPreferences
     private lateinit var prefEditor: SharedPreferences.Editor
-    private var stringPrefs: String? = null
     var searchHistoryList = ArrayList<RecentSearchWord>()
 
     init {
@@ -100,7 +100,7 @@ class MapRepository(private val context: Context) {
 
 
     /**
-     * Search History 관련
+     * SharedPreferences 관련
      */
     fun getSearchHistory(): ArrayList<RecentSearchWord> {
         return searchHistoryList
@@ -128,7 +128,7 @@ class MapRepository(private val context: Context) {
     }
 
     private fun saveSearchHistory() {
-        stringPrefs = GsonBuilder().create().toJson(
+        val stringPrefs = GsonBuilder().create().toJson(
             searchHistoryList, object : TypeToken<ArrayList<RecentSearchWord>>() {}.type
         )
         prefEditor.putString(SEARCH_HISTORY, stringPrefs)
@@ -138,7 +138,7 @@ class MapRepository(private val context: Context) {
     private fun setPrefs() {
         prefs = context.getSharedPreferences(PREF_NAME, AppCompatActivity.MODE_PRIVATE)
         prefEditor = prefs.edit()
-        stringPrefs = prefs.getString(SEARCH_HISTORY, null)
+        val stringPrefs = prefs.getString(SEARCH_HISTORY, null)
 
         if (stringPrefs != null && stringPrefs != "[]") {
             searchHistoryList = GsonBuilder().create().fromJson(
@@ -147,9 +147,30 @@ class MapRepository(private val context: Context) {
         }
     }
 
+    fun getLastPos(): LatLng? {
+        val stringPrefs = prefs.getString(LAST_POSITION, null)
+        if (stringPrefs != null) {
+            val lastPos: LatLng = GsonBuilder().create().fromJson(
+                stringPrefs, object : TypeToken<LatLng>() {}.type
+            )
+            return lastPos
+        }
+        return null
+    }
+
+    fun savePos(latLng: LatLng) {
+        Log.d("repository", "savePos: ${Thread.currentThread().name}")
+        val stringPrefs = GsonBuilder().create().toJson(
+            latLng, object : TypeToken<LatLng>() {}.type
+        )
+        prefEditor.putString(LAST_POSITION, stringPrefs)
+        prefEditor.apply()
+    }
+
     companion object {
         private const val PREF_NAME = "app_data"
         private const val SEARCH_HISTORY = "search_history"
+        private const val LAST_POSITION = "last_position"
     }
 
 }

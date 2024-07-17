@@ -9,13 +9,14 @@ import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import campus.tech.kakao.map.model.RecentSearchWord
 import campus.tech.kakao.map.databinding.ActivitySearchBinding
 import campus.tech.kakao.map.model.Place
 import campus.tech.kakao.map.viewModel.MapRepository
 import campus.tech.kakao.map.viewModel.PlacesViewModel
 import campus.tech.kakao.map.viewModel.PlacesViewModelFactory
+import kotlinx.coroutines.launch
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
@@ -61,6 +62,7 @@ class SearchActivity : AppCompatActivity() {
         placesAdapter = PlacesAdapter { item: Place ->
             val itemName = item.name
             viewModel.insertSearch(itemName)
+            viewModel.savePos(item.longitude, item.latitude)
             goToSearch(item)
         }
         binding.placesRView.adapter = placesAdapter
@@ -75,7 +77,7 @@ class SearchActivity : AppCompatActivity() {
                 if (placesAdapter.itemCount <= 0) View.VISIBLE else View.GONE
         })
 
-        viewModel.searchHistoryData.observe(this, Observer {  searchHistoryData ->
+        viewModel.searchHistoryData.observe(this, Observer { searchHistoryData ->
             searchHistoryAdapter.submitList(searchHistoryData.toList())
             binding.searchHistory.isVisible = searchHistoryData.isNotEmpty()
         })
