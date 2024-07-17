@@ -27,6 +27,11 @@ class MapActivity : AppCompatActivity() {
         setupMapView()
     }
 
+    override fun onStart() {
+        super.onStart()
+        Log.d("jieun", "map: onStart")
+    }
+
     private fun initViews() {
         searchEditText = findViewById(R.id.SearchEditTextInMap)
         mapView = findViewById(R.id.map_view)

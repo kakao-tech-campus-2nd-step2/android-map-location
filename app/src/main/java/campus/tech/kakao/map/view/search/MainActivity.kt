@@ -1,5 +1,6 @@
 package campus.tech.kakao.map.view.search
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -19,6 +20,7 @@ import campus.tech.kakao.map.model.SavedLocation
 import campus.tech.kakao.map.model.LocationDbHelper
 import campus.tech.kakao.map.model.repository.LocationRepository
 import campus.tech.kakao.map.model.repository.SavedLocationRepository
+import campus.tech.kakao.map.view.map.MapActivity
 import campus.tech.kakao.map.viewmodel.ViewModelFactory.LocationViewModelFactory
 import campus.tech.kakao.map.viewmodel.ViewModelFactory.SavedLocationViewModelFactory
 import campus.tech.kakao.map.viewmodel.LocationViewModel
@@ -133,8 +135,13 @@ class MainActivity : AppCompatActivity(), OnItemSelectedListener {
         savedLocationRecyclerView.adapter = savedLocationAdapter
     }
 
-    override fun onLocationViewClicked(title: String) {
+    override fun onLocationViewClicked(title: String, x: String, y: String) {
         savedLocationViewModel.addSavedLocation(title)
+
+        val intent = Intent(this@MainActivity, MapActivity::class.java)
+        intent.putExtra("x", x)
+        intent.putExtra("y", y)
+        startActivity(intent)
     }
 
     override fun onSavedLocationXButtonClicked(item: SavedLocation) {
