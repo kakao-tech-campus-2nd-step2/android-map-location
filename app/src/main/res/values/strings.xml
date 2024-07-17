@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Map</string>
+    <string name="input_search_keyword">검색어를 입력해 주세요.</string>
+    <string name="no_result_search_keyword">검색 결과가 없습니다.</string>
+    <string name="search">검색</string>
+    <string name="current_location">현재 위치</string>
+    <string name="refresh">새로고침</string>
+    <string name="map_auth_error">지도 인증을 실패 했습니다.\n다시 시도해 주세요.</string>
 </resources>

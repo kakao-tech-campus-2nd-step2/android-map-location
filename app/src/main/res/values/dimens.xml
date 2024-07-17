@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="large_padding">24dp</dimen>
+    <dimen name="medium_padding">16dp</dimen>
+    <dimen name="small_padding">8dp</dimen>
+    <dimen name="bottom_sheet_peek_height">48dp</dimen>
+    <dimen name="search_text_input_view_margin">10dp</dimen>
+    <dimen name="search_text_input_height">50dp</dimen>
+    <dimen name="delete_text_input_margin">-30dp</dimen>
+    <dimen name="keyword_margin">10dp</dimen>
+    <dimen name="keyword_view_padding">15dp</dimen>
+    <dimen name="location_icon_height">40dp</dimen>
+    <dimen name="location_icon_width">40dp</dimen>
+    <dimen name="list_item_margin">10dp</dimen>
+    <dimen name="list_item_padding">10dp</dimen>
+    <dimen name="text_size_small">14sp</dimen>
+    <dimen name="text_size_medium">18sp</dimen>
+    <dimen name="text_size_large">22sp</dimen>
+</resources>
