@@ -11,6 +11,7 @@ import campus.tech.kakao.map.view.search.MainActivity
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.KakaoMapSdk
+import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.MapView
 
@@ -29,7 +30,7 @@ class MapActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        Log.d("jieun", "map: onStart")
+        Log.d("jieun", "onStart")
     }
 
     private fun initViews() {
@@ -60,7 +61,42 @@ class MapActivity : AppCompatActivity() {
             override fun onMapReady(kakaoMap: KakaoMap) {
                 // 인증 후 API 가 정상적으로 실행될 때 호출됨
                 Log.d("jieun", "onMapReady")
+
+            }
+
+            override fun getPosition(): LatLng {
+                Log.d("jieun", "getPosition")
+                val coordinates = getXY()
+                if (coordinates != null) {
+                    return LatLng.from(coordinates.latitude, coordinates.longitude)
+                }
+                return LatLng.from(37.406960, 127.115587);
             }
         })
     }
+    private fun getXY(): Coordinates? {
+        if(intent == null)
+            return null
+        val longitudeString = intent.getStringExtra("longitude")
+        val latitudeString = intent.getStringExtra("latitude")
+        if (longitudeString != null && latitudeString != null) {
+            val longitude = longitudeString.toDouble()
+            val latitude = latitudeString.toDouble()
+            Log.d("jieun", "longitude: " + longitude + " latitude:" + latitude)
+            return Coordinates(longitude, latitude)
+        }
+        return null
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mapView.resume() // MapView 의 resume 호출
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d("jieun", "onPause")
+        mapView.pause() // MapView 의 pause 호출
+    }
+
 }

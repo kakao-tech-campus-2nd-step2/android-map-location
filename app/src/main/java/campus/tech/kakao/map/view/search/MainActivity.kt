@@ -135,12 +135,12 @@ class MainActivity : AppCompatActivity(), OnItemSelectedListener {
         savedLocationRecyclerView.adapter = savedLocationAdapter
     }
 
-    override fun onLocationViewClicked(title: String, x: String, y: String) {
+    override fun onLocationViewClicked(title: String, longitude: String, latitude: String) {
         savedLocationViewModel.addSavedLocation(title)
 
         val intent = Intent(this@MainActivity, MapActivity::class.java)
-        intent.putExtra("x", x)
-        intent.putExtra("y", y)
+        intent.putExtra("longitude", longitude)
+        intent.putExtra("latitude", latitude)
         startActivity(intent)
     }
 
