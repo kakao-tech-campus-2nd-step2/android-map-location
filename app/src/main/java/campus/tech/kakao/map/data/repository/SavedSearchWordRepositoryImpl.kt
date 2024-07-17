@@ -2,8 +2,10 @@ package campus.tech.kakao.map.data.repository
 
 import campus.tech.kakao.map.data.SavedSearchWordDBHelper
 import campus.tech.kakao.map.model.SavedSearchWord
+import dagger.hilt.android.scopes.ViewModelScoped
 import javax.inject.Inject
 
+@ViewModelScoped
 class SavedSearchWordRepositoryImpl
     @Inject
     constructor(private val dbHelper: SavedSearchWordDBHelper) :

@@ -17,23 +17,18 @@ import campus.tech.kakao.map.ui.IntentKeys.EXTRA_PLACE_ADDRESS
 import campus.tech.kakao.map.ui.IntentKeys.EXTRA_PLACE_LATITUDE
 import campus.tech.kakao.map.ui.IntentKeys.EXTRA_PLACE_LONGITUDE
 import campus.tech.kakao.map.ui.IntentKeys.EXTRA_PLACE_NAME
-import campus.tech.kakao.map.ui.ViewModelFactory
 import campus.tech.kakao.map.ui.search.adapters.ResultRecyclerViewAdapter
 import campus.tech.kakao.map.ui.search.adapters.SavedSearchWordRecyclerViewAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelFactory
-
-    private val placeViewModel: PlaceViewModel by viewModels { viewModelFactory }
-    private val savedSearchWordViewModel: SavedSearchWordViewModel by viewModels { viewModelFactory }
+    private val placeViewModel: PlaceViewModel by viewModels()
+    private val savedSearchWordViewModel: SavedSearchWordViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
