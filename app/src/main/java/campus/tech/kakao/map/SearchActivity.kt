@@ -1,5 +1,6 @@
 package campus.tech.kakao.map
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -34,13 +35,23 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun setupAdapters() {
-        savedKeywordsAdapter = SavedKeywordsAdapter(emptyList()) { keyword ->
+        savedKeywordsAdapter = SavedKeywordsAdapter(emptyList(), { keyword ->
             viewModel.deleteKeyword(keyword)
-        }
+        }, { keyword ->
+            binding.editSearch.setText(keyword.name)
+        })
         binding.savedKeywordsRecyclerView.adapter = savedKeywordsAdapter
 
         searchResultsAdapter = SearchResultsAdapter(emptyList()) { keyword ->
             viewModel.saveKeyword(keyword)
+            val intent = Intent().apply {
+                putExtra("place_name", keyword.name)
+                putExtra("road_address_name", keyword.address)
+                putExtra("x", keyword.x)
+                putExtra("y", keyword.y)
+            }
+            setResult(RESULT_OK, intent)
+            finish()
         }
         binding.recyclerView.adapter = searchResultsAdapter
     }

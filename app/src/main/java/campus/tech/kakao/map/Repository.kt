@@ -20,7 +20,7 @@ class Repository(context: Context) {
         val response = kakaoApiService.searchPlaces(query).execute()
         if (response.isSuccessful) {
             response.body()?.documents?.map {
-                Keyword(it.id.toInt(), it.place_name, it.address_name)
+                Keyword(it.id.toInt(), it.place_name, it.address_name, it.x.toDouble(), it.y.toDouble())
             } ?: emptyList()
         } else {
             emptyList()

@@ -81,4 +81,13 @@ class MainActivity : AppCompatActivity() {
         Log.d("MainActivity", "onPause called")
         binding.mapView.pause()
     }
+
+    companion object {
+        private const val SEARCH_REQUEST_CODE = 1
+        private const val PREFS_NAME = "LastMarker"
+        private const val PREF_LATITUDE = "lasrX"
+        private const val PREF_LONGITUDE = "lastY"
+        private const val PREF_PLACE_NAME = "lastName"
+        private const val PREF_ROAD_ADDRESS_NAME = "lastAdress"
+    }
 }

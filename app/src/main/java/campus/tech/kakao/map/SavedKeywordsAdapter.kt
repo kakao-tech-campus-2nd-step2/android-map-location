@@ -7,7 +7,8 @@ import campus.tech.kakao.map.databinding.ItemSavedKeywordBinding
 
 class SavedKeywordsAdapter(
     private var keywords: List<Keyword>,
-    private val onDeleteClick: (Keyword) -> Unit
+    private val onDeleteClick: (Keyword) -> Unit,
+    private val onKewordClick: (Keyword) -> Unit
 ) : RecyclerView.Adapter<SavedKeywordsAdapter.SavedKeywordViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SavedKeywordViewHolder {
@@ -24,6 +25,7 @@ class SavedKeywordsAdapter(
     inner class SavedKeywordViewHolder(private val binding: ItemSavedKeywordBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(keyword: Keyword) {
             binding.keyword = keyword
+            binding.btnKeyword.setOnClickListener { onKewordClick(keyword) }
             binding.btnDelete.setOnClickListener { onDeleteClick(keyword) }
         }
     }
