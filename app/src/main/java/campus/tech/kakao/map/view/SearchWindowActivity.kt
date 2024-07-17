@@ -81,6 +81,11 @@ class SearchWindowActivity : AppCompatActivity() {
                             override fun onClick(item: Place) {
                                 val searchKeyword = SearchKeyword(item.place_name)
                                 viewModel.saveSearchKeyword(searchKeyword)
+
+                                val intent = Intent()
+                                intent.putExtra(IntentKeys.PLACE, item)
+                                setResult(RESULT_OK, intent)
+                                finish()
                             }
                         })
 
