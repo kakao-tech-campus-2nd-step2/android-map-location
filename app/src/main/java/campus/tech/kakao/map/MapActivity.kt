@@ -59,7 +59,9 @@ class MapActivity : AppCompatActivity() {
 			}
 
 			override fun onMapError(p0: Exception?) {
-				Log.e("MapActivity", "onMapError: ${p0?.message}", p0)
+				setContentView(R.layout.map_error)
+				val errorText = findViewById<TextView>(R.id.map_error_text)
+				errorText.text = p0?.message
 			}
 
 		}, object: KakaoMapReadyCallback() {
