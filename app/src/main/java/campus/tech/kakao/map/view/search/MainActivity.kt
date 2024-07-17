@@ -142,7 +142,8 @@ class MainActivity : AppCompatActivity(), OnItemSelectedListener {
     }
 
     override fun onUpdateLocationRecyclerView(title: String) {
-        searchEditText.setText(title) // 커서도 옮기고 싶다.
+        searchEditText.setText(title)
+        searchEditText.setSelection(searchEditText.text.length)
         locationViewModel.searchLocationsFromKakaoAPI(title){ searchLocationsSize ->
             handleNoResultMessage(searchLocationsSize)
         }
