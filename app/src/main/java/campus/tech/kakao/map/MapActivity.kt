@@ -47,6 +47,7 @@ class MapActivity : AppCompatActivity() {
         viewModel = MapViewModel(MapDbHelper(this))
         kakaoMapView.start(object : MapLifeCycleCallback() {
             override fun onMapDestroy() {
+                // TODO: 필요시 구현 예정
             }
 
             override fun onMapError(exception: Exception?) {
