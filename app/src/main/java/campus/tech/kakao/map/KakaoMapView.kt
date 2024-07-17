@@ -1,5 +1,6 @@
 package campus.tech.kakao.map
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -20,6 +21,11 @@ class KakaoMapView : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_kakao_map_view)
+
+        val sharedPref = getSharedPreferences("Coordinates", Context.MODE_PRIVATE)
+        val xCoordinate = sharedPref.getString("xCoordinate", null)?.toDouble()
+        val yCoordinate = sharedPref.getString("yCoordinate", null)?.toDouble()
+        Log.e("SharedPreff", "X:$xCoordinate, Y:$yCoordinate")
 
         val key = getString(R.string.kakao_api_key)
         KakaoMapSdk.init(this, key)

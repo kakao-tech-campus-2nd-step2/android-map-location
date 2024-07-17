@@ -1,6 +1,8 @@
 package campus.tech.kakao.map
 
 import android.content.ContentValues
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -162,8 +164,22 @@ class SearchActivity : AppCompatActivity() {
                 savedSearchList = db.getAllSavedWords().toMutableList()
                 savedSearchAdapter.savedSearchList = savedSearchList
                 savedSearchAdapter.notifyDataSetChanged()
+
+                saveCoordinates(searchData.x, searchData.y)
+
+                val intent = Intent(this@SearchActivity, KakaoMapView::class.java)
+                startActivity(intent)
             }
         })
+    }
+
+    private fun saveCoordinates(x: Double, y: Double) {
+        val sharedPref = getSharedPreferences("Coordinates", Context.MODE_PRIVATE)
+        with(sharedPref.edit()) {
+            putString("xCoordinate", x.toString())
+            putString("yCoordinate", y.toString())
+            apply()
+        }
     }
 
     private fun savedWordClick(){
