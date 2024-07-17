@@ -15,12 +15,14 @@ import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.isVisible
 import campus.tech.kakao.map.BuildConfig
 import campus.tech.kakao.map.R
 import campus.tech.kakao.map.model.Constants
 import campus.tech.kakao.map.model.Place
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.KakaoMapSdk
@@ -45,17 +47,25 @@ class MapActivity : AppCompatActivity() {
     lateinit var kakaoMap : KakaoMap
     lateinit var resultLauncher : ActivityResultLauncher<Intent>
     lateinit var sharedPreferences : SharedPreferences
+    lateinit var bottomSheetLayout : ConstraintLayout
+    lateinit var placeNameField : TextView
+    lateinit var placeLocationField : TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
 
-        sharedPreferences = getSharedPreferences("table_name", Context.MODE_PRIVATE)
 
+        placeNameField = findViewById<TextView>(R.id.place_name)
+        placeLocationField = findViewById<TextView>(R.id.place_location)
+        sharedPreferences = getSharedPreferences("table_name", Context.MODE_PRIVATE)
+        bottomSheetLayout = findViewById<ConstraintLayout>(R.id.bottom_sheet)
         initVar()
         initSDK()
         initMapView()
         initClickListener()
+        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout)
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
         resultLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -81,9 +91,16 @@ class MapActivity : AppCompatActivity() {
                     editor.putString("latitude", latitude.toString()) // key-value방식으로 데이터 저장
                     editor.putString("longitude", longitude.toString())
                     editor.apply()
+                    placeNameField.text = place?.name ?: ""
+                    placeLocationField.text = place?.location ?: ""
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+
 
                 }
             }
+
+        // BottomSheetBehavior에 layout 설정
+
 
 
     }
