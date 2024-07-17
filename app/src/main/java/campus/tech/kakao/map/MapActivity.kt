@@ -28,6 +28,9 @@ class MapActivity : AppCompatActivity() {
     private lateinit var infoSheetName: TextView
     private lateinit var infoSheetAddress: TextView
 
+    private lateinit var viewModel: MapViewModel
+    private var initRun = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
@@ -36,7 +39,7 @@ class MapActivity : AppCompatActivity() {
         infoSheetLayout = findViewById(R.id.info_sheet)
         infoSheetName = findViewById(R.id.info_sheet_name)
         infoSheetAddress = findViewById(R.id.info_sheet_address)
-
+        viewModel = MapViewModel(MapDbHelper(this))
         kakaoMapView.start(object : MapLifeCycleCallback() {
             override fun onMapDestroy() {
             }
@@ -48,11 +51,13 @@ class MapActivity : AppCompatActivity() {
             override fun onMapReady(kakaoMap: KakaoMap) {
                 Log.d(TAG, "onMapReady")
                 val targetLocation =
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        intent?.extras?.getSerializable(Location.LOCATION, Location::class.java)
+                    if (initRun) {
+                        initRun = false
+                        viewModel.getLastLocation()
                     } else {
-                        intent?.extras?.getSerializable(Location.LOCATION) as Location?
+                        getTargetLocation()
                     }
+                Log.d(TAG, targetLocation.toString())
 
                 targetLocation?.let {
                     val cameraUpdate = CameraUpdateFactory.newCenterPosition(LatLng.from(targetLocation.y, targetLocation.x))
@@ -91,5 +96,13 @@ class MapActivity : AppCompatActivity() {
         super.onPause()
         kakaoMapView.pause()
         Log.d("KAKAOMAP","onPause")
+    }
+
+    private fun getTargetLocation(): Location? {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent?.extras?.getSerializable(Location.LOCATION, Location::class.java)
+        } else {
+            intent?.extras?.getSerializable(Location.LOCATION) as Location?
+        }
     }
 }

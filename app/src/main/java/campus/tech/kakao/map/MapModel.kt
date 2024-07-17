@@ -200,7 +200,7 @@ class MapModel(dbHelper: MapDbHelper) {
     }
 
     private fun clearDb() {
-        helper.clearDb(helper.writableDatabase)
+        helper.clearResult(helper.writableDatabase)
     }
 
     private fun updateDb(serverResult: ServerResult, page: Int) {
@@ -219,5 +219,28 @@ class MapModel(dbHelper: MapDbHelper) {
         val keyword = serverResult.meta.sameName.keyword
         val nextPage = page + 1
         request(keyword, nextPage)
+    }
+
+    fun insertLastLocation(location: Location) {
+        val writeableDb = helper.writableDatabase
+        val content = getLocationContent(location)
+
+        helper.clearLastLocation(writeableDb)
+        writeableDb.insert(MapContract.MapEntry.TABLE_NAME_LAST_LOCATION, null, content)
+    }
+
+    fun getLastLocation(): Location {
+        val readableDb = helper.readableDatabase
+        val cursor = readableDb.query(
+            MapContract.MapEntry.TABLE_NAME_LAST_LOCATION,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        )
+        cursor.moveToNext()
+        return getLocation(cursor)
     }
 }

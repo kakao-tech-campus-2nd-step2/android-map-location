@@ -12,6 +12,8 @@ class MapViewModel(dbHelper: MapDbHelper) : ViewModel() {
     val searchResult: LiveData<List<Location>> = _searchResult
     private val _searchHistory = MutableLiveData<List<Location>>()
     val searchHistory: LiveData<List<Location>> = _searchHistory
+    private val _lastLocation = MutableLiveData<Location>()
+    val lastLocation = _lastLocation as LiveData<Location>
 
     private val resultObserver = Observer<List<Location>> {
         _searchResult.value = it
@@ -60,8 +62,17 @@ class MapViewModel(dbHelper: MapDbHelper) : ViewModel() {
 
     fun searchByKeywordFromServer(keyword: String, isExactMatch: Boolean) {
         model.searchByKeywordFromServer(keyword, isExactMatch)
-//        _searchResult.value = model.getAllLocation()
-//        Log.d("ViewModel", model.getAllLocation().toString())
+    }
+
+    fun insertLastLocation(location: Location) {
+        model.insertLastLocation(location)
+        _lastLocation.value = model.getLastLocation()
+        Log.d("ViewModel", _lastLocation.value.toString())
+    }
+
+    fun getLastLocation(): Location {
+        _lastLocation.value = model.getLastLocation()
+        return model.getLastLocation()
     }
 
     private fun observeData() {

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
@@ -61,6 +62,10 @@ class SearchActivity : AppCompatActivity(), DatabaseListener {
         val locInfo = Intent(this, MapActivity::class.java)
         locInfo.putExtra(Location.LOCATION, newHistory)
         startActivity(locInfo)
+    }
+
+    override fun insertLastLocation(location: Location) {
+        viewModel.insertLastLocation(location)
     }
 
     override fun searchHistory(locName: String, isExactMatch: Boolean) {

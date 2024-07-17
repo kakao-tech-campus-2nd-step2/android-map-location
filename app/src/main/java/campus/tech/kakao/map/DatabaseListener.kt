@@ -5,4 +5,5 @@ interface DatabaseListener {
     fun insertHistory(newHistory: Location)
     fun searchHistory(locName: String, isExactMatch: Boolean)
     fun showMap(newHistory: Location)
+    fun insertLastLocation(location: Location)
 }
