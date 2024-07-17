@@ -1,6 +1,8 @@
 package campus.tech.kakao.map
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -30,10 +32,13 @@ class MapActivity : AppCompatActivity() {
     private lateinit var placeNameTextView: TextView
     private lateinit var placeAddressTextView: TextView
     private lateinit var bottomSheet: LinearLayout
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
+
+        sharedPreferences = getSharedPreferences("map_prefs", Context.MODE_PRIVATE)
 
         mapView = findViewById(R.id.map_view)
         errorLayout = findViewById(R.id.error_layout)
@@ -46,8 +51,8 @@ class MapActivity : AppCompatActivity() {
 
         startMapView()
 
-        refreshImageView.setOnClickListener {  // 추가된 부분
-            retryMapLoad()  // 클릭 시 retryMapLoad 호출
+        refreshImageView.setOnClickListener {
+            retryMapLoad()
         }
 
         inputMap.setOnClickListener {
@@ -70,13 +75,35 @@ class MapActivity : AppCompatActivity() {
         }, object : KakaoMapReadyCallback() {
             override fun onMapReady(kakaoMap: KakaoMap) {
                 //인증 후 API가 정상적으로 실행될 때 호출됨
+
+                val lastLat = sharedPreferences.getFloat("last_lat", 0.0f)
+                val lastLng = sharedPreferences.getFloat("last_lng", 0.0f)
+                val lastZoom = sharedPreferences.getFloat("last_zoom", 15.0f)
+
+                if (lastLat != 0.0f && lastLng != 0.0f) {
+                    val lastPosition = LatLng.from(lastLat.toDouble(), lastLng.toDouble())
+                    kakaoMap.moveCamera(CameraUpdateFactory.newCenterPosition(lastPosition, lastZoom.toInt()))
+                }
+
                 handleIntent(kakaoMap)
                 //showErrorLayout(Exception("강제 에러 호출"))
+
+                kakaoMap.setOnCameraMoveEndListener { _, cameraPosition, _ ->
+                    val currentPosition = cameraPosition.position
+                    val currentZoom = cameraPosition.zoomLevel
+
+                    sharedPreferences.edit().apply {
+                        putFloat("last_lat", currentPosition.latitude.toFloat())
+                        putFloat("last_lng", currentPosition.longitude.toFloat())
+                        putFloat("last_zoom", currentZoom.toFloat())
+                        apply()
+                    }
+                }
             }
         })
     }
 
-    private fun retryMapLoad() {  // 재시도 버튼 클릭 시 호출되는 메서드
+    private fun retryMapLoad() {
         errorLayout.visibility = View.GONE
         mapView.visibility = View.VISIBLE
         startMapView()
