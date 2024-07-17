@@ -34,3 +34,5 @@ google-services.json
 
 # Mac OS
 .DS_Store
+
+app/src/main/java/test.kt
