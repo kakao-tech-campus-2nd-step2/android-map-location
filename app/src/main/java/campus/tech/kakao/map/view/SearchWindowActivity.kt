@@ -1,11 +1,11 @@
 package campus.tech.kakao.map.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -15,6 +15,7 @@ import campus.tech.kakao.map.repository.SavedSearchKeywordRepository
 import campus.tech.kakao.map.model.SearchKeyword
 import campus.tech.kakao.map.repository.SearchRepository
 import campus.tech.kakao.map.databinding.ActivitySearchWindowBinding
+import campus.tech.kakao.map.model.Place
 import campus.tech.kakao.map.viewmodel.SearchViewModel
 import campus.tech.kakao.map.viewmodel.SearchViewModelFactory
 import kotlinx.coroutines.launch
@@ -32,8 +33,7 @@ class SearchWindowActivity : AppCompatActivity() {
         val savedSearchKeywordRepository = SavedSearchKeywordRepository(this)
         val viewModelProviderFactory =
             SearchViewModelFactory(searchRepository, savedSearchKeywordRepository)
-        viewModel =
-            ViewModelProvider(this, viewModelProviderFactory)[SearchViewModel::class.java]
+        viewModel = ViewModelProvider(this, viewModelProviderFactory)[SearchViewModel::class.java]
 
         delSearchKeywordListener()
         detectSearchWindowChangedListener()
@@ -74,8 +74,17 @@ class SearchWindowActivity : AppCompatActivity() {
                     } else {
                         showView(binding.emptySearchResults, false)
                         showView(binding.searchResultsList, true)
-                        binding.searchResultsList.adapter =
-                            SearchResultsAdapter(it, layoutInflater, viewModel::saveSearchKeyword)
+
+                        val adapter = SearchResultsAdapter(it, layoutInflater)
+                        adapter.setItemClickListener(object :
+                            SearchResultsAdapter.OnItemClickListener {
+                            override fun onClick(item: Place) {
+                                val searchKeyword = SearchKeyword(item.place_name)
+                                viewModel.saveSearchKeyword(searchKeyword)
+                            }
+                        })
+
+                        binding.searchResultsList.adapter = adapter
                         binding.searchResultsList.layoutManager =
                             LinearLayoutManager(this@SearchWindowActivity)
                     }
@@ -88,17 +97,22 @@ class SearchWindowActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.savedSearchKeywords.collect {
-                    binding.savedSearchKeywordsList.adapter =
-                        SavedSearchKeywordsAdapter(
-                            it,
-                            layoutInflater,
-                            viewModel::getSearchResults,
-                            viewModel::delSavedSearchKeyword
-                        )
+
+                    val adapter = SavedSearchKeywordsAdapter(it, layoutInflater)
+                    adapter.setItemClickListener(object :
+                        SavedSearchKeywordsAdapter.OnItemClickListener {
+                        override fun onClickSavedSearchKeyword(item: SearchKeyword) {
+                            binding.searchWindow.setText(item.searchKeyword)
+                        }
+
+                        override fun onClickDelSavedSearchKeyword(item: SearchKeyword) {
+                            viewModel.delSavedSearchKeyword(item)
+                        }
+                    })
+
+                    binding.savedSearchKeywordsList.adapter = adapter
                     binding.savedSearchKeywordsList.layoutManager = LinearLayoutManager(
-                        this@SearchWindowActivity,
-                        LinearLayoutManager.HORIZONTAL,
-                        false
+                        this@SearchWindowActivity, LinearLayoutManager.HORIZONTAL, false
                     )
                 }
             }

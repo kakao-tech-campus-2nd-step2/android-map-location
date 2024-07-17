@@ -2,29 +2,26 @@ package campus.tech.kakao.map.view
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.map.databinding.SearchResultItemBinding
 import campus.tech.kakao.map.model.Place
-import campus.tech.kakao.map.model.SearchKeyword
-
 
 class SearchResultsAdapter(
     private val searchResults: List<Place>,
-    private val layoutInflater: LayoutInflater,
-    private val saveStoreName: (SearchKeyword) -> Unit
-) :
-    RecyclerView.Adapter<SearchResultsAdapter.ViewHolder>() {
-    inner class ViewHolder(binding: SearchResultItemBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        val placeName: TextView = binding.placeName
-        val addressName: TextView = binding.addressName
-        val categoryName: TextView = binding.categoryName
+    private val layoutInflater: LayoutInflater
+) : RecyclerView.Adapter<SearchResultsAdapter.ViewHolder>() {
 
-        init {
+    private lateinit var itemClickListener: OnItemClickListener
+
+    inner class ViewHolder(private val binding: SearchResultItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: Place) {
+            binding.placeName.text = item.place_name
+            binding.addressName.text = item.address_name
+            binding.categoryName.text = item.category_name
+
             binding.root.setOnClickListener {
-                val searchKeyword = SearchKeyword(placeName.text.toString())
-                saveStoreName(searchKeyword)
+                itemClickListener?.onClick(item)
             }
         }
     }
@@ -39,9 +36,14 @@ class SearchResultsAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = searchResults[position]
-        holder.placeName.text = item.place_name
-        holder.addressName.text = item.address_name
-        holder.categoryName.text = item.category_name
+        holder.bind(searchResults[position])
+    }
+
+    interface OnItemClickListener {
+        fun onClick(item: Place)
+    }
+
+    fun setItemClickListener(onItemClickListener: OnItemClickListener) {
+        this.itemClickListener = onItemClickListener
     }
 }
