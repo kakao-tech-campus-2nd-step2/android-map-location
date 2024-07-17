@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.LinearLayoutCompat
 import campus.tech.kakao.map.BuildConfig
 import campus.tech.kakao.map.R
+import campus.tech.kakao.map.model.PlaceInfo
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.kakao.vectormap.KakaoMap
@@ -16,7 +17,6 @@ import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.KakaoMapSdk
 import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.MapView
-
 
 class MapActivity : AppCompatActivity() {
     private lateinit var mapView: MapView
@@ -26,6 +26,7 @@ class MapActivity : AppCompatActivity() {
     private lateinit var clickedPlaceView: LinearLayoutCompat
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
     private lateinit var KAKAO_APP_KEY: String
+    private lateinit var kakaoMap: KakaoMap
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +37,6 @@ class MapActivity : AppCompatActivity() {
         initView()
         setListeners()
         initializeMap()
-        handleIntent()
     }
 
     private fun initView() {
@@ -67,17 +67,18 @@ class MapActivity : AppCompatActivity() {
             }
         }, object : KakaoMapReadyCallback() {
             override fun onMapReady(map: KakaoMap) {
-                Log.d("KakaoMap", "onMapReady")
+                kakaoMap = map
+                handleIntent()
             }
         })
     }
 
     private fun handleIntent() {
-        val clickedPlaceName = intent.getStringExtra("clickPlaceName")
-        val clickedPlaceAddress = intent.getStringExtra("clickPlaceAddress")
-
-        if (clickedPlaceName != null && clickedPlaceAddress != null) {
-            showClickedPlaceInfo(clickedPlaceName, clickedPlaceAddress)
+        val clickedPlaceInfo = intent.getParcelableExtra<PlaceInfo>("placeInfo")
+        clickedPlaceInfo.let {
+            if (it != null) {
+                showClickedPlaceInfo(it.place_name, it.road_address_name)
+            }
         }
     }
 
@@ -86,4 +87,6 @@ class MapActivity : AppCompatActivity() {
         clickedPlaceAddressView.text = clickedPlaceAddress
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
     }
+
+
 }

@@ -77,8 +77,7 @@ class SearchActivity : AppCompatActivity() {
         searchAdapter = SearchAdapter(emptyList()) {
             viewModel.savePlaces(it.place_name)
             val intent = Intent(this, MapActivity::class.java)
-            intent.putExtra("clickPlaceName", it.place_name)
-            intent.putExtra("clickPlaceAddress", it.road_address_name)
+            intent.putExtra("placeInfo", it)
             startActivity(intent)
         }
         recyclerView.adapter = searchAdapter
