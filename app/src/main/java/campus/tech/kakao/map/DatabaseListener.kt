@@ -1,5 +1,7 @@
 package campus.tech.kakao.map
 
+import campus.tech.kakao.map.domain.model.Location
+
 interface DatabaseListener {
     fun deleteHistory(oldHistory: Location)
     fun insertHistory(newHistory: Location)

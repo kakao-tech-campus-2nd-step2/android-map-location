@@ -1,4 +1,4 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.domain.model
 
 import java.io.Serializable
 

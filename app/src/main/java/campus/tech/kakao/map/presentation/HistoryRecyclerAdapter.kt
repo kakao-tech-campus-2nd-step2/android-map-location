@@ -1,4 +1,4 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.presentation
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +7,9 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import campus.tech.kakao.map.DatabaseListener
+import campus.tech.kakao.map.domain.model.Location
+import campus.tech.kakao.map.R
 
 class HistoryRecyclerAdapter(
     var history: List<Location>,

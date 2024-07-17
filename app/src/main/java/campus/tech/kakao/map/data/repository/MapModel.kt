@@ -1,17 +1,26 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.data.repository
 
 import android.content.ContentValues
 import android.database.Cursor
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import campus.tech.kakao.map.BuildConfig
+import campus.tech.kakao.map.data.Document
+import campus.tech.kakao.map.domain.model.Location
+import campus.tech.kakao.map.MapContract
+import campus.tech.kakao.map.data.source.RetrofitService
+import campus.tech.kakao.map.data.source.RetrofitServiceClient
+import campus.tech.kakao.map.data.ServerResult
+import campus.tech.kakao.map.data.source.MapDbHelper
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class MapModel(dbHelper: MapDbHelper) {
     private val helper: MapDbHelper = dbHelper
-    private val retrofit: RetrofitService = RetrofitServiceClient.getRetrofit("https://dapi.kakao.com/")
+    private val retrofit: RetrofitService =
+        RetrofitServiceClient.getRetrofit("https://dapi.kakao.com/")
 
     private val _searchResult = MutableLiveData(getAllLocation())
     val searchResult: LiveData<List<Location>> = _searchResult

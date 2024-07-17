@@ -1,4 +1,4 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.data
 
 import com.google.gson.annotations.SerializedName
 

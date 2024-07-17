@@ -1,10 +1,9 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.presentation
 
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
@@ -13,6 +12,10 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import campus.tech.kakao.map.DatabaseListener
+import campus.tech.kakao.map.domain.model.Location
+import campus.tech.kakao.map.R
+import campus.tech.kakao.map.data.source.MapDbHelper
 
 class SearchActivity : AppCompatActivity(), DatabaseListener {
     private lateinit var viewModel: MapViewModel

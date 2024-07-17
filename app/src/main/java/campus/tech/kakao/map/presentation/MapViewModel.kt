@@ -1,10 +1,13 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.presentation
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
+import campus.tech.kakao.map.domain.model.Location
+import campus.tech.kakao.map.data.repository.MapModel
+import campus.tech.kakao.map.data.source.MapDbHelper
 
 class MapViewModel(dbHelper: MapDbHelper) : ViewModel() {
     private val model: MapModel = MapModel(dbHelper)

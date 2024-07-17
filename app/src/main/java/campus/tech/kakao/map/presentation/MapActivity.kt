@@ -1,4 +1,4 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.presentation
 
 import android.content.Intent
 import android.graphics.Color
@@ -10,6 +10,9 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
+import campus.tech.kakao.map.domain.model.Location
+import campus.tech.kakao.map.R
+import campus.tech.kakao.map.data.source.MapDbHelper
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
