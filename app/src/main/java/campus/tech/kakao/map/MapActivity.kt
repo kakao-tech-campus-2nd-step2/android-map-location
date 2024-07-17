@@ -8,6 +8,7 @@ import android.util.Log
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
@@ -27,6 +28,8 @@ class MapActivity : AppCompatActivity() {
     private lateinit var infoSheetLayout: LinearLayout
     private lateinit var infoSheetName: TextView
     private lateinit var infoSheetAddress: TextView
+    private lateinit var errorLayout: ConstraintLayout
+    private lateinit var errorCode: TextView
 
     private lateinit var viewModel: MapViewModel
     private var initRun = true
@@ -39,12 +42,18 @@ class MapActivity : AppCompatActivity() {
         infoSheetLayout = findViewById(R.id.info_sheet)
         infoSheetName = findViewById(R.id.info_sheet_name)
         infoSheetAddress = findViewById(R.id.info_sheet_address)
+        errorLayout = findViewById(R.id.error_layout)
+        errorCode = findViewById(R.id.error_code)
         viewModel = MapViewModel(MapDbHelper(this))
         kakaoMapView.start(object : MapLifeCycleCallback() {
             override fun onMapDestroy() {
             }
 
             override fun onMapError(exception: Exception?) {
+                errorCode.text = exception?.message
+                errorLayout.isVisible = true
+                kakaoMapView.isVisible = false
+                searchBox.isVisible = false
             }
 
         }, object : KakaoMapReadyCallback(){

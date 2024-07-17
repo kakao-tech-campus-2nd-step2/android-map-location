@@ -70,7 +70,7 @@ class MapViewModel(dbHelper: MapDbHelper) : ViewModel() {
         Log.d("ViewModel", _lastLocation.value.toString())
     }
 
-    fun getLastLocation(): Location {
+    fun getLastLocation(): Location? {
         _lastLocation.value = model.getLastLocation()
         return model.getLastLocation()
     }

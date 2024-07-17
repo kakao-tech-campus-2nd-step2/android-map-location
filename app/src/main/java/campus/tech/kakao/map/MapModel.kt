@@ -229,7 +229,7 @@ class MapModel(dbHelper: MapDbHelper) {
         writeableDb.insert(MapContract.MapEntry.TABLE_NAME_LAST_LOCATION, null, content)
     }
 
-    fun getLastLocation(): Location {
+    fun getLastLocation(): Location? {
         val readableDb = helper.readableDatabase
         val cursor = readableDb.query(
             MapContract.MapEntry.TABLE_NAME_LAST_LOCATION,
@@ -240,7 +240,9 @@ class MapModel(dbHelper: MapDbHelper) {
             null,
             null
         )
-        cursor.moveToNext()
-        return getLocation(cursor)
+        return if(cursor.moveToNext())
+            getLocation(cursor)
+        else
+            null
     }
 }
