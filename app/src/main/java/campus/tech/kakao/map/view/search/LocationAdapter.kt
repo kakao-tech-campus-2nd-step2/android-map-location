@@ -32,7 +32,7 @@ class LocationAdapter(
 
         init {
             itemView.setOnClickListener {
-                itemSelectedListener.onAddSavedLocation(getItem(bindingAdapterPosition).title)
+                itemSelectedListener.onLocationViewClicked(getItem(bindingAdapterPosition).title)
             }
         }
     }

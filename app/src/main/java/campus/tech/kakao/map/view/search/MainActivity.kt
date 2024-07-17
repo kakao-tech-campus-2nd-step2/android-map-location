@@ -133,20 +133,24 @@ class MainActivity : AppCompatActivity(), OnItemSelectedListener {
         savedLocationRecyclerView.adapter = savedLocationAdapter
     }
 
-    override fun onAddSavedLocation(title: String) {
+    override fun onLocationViewClicked(title: String) {
         savedLocationViewModel.addSavedLocation(title)
     }
 
-    override fun onDeleteSavedLocation(item: SavedLocation) {
+    override fun onSavedLocationXButtonClicked(item: SavedLocation) {
         savedLocationViewModel.deleteSavedLocation(item)
     }
 
-    override fun onUpdateLocationRecyclerView(title: String) {
-        searchEditText.setText(title)
-        searchEditText.setSelection(searchEditText.text.length)
+    override fun onSavedLocationViewClicked(title: String) {
+        updateEditText(title)
         locationViewModel.searchLocationsFromKakaoAPI(title){ searchLocationsSize ->
             handleNoResultMessage(searchLocationsSize)
         }
+    }
+
+    private fun updateEditText(title: String) {
+        searchEditText.setText(title)
+        searchEditText.setSelection(searchEditText.text.length)
     }
 
     private fun handleNoResultMessage(searchLocationsSize: Int) {
