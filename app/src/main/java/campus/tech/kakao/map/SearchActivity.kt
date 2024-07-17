@@ -80,7 +80,7 @@ class SearchActivity : AppCompatActivity() {
             binding.textView.visibility =
                 if (placesAdapter.itemCount <= 0) View.VISIBLE else View.GONE
         })
-
+        
         viewModel.searchHistoryData.observe(this, Observer { searchHistoryData ->
             searchHistoryAdapter.submitList(searchHistoryData.toList())
             binding.searchHistory.isVisible = searchHistoryData.isNotEmpty()

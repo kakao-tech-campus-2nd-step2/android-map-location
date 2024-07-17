@@ -168,6 +168,7 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         binding.mapView.resume()
         Log.d("MainAct State", "Intent is: $intent")
+
     }
 
     override fun onPause() {

@@ -42,6 +42,7 @@ class PlacesAdapter(
         init {
             binding.root.setOnClickListener {
                 onClick(placesList[bindingAdapterPosition])
+
             }
         }
 
