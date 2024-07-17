@@ -43,16 +43,6 @@ class MapActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-//        sheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-//            override fun onStateChanged(p0: View, p1: Int) {
-//                Log.d("uin", "상태바뀜")
-//            }
-//
-//            override fun onSlide(p0: View, p1: Float) {
-//                Log.d("uin", "슬라이드")
-//            }
-//        })
-
         //맵 표시 부분
         val x: Double? = intent.extras?.getDouble("x")
         val y: Double? = intent.extras?.getDouble("y")
@@ -66,6 +56,11 @@ class MapActivity : AppCompatActivity() {
 
             override fun onMapError(error: Exception?) {
                 // 인증 실패 및 지도 사용 중 에러가 발생할 때 호출됨
+                val intent = Intent(this@MapActivity, MapErrorActivity::class.java)
+                intent.putExtra("error", error.toString())
+                Log.d("uin", "" + error)
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                startActivity(intent)
             }
         }, object : KakaoMapReadyCallback() {
 
@@ -74,7 +69,7 @@ class MapActivity : AppCompatActivity() {
                 if(x == null && y == null) {
                     val lastX = sharedPreferences.getString("x", "127.115587")?.toDouble()
                     val lastY = sharedPreferences.getString("y", "37.406960")?.toDouble()
-                    Log.d("uin", "" + lastX + " " + lastY)
+                    //Log.d("uin", "" + lastX + " " + lastY)
                     return LatLng.from(lastY ?: 37.395447 , lastX ?: 127.110457)
                 }else {
                     return LatLng.from(y ?: 37.395447 , x ?: 127.110457)
