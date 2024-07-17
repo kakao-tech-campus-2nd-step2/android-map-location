@@ -57,6 +57,10 @@ class SearchActivity : AppCompatActivity(), OnClickPlaceListener, OnClickSavedPl
         viewModel.deleteSavedPlace(savedPlace)
     }
 
+    override fun loadPlace(savedPlace: SavedPlace){
+        inputSearchField.setText(savedPlace.name)
+    }
+
     override fun savePlace(place: Place) {
         Log.d("testt", "콜백함수 처리")
         viewModel.savePlace(place)
