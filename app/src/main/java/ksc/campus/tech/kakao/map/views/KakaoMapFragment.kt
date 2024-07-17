@@ -6,7 +6,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
+import androidx.constraintlayout.widget.Group
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.kakao.vectormap.KakaoMap
@@ -29,17 +32,21 @@ class KakaoMapFragment : Fragment() {
     private lateinit var locationInfoNameView: TextView
     private lateinit var locationInfoAddressView: TextView
 
+    private lateinit var errorTextView: TextView
+    private lateinit var retryButton: ImageButton
+    private lateinit var errorMessageGroup: Group
+
     private lateinit var kakaoMapView: MapView
     private var kakaoMap: KakaoMap? = null
     private val viewModel by activityViewModels<SearchActivityViewModel>()
 
-    private fun initiateKakaoMap(view: View) {
-        kakaoMapView = view.findViewById(R.id.kakao_map_view)
+    private fun startKakaoMapView(){
         kakaoMapView.start(object : MapLifeCycleCallback() {
             override fun onMapDestroy() {
             }
 
             override fun onMapError(e: Exception?) {
+                showErrorText(getErrorMessage(e?.message?:""))
                 Log.e("KSC", e?.message ?: "")
             }
 
@@ -54,6 +61,11 @@ class KakaoMapFragment : Fragment() {
                     }
                 }
             })
+
+    }
+    private fun initiateKakaoMap(view: View) {
+        kakaoMapView = view.findViewById(R.id.kakao_map_view)
+        startKakaoMapView()
     }
 
     private fun moveCamera(kakaoMap: KakaoMap, position: CameraPosition){
@@ -70,10 +82,21 @@ class KakaoMapFragment : Fragment() {
         }
     }
 
-    private fun initiateTextViews(parent: View){
+    private fun initiateRetryButton(parent: View){
+        retryButton = parent.findViewById(R.id.retry_button)
+        retryButton.setOnClickListener{
+            startKakaoMapView()
+            setErrorMessageVisibility(false)
+        }
+    }
+
+    private fun initiateViews(parent: View){
+        errorTextView = parent.findViewById(R.id.text_error)
         locationInfoNameView = parent.findViewById(R.id.text_location_name)
         locationInfoAddressView = parent.findViewById(R.id.text_location_address)
+        errorMessageGroup = parent.findViewById(R.id.error_message_group)
 
+        initiateRetryButton(parent)
         setTextVisibility(viewModel.selectedLocation.value != null)
         updateText(viewModel.selectedLocation.value?.name?:"", viewModel.selectedLocation.value?.address?:"")
     }
@@ -86,8 +109,8 @@ class KakaoMapFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        initiateViews(view)
         initiateKakaoMap(view)
-        initiateTextViews(view)
         initiateViewModelCallbacks()
         super.onViewCreated(view, savedInstanceState)
     }
@@ -158,5 +181,18 @@ class KakaoMapFragment : Fragment() {
         options.setStyles(styles)
         val layer = kakaoMap?.labelManager?.layer
         layer?.addLabel(options)
+    }
+
+    private fun getErrorMessage(error: String): String{
+        return "지도 인증을 실패 했습니다. \n다시 시도해 주세요.\n\n$error"
+    }
+
+    private fun showErrorText(errorMessage:String){
+        setErrorMessageVisibility(true)
+        errorTextView.text = errorMessage
+    }
+
+    private fun setErrorMessageVisibility(visible:Boolean){
+        errorMessageGroup.isVisible = visible
     }
 }
