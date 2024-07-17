@@ -27,8 +27,12 @@ class SavedLocationAdapter(
         itemView:View,
         itemSelectedListener: OnItemSelectedListener
     ) : RecyclerView.ViewHolder(itemView) {
-        val savedLocationXButton: ImageView = itemView.findViewById(R.id.savedLocationXButton)
-        val savedLocationTextView: TextView = itemView.findViewById(R.id.savedLocationTextView)
+        val savedLocationXButton: ImageView by lazy{
+            itemView.findViewById(R.id.savedLocationXButton)
+        }
+        val savedLocationTextView: TextView by lazy {
+            itemView.findViewById(R.id.savedLocationTextView)
+        }
 
         init {
             savedLocationXButton.setOnClickListener {
