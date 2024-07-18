@@ -13,5 +13,9 @@ data class LocationDto(
     @SerializedName("category_group_name")
     val category: String,
     @SerializedName("address_name")
-    val address: String
+    val address: String,
+    @SerializedName("x")
+    val x: String,
+    @SerializedName("y")
+    val y: String
 )
