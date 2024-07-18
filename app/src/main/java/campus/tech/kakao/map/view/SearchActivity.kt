@@ -34,7 +34,7 @@ class SearchActivity : AppCompatActivity() {
         binding.recyclerViewSearchResults.layoutManager = LinearLayoutManager(this)
         binding.recyclerViewSavedSearches.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
-        placeAdapter = PlaceAdapter(emptyList()) { place ->
+        placeAdapter = PlaceAdapter(this, emptyList()) { place ->
             viewModel.addSavedQuery(place.placeName)
         }
         binding.recyclerViewSearchResults.adapter = placeAdapter
