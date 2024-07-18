@@ -29,4 +29,18 @@ class ErrorScreenTest {
             scenario.close()
         }
     }
+
+    @Test
+    fun testShowErrorScreen() {
+        scenario.onActivity { activity ->
+
+            Thread.sleep(2000)
+
+            val errorLayout: RelativeLayout = activity.findViewById(R.id.error_layout)
+            val errorDetails: TextView = activity.findViewById(R.id.error_details)
+
+            assertTrue(errorLayout.visibility == View.VISIBLE)
+            assertTrue(errorDetails.text.toString().contains("Unauthorized"))
+        }
+    }
 }
