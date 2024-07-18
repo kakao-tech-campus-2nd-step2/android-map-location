@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import campus.tech.kakao.map.BuildConfig
 import campus.tech.kakao.map.R
@@ -53,7 +54,8 @@ class MapActivity : AppCompatActivity() {
     }
 
     private fun setupMapView() {
-        KakaoMapSdk.init(this, BuildConfig.KAKAO_API_KEY);
+//        KakaoMapSdk.init(this, BuildConfig.KAKAO_API_KEY);
+        KakaoMapSdk.init(this, BuildConfig.KAKAO_REST_API_KEY);
         mapView.start(object : MapLifeCycleCallback() {
             override fun onMapDestroy() {
                 // 지도 API 가 정상적으로 종료될 때 호출됨
@@ -63,6 +65,9 @@ class MapActivity : AppCompatActivity() {
             override fun onMapError(error: Exception) {
                 // 인증 실패 및 지도 사용 중 에러가 발생할 때 호출됨
                 Log.d("jieun", "onMapError" + error)
+                setContentView(R.layout.error_map)
+                val errorMessageTextView: TextView = findViewById(R.id.errorMessageTextView)
+                errorMessageTextView.text = "지도 인증을 실패했습니다.\n다시 시도해주세요.\n\n"+error.message
             }
         }, object : KakaoMapReadyCallback() {
             val coordinates = getCoordinates()
