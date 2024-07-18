@@ -6,7 +6,10 @@ import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.map.databinding.ItemSelectedBinding
 
 class SelectedAdapter(
-    private val onItemRemoved: (MapItem) -> Unit
+
+    private val onItemRemoved: (MapItem) -> Unit,
+    private val onItemClicked: (MapItem) -> Unit
+
 ) : RecyclerView.Adapter<SelectedAdapter.SelectedViewHolder>() {
 
     private var items: List<MapItem> = emptyList()
@@ -44,6 +47,8 @@ class SelectedAdapter(
             binding.apply {
                 selectedItemName.text = item.place_name //상단에 이름만 표시
                 deleteButton.setOnClickListener { onItemRemoved(item) }
+
+                root.setOnClickListener { onItemClicked(item) } // 클릭 시 검색
             }
         }
     }

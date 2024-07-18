@@ -12,7 +12,8 @@ class MapAccess(context: Context) {
 
         return withContext(Dispatchers.IO) {
 
-            val apiKey = "KakaoAK ${BuildConfig.KAKAO_REST_API_KEY}"
+            val apiKey = Constants.KAKAO_API_KEY
+
 
             val response = RetrofitInstance.api.searchPlaces(apiKey, query, page, size)
 

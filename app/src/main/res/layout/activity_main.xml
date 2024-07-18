@@ -1,23 +1,100 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MainActivity">
 
-    <EditText
-        android:id="@+id/search_edit_text"
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <EditText
+            android:id="@+id/search_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:hint="@string/hint_search"
+            android:padding="10dp"
+            android:background="@drawable/search_background"
+            android:drawableEnd="@android:drawable/ic_menu_search"
+            android:layout_margin="10dp" />
+
+        <com.kakao.vectormap.MapView
+            android:id="@+id/map_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/search_edit_text" />
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/bottomSheetLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:hint="@string/hint_search"
-        android:padding="10dp"
-        android:background="@drawable/search_background"
-        android:drawableEnd="@android:drawable/ic_menu_search"
-        android:layout_margin="10dp" />
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        android:background="@android:color/white">
 
-    <com.kakao.vectormap.MapView
-        android:id="@+id/map_view"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/bottomSheetTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:id="@+id/bottomSheetAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"/>
+        </LinearLayout>
+    </FrameLayout>
+
+    <!-- 에러 화면 레이아웃 -->
+    <RelativeLayout
+        android:id="@+id/error_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/search_edit_text" />
-</RelativeLayout>
+        android:visibility="gone"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/error_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="지도 인증에 실패했습니다.\n다시 시도해 주세요."
+            android:textSize="16sp"
+            android:gravity="center"
+            android:textColor="#000000" />
+
+        <TextView
+            android:id="@+id/error_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="14sp"
+            android:gravity="center"
+            android:textColor="#000000"
+            android:layout_below="@id/error_message"
+            android:layout_marginTop="8dp" />
+
+        <ImageButton
+            android:id="@+id/retry_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_refresh"
+            android:layout_below="@id/error_details"
+            android:layout_marginTop="16dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:onClick="onRetryButtonClick" />
+    </RelativeLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+

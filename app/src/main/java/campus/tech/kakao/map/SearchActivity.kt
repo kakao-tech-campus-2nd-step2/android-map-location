@@ -11,6 +11,9 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import android.app.Activity
+import android.content.Intent
+
 
 class SearchActivity : AppCompatActivity() {
 
@@ -35,14 +38,31 @@ class SearchActivity : AppCompatActivity() {
         setupSearchEditText()
         setupClearTextButton()
         observeViewModel()
+
+
+        // 선택된 항목 복원
+        val selectedItemsSize = intent.getIntExtra("selectedItemsSize", 0)
+        val selectedItems = mutableListOf<MapItem>()
+        for (i in 0 until selectedItemsSize) {
+            val id = intent.getStringExtra("id_$i") ?: ""
+            val place_name = intent.getStringExtra("place_name_$i") ?: ""
+            val road_address_name = intent.getStringExtra("road_address_name_$i") ?: ""
+            val category_group_name = intent.getStringExtra("category_group_name_$i") ?: ""
+            val x = intent.getDoubleExtra("x_$i", 0.0)
+            val y = intent.getDoubleExtra("y_$i", 0.0)
+            selectedItems.add(MapItem(id, place_name, road_address_name, category_group_name, x, y))
+        }
+        viewModel.setSelectedItems(selectedItems)
     }
 
     private fun setupRecyclerViews() {
         searchAdapter = SearchAdapter { item ->
             if (viewModel.selectedItems.value?.contains(item) == true) {
-                Toast.makeText(this, getString(R.string.item_already_selected), Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.item_already_selected), Toast.LENGTH_SHORT)
+                    .show()
             } else {
                 viewModel.selectItem(item)
+                setResultAndFinish(item)
             }
         }
 
@@ -51,7 +71,12 @@ class SearchActivity : AppCompatActivity() {
             adapter = searchAdapter
         }
 
-        selectedAdapter = SelectedAdapter { item -> viewModel.removeSelectedItem(item) }
+
+        selectedAdapter = SelectedAdapter(
+            onItemRemoved = { item -> viewModel.removeSelectedItem(item) },
+            onItemClicked = { item -> performSearch(item.place_name) }
+        )
+
         binding.selectedItemsRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@SearchActivity, RecyclerView.HORIZONTAL, false)
             adapter = selectedAdapter
@@ -109,5 +134,31 @@ class SearchActivity : AppCompatActivity() {
         viewModel.selectedItems.observe(this, Observer { selectedItems ->
             selectedAdapter.submitList(selectedItems)
         })
+    }
+
+    private fun performSearch(query: String) {
+        binding.searchEditText.setText(query)
+        viewModel.searchQuery.value = query
+    }
+
+    //Main->Search 반환 시 저장된 검색어 그대로
+    private fun setResultAndFinish(selectedItem: MapItem) {
+        val intent = Intent().apply {
+            putExtra("place_name", selectedItem.place_name)
+            putExtra("road_address_name", selectedItem.road_address_name)
+            putExtra("x", selectedItem.x)
+            putExtra("y", selectedItem.y)
+            putExtra("selectedItemsSize", viewModel.selectedItems.value?.size ?: 0)
+            viewModel.selectedItems.value?.forEachIndexed { index, item ->
+                putExtra("id_$index", item.id)
+                putExtra("place_name_$index", item.place_name)
+                putExtra("road_address_name_$index", item.road_address_name)
+                putExtra("category_group_name_$index", item.category_group_name)
+                putExtra("x_$index", item.x)
+                putExtra("y_$index", item.y)
+            }
+        }
+        setResult(Activity.RESULT_OK, intent)
+        finish()
     }
 }
