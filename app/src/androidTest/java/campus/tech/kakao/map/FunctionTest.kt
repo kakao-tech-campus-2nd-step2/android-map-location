@@ -52,6 +52,15 @@ class FunctionTest {
                     val searchEditText: EditText = searchActivity.findViewById(R.id.searchEditText)
                     searchEditText.setText("바다 정원")
                     searchActivity.performSearch("바다 정원")
+
+                    //2 recyclerview로 검색결과 보이는지 테스트
+                    val searchResults = MutableLiveData<List<MapItem>>()
+                    searchResults.postValue(listOf(MapItem("1", "바다 정원", "강원도 고성군", "카페", 127.0, 37.0)))
+                    searchActivity.viewModel.setSearchResults(searchResults.value ?: emptyList())
+
+                    val searchResultsRecyclerView: RecyclerView = searchActivity.findViewById(R.id.searchResultsRecyclerView)
+                    searchResultsRecyclerView.adapter?.notifyDataSetChanged()
+                    assertEquals(1, searchResultsRecyclerView.adapter?.itemCount)
                 }
             }
         }
