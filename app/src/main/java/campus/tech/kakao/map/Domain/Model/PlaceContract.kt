@@ -107,7 +107,6 @@ object PlaceContract {
                     cursor.getColumnIndexOrThrow(PlaceEntry.COLUMN_Y)
                 )
             )
-            result.add(place)
         }
         return result
     }
