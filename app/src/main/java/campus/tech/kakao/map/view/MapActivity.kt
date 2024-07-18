@@ -1,9 +1,13 @@
 package campus.tech.kakao.map.view
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.LinearLayoutCompat
@@ -33,6 +37,11 @@ class MapActivity : AppCompatActivity() {
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
     private lateinit var KAKAO_APP_KEY: String
     private lateinit var kakaoMap: KakaoMap
+    private lateinit var pos: LatLng
+    private lateinit var spf: SharedPreferences
+    private lateinit var errorView: LinearLayout
+    private lateinit var errorDetail: TextView
+    private lateinit var retryButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +54,17 @@ class MapActivity : AppCompatActivity() {
         initializeMap()
     }
 
+    override fun onResume() {
+        super.onResume()
+        mapView.resume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mapView.pause()
+        saveLastPosition()
+    }
+
     private fun initView() {
         mapView = findViewById(R.id.mapView)
         searchFloatingBtn = findViewById(R.id.searchFloatingBtn)
@@ -53,12 +73,21 @@ class MapActivity : AppCompatActivity() {
         clickedPlaceView = findViewById(R.id.clickedPlaceView)
         bottomSheetBehavior = BottomSheetBehavior.from(clickedPlaceView)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        spf = getPreferences(Context.MODE_PRIVATE)
+        errorView = findViewById(R.id.errorView)
+        errorDetail = findViewById(R.id.errorDetail)
+        retryButton = findViewById(R.id.retryButton)
     }
 
     private fun setListeners() {
         searchFloatingBtn.setOnClickListener {
             val intent = Intent(this, SearchActivity::class.java)
             startActivity(intent)
+        }
+        retryButton.setOnClickListener {
+            errorView.visibility = View.GONE
+            mapView.visibility = View.VISIBLE
+            initializeMap()
         }
     }
 
@@ -75,19 +104,17 @@ class MapActivity : AppCompatActivity() {
             override fun onMapReady(map: KakaoMap) {
                 kakaoMap = map
                 handleIntent()
+                moveClickedPlace(pos.latitude, pos.longitude)
             }
         })
     }
 
     private fun handleIntent() {
         val clickedPlaceInfo = intent.getParcelableExtra<PlaceInfo>("placeInfo")
-        clickedPlaceInfo.let {
-            if (it != null) {
-                val pos: LatLng = LatLng.from(it.y.toDouble(), it.x.toDouble())
-                showClickedPlaceInfo(it.place_name, it.road_address_name)
-                showLabel(pos.latitude, pos.longitude)
-                moveClickedPlace(pos.latitude, pos.longitude)
-            }
+        clickedPlaceInfo?.let {
+            pos = LatLng.from(it.y.toDouble(), it.x.toDouble())
+            showClickedPlaceInfo(it.place_name, it.road_address_name)
+            showLabel(pos.latitude, pos.longitude)
         }
     }
 
@@ -108,5 +135,15 @@ class MapActivity : AppCompatActivity() {
 
     private fun moveClickedPlace(latitude: Double, longitude: Double) {
         kakaoMap.moveCamera(CameraUpdateFactory.newCenterPosition(LatLng.from(latitude, longitude)))
+    }
+
+    private fun saveLastPosition() {
+        kakaoMap.cameraPosition?.let { camera ->
+            val editor = spf.edit()
+            editor.putFloat("latitude", camera.position.latitude.toFloat())
+            editor.putFloat("longitude", camera.position.longitude.toFloat())
+            editor.apply()
+
+        }
     }
 }
