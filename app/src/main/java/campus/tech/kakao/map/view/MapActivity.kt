@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.SharedPreferences.Editor
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -31,14 +30,11 @@ import com.kakao.vectormap.KakaoMapSdk
 import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.MapView
-import com.kakao.vectormap.MapViewInfo
-import com.kakao.vectormap.camera.CameraUpdate
 import com.kakao.vectormap.camera.CameraUpdateFactory
 import com.kakao.vectormap.label.LabelManager
 import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.label.LabelStyle
 import com.kakao.vectormap.label.LabelStyles
-
 
 class MapActivity : AppCompatActivity() {
 
@@ -106,7 +102,6 @@ class MapActivity : AppCompatActivity() {
                 Log.d("testt", "message : " + error.message.toString())
                 Log.d("testt", "hashCode : " + error.localizedMessage)
                 showErrorMessageView(error.message.toString())
-
             }
         }, object : KakaoMapReadyCallback() {
             override fun onMapReady(kakaoMap: KakaoMap) {
