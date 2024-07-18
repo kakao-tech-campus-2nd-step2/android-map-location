@@ -1,4 +1,4 @@
-package campus.tech.kakao.map.viewModel
+package campus.tech.kakao.map.viewmodel
 
 import android.content.Context
 import android.content.Intent
@@ -19,8 +19,12 @@ class SearchViewModel(private val context: Context) : ViewModel() {
     private val _selectedKeyword = MutableLiveData<Keyword>()
     val selectedKeyword: LiveData<Keyword> = _selectedKeyword
 
+    private val _lastMarker = MutableLiveData<Keyword>()
+    val lastMarker: LiveData<Keyword> = _lastMarker
+
     init {
         _savedKeywords.value = repository.getAllSavedKeywordsFromPrefs()
+        loadLastMarkerPosition()
     }
 
     fun search(query: String) {
@@ -33,7 +37,7 @@ class SearchViewModel(private val context: Context) : ViewModel() {
     fun saveKeyword(keyword: Keyword) {
         val currentSavedKeywords = _savedKeywords.value?.toMutableList() ?: mutableListOf()
         if (!currentSavedKeywords.contains(keyword)) {
-            currentSavedKeywords.add(0, keyword) // 최신 키워드를 앞에 추가
+            currentSavedKeywords.add(0, keyword)
             _savedKeywords.value = currentSavedKeywords
             repository.saveKeywordToPrefs(keyword)
         }
@@ -52,7 +56,20 @@ class SearchViewModel(private val context: Context) : ViewModel() {
         val x = data.getDoubleExtra("x", 0.0)
         val y = data.getDoubleExtra("y", 0.0)
         if (placeName != null && roadAddressName != null) {
-            _selectedKeyword.value = Keyword(0, placeName, roadAddressName, x, y)
+            val keyword = Keyword(0, placeName, roadAddressName, x, y)
+            _selectedKeyword.value = keyword
+            saveLastMarkerPosition(keyword)
+        }
+    }
+
+    fun saveLastMarkerPosition(keyword: Keyword) {
+        repository.saveLastMarkerPosition(keyword.x, keyword.y, keyword.name, keyword.address)
+    }
+
+    fun loadLastMarkerPosition() {
+        val keyword = repository.loadLastMarkerPosition()
+        if (keyword != null) {
+            _lastMarker.value = keyword
         }
     }
 }

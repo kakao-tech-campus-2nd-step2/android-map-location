@@ -8,8 +8,8 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import campus.tech.kakao.map.viewModel.SearchViewModel
-import campus.tech.kakao.map.viewModel.SearchViewModelFactory
+import campus.tech.kakao.map.viewmodel.SearchViewModel
+import campus.tech.kakao.map.viewmodel.SearchViewModelFactory
 import campus.tech.kakao.map.adapter.SavedKeywordsAdapter
 import campus.tech.kakao.map.adapter.SearchResultsAdapter
 import campus.tech.kakao.map.databinding.ActivitySearchBinding

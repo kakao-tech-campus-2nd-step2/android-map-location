@@ -10,9 +10,10 @@ import android.widget.FrameLayout
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import campus.tech.kakao.map.R
+import campus.tech.kakao.map.data.Keyword
 import campus.tech.kakao.map.databinding.ActivityMainBinding
-import campus.tech.kakao.map.viewModel.SearchViewModel
-import campus.tech.kakao.map.viewModel.SearchViewModelFactory
+import campus.tech.kakao.map.viewmodel.SearchViewModel
+import campus.tech.kakao.map.viewmodel.SearchViewModelFactory
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
@@ -80,7 +81,7 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     Log.e("MainActivity", "LabelManager is null")
                 }
-                loadLastMarkerPosition()
+                viewModel.loadLastMarkerPosition()
                 Log.d("MainActivity", "Map is ready")
             }
 
@@ -126,7 +127,7 @@ class MainActivity : AppCompatActivity() {
 
             moveCamera(position)
             updateBottomSheet(placeName, roadAddressName)
-            saveLastMarkerPosition(x, y, placeName, roadAddressName)
+            viewModel.saveLastMarkerPosition(Keyword(0, placeName, roadAddressName, x, y))
         }
     }
 
@@ -156,52 +157,16 @@ class MainActivity : AppCompatActivity() {
         binding.mapView.pause()
     }
 
-    private fun saveLastMarkerPosition(latitude: Double, longitude: Double, placeName: String, roadAddressName: String) {
-        val sharedPreferences = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        with(sharedPreferences.edit()) {
-            putFloat(PREF_LATITUDE, latitude.toFloat())
-            putFloat(PREF_LONGITUDE, longitude.toFloat())
-            putString(PREF_PLACE_NAME, placeName)
-            putString(PREF_ROAD_ADDRESS_NAME, roadAddressName)
-            apply()
-        }
-    }
-
-    private fun loadLastMarkerPosition() {
-        val sharedPreferences = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        if (sharedPreferences.contains(PREF_LATITUDE) && sharedPreferences.contains(PREF_LONGITUDE)) {
-            val latitude = sharedPreferences.getFloat(PREF_LATITUDE, 0.0f).toDouble()
-            val longitude = sharedPreferences.getFloat(PREF_LONGITUDE, 0.0f).toDouble()
-            val placeName = sharedPreferences.getString(PREF_PLACE_NAME, "") ?: ""
-            val roadAddressName = sharedPreferences.getString(PREF_ROAD_ADDRESS_NAME, "") ?: ""
-
-            if (placeName.isNotEmpty() && roadAddressName.isNotEmpty()) {
-                Log.d("MainActivity", "Loaded last marker position: lat=$latitude, lon=$longitude, placeName=$placeName, roadAddressName=$roadAddressName")
-                addMarker(placeName, roadAddressName, longitude, latitude)
-                val position = LatLng.from(latitude, longitude)
-                moveCamera(position)
-                updateBottomSheet(placeName, roadAddressName)
-            } else {
-                Log.d("MainActivity", "No place name or road address name found")
-            }
-        } else {
-            Log.d("MainActivity", "No last marker position found in SharedPreferences")
-        }
-    }
-
     private fun observeViewModel() {
         viewModel.selectedKeyword.observe(this) { keyword ->
             addMarker(keyword.name, keyword.address, keyword.x, keyword.y)
-            saveLastMarkerPosition(keyword.x, keyword.y, keyword.name, keyword.address)
+        }
+        viewModel.lastMarker.observe(this) { keyword ->
+            addMarker(keyword.name, keyword.address, keyword.x, keyword.y)
         }
     }
 
     companion object {
         private const val SEARCH_REQUEST_CODE = 1
-        private const val PREFS_NAME = "LastMarker"
-        private const val PREF_LATITUDE = "lasrX"
-        private const val PREF_LONGITUDE = "lastY"
-        private const val PREF_PLACE_NAME = "lastName"
-        private const val PREF_ROAD_ADDRESS_NAME = "lastAdress"
     }
 }
