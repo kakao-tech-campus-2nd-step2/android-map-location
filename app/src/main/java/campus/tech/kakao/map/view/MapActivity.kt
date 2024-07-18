@@ -4,6 +4,7 @@ import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.SharedPreferences.Editor
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -12,6 +13,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -50,59 +52,20 @@ class MapActivity : AppCompatActivity() {
     lateinit var bottomSheetLayout : ConstraintLayout
     lateinit var placeNameField : TextView
     lateinit var placeLocationField : TextView
+    lateinit var bottomSheetBehavior : BottomSheetBehavior<ConstraintLayout>
+    lateinit var editor : Editor
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
 
-
-        placeNameField = findViewById<TextView>(R.id.place_name)
-        placeLocationField = findViewById<TextView>(R.id.place_location)
-        sharedPreferences = getSharedPreferences("table_name", Context.MODE_PRIVATE)
-        bottomSheetLayout = findViewById<ConstraintLayout>(R.id.bottom_sheet)
         initVar()
+        initSharedPreferece()
+        initBottomSheet()
         initSDK()
         initMapView()
         initClickListener()
-        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout)
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-
-        resultLauncher =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                if (result.resultCode == RESULT_OK) {
-                    val place : Place? =
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        result.data?.getParcelableExtra(Constants.Keys.KEY_PLACE, Place::class.java)
-                    } else {
-                        result.data?.getParcelableExtra(Constants.Keys.KEY_PLACE)
-                    }
-                    Log.d("testt", "pos : ${place.toString()}")
-                    val latitude = place?.y?.toDouble() ?: 127.115587
-                    val longitude = place?.x?.toDouble()?: 37.406960
-                    val pos = LatLng.from(latitude, longitude)
-                    Log.d("testt", "pos : ${pos.toString()}")
-                    kakaoMap.moveCamera(CameraUpdateFactory.newCenterPosition(pos))
-                    val labelManager = kakaoMap.labelManager
-                    kakaoMap.labelManager?.clearAll()
-                    val style = labelManager
-                        ?.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.ic_location_marker_2).setAnchorPoint(0.5f, 1f)))
-                    var label = kakaoMap.getLabelManager()?.getLayer()?.addLabel(LabelOptions.from("center",pos).setStyles(style).setRank(1))
-                    val editor : SharedPreferences.Editor = sharedPreferences.edit()
-                    editor.putString("latitude", latitude.toString()) // key-value방식으로 데이터 저장
-                    editor.putString("longitude", longitude.toString())
-                    editor.apply()
-                    placeNameField.text = place?.name ?: ""
-                    placeLocationField.text = place?.location ?: ""
-                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-
-
-                }
-            }
-
-        // BottomSheetBehavior에 layout 설정
-
-
-
+        initResultLauncher()
     }
 
 
@@ -111,7 +74,20 @@ class MapActivity : AppCompatActivity() {
         inputField = findViewById<EditText>(R.id.input_search_field)
         searchIcon = findViewById<ImageView>(R.id.search_icon)
         errorTextView = findViewById<TextView>(R.id.error_text)
+        placeNameField = findViewById<TextView>(R.id.place_name)
+        placeLocationField = findViewById<TextView>(R.id.place_location)
         bringFrontSearchField()
+    }
+
+    private fun initSharedPreferece(){
+        sharedPreferences = getSharedPreferences(Constants.Keys.KEY_SHARED, Context.MODE_PRIVATE)
+        editor = sharedPreferences.edit()
+    }
+
+    private fun initBottomSheet(){
+        bottomSheetLayout = findViewById<ConstraintLayout>(R.id.bottom_sheet)
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout)
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
     }
 
     private fun initSDK() {
@@ -140,12 +116,11 @@ class MapActivity : AppCompatActivity() {
             }
 
             override fun getPosition(): LatLng {
-                val latitude = sharedPreferences.getString("latitude", "37.406960")?.toDouble() ?: 37.406960
-                val longitude = sharedPreferences.getString("longitude", "127.115587")?.toDouble() ?: 127.115587
+                val latitude = sharedPreferences.getString(Constants.Keys.KEY_LATITUDE, "37.406960")?.toDouble() ?: 37.406960
+                val longitude = sharedPreferences.getString(Constants.Keys.KEY_LONGITUDE, "127.115587")?.toDouble() ?: 127.115587
                 return LatLng.from(latitude, longitude)
             }
         })
-
 
     }
 
@@ -158,6 +133,23 @@ class MapActivity : AppCompatActivity() {
         inputField.setOnClickListener {
             moveSearchPage(it)
         }
+    }
+
+    private fun initResultLauncher(){
+        resultLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == RESULT_OK) {
+                    val place = getPlaceToResult(result)
+                    val latitude = place?.y?.toDouble() ?: 127.115587
+                    val longitude = place?.x?.toDouble()?: 37.406960
+                    val pos = LatLng.from(latitude, longitude)
+                    moveMapCamera(pos)
+                    createLabel(pos)
+                    putPosSharedPreference(latitude, longitude)
+                    bottomSheetBinding(place)
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+                }
+            }
     }
 
     private fun moveSearchPage(view: View) {
@@ -218,5 +210,38 @@ class MapActivity : AppCompatActivity() {
         }
     }
 
+    private fun getPlaceToResult(result: ActivityResult): Place? {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            result.data?.getParcelableExtra(Constants.Keys.KEY_PLACE, Place::class.java)
+        } else {
+            result.data?.getParcelableExtra(Constants.Keys.KEY_PLACE)
+        }
+    }
 
+    private fun moveMapCamera(pos : LatLng){
+        kakaoMap.moveCamera(CameraUpdateFactory.newCenterPosition(pos))
+    }
+
+    private fun bottomSheetBinding(place: Place?){
+        placeNameField.text = place?.name ?: ""
+        placeLocationField.text = place?.location ?: ""
+    }
+
+    private fun putPosSharedPreference(latitude : Double, longitude : Double){
+        editor.putString(Constants.Keys.KEY_LATITUDE, latitude.toString())
+        editor.putString(Constants.Keys.KEY_LONGITUDE, longitude.toString())
+        editor.apply()
+    }
+
+    private fun removeAllLabel(){
+        kakaoMap.labelManager?.clearAll()
+    }
+
+    private fun createLabel(pos : LatLng){
+        val labelManager = kakaoMap.labelManager
+        removeAllLabel()
+        val style = labelManager
+            ?.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.ic_location_marker_2).setAnchorPoint(0.5f, 1f)))
+        var label = kakaoMap.getLabelManager()?.getLayer()?.addLabel(LabelOptions.from("center",pos).setStyles(style).setRank(1))
+    }
 }
