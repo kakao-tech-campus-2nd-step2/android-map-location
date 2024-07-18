@@ -1,6 +1,7 @@
 package campus.tech.kakao.map
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.widget.LinearLayout
@@ -73,8 +74,16 @@ class MapViewActivity : AppCompatActivity() {
             }, object : KakaoMapReadyCallback() {
                 override fun onMapReady(map: KakaoMap) {
                     Log.d("KakaoMap", "카카오맵 정상실행")
-                    // 카메라 이동
                     val position = LatLng.from(placeY!!.toDouble(), placeX!!.toDouble())
+                    // 라벨표시
+                    val style = map.labelManager?.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.flag).setTextStyles(40, Color.BLACK)))
+                    val options: LabelOptions = LabelOptions.from(position)
+                        .setStyles(style)
+                    val layer = map.labelManager?.layer
+                    val label = layer?.addLabel(options)
+                    label?.changeText(placeName)
+
+                    //카메라 이동
                     val cameraUpdate = CameraUpdateFactory.newCenterPosition(position)
                     map.moveCamera(cameraUpdate, CameraAnimation.from(500, true, true))
                 }
