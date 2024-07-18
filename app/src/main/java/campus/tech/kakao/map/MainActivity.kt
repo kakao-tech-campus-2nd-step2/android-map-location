@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.map.databinding.ActivityMainBinding
 import android.util.Log
 import com.kakao.sdk.common.util.Utility
+import android.content.Intent
 
 class MainActivity : AppCompatActivity() {
 
@@ -82,11 +83,23 @@ class MainActivity : AppCompatActivity() {
     fun setupRecyclerViews() {
         searchAdapter = SearchAdapter { result ->
             viewModel.addSearch(result.place_name)
+            val intent = Intent(this, MapActivity::class.java).apply {
+                putExtra("place_name", result.place_name)
+                putExtra("place_address", result.address_name)
+                putExtra("place_x", result.x)
+                putExtra("place_y", result.y)
+            }
+            startActivity(intent)
         }
 
-        savedSearchAdapter = SavedSearchAdapter { place ->
-            viewModel.removeSearch(place)
-        }
+        savedSearchAdapter = SavedSearchAdapter (
+            onSearchClicked = { searchQuery ->
+                viewModel.searchSavedPlace(searchQuery)
+            },
+            onDeleteClicked = { searchQuery ->
+                viewModel.removeSearch(searchQuery)
+            }
+        )
 
         binding.searchRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.searchRecyclerView.adapter = searchAdapter
