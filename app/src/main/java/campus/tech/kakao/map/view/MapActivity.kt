@@ -140,10 +140,9 @@ class MapActivity : AppCompatActivity() {
     private fun saveLastPosition() {
         kakaoMap.cameraPosition?.let { camera ->
             val editor = spf.edit()
-            editor.putFloat("latitude", camera.position.latitude.toFloat())
-            editor.putFloat("longitude", camera.position.longitude.toFloat())
+            editor.putString("latitude", camera.position.latitude.toString())
+            editor.putString("longitude", camera.position.longitude.toString())
             editor.apply()
-
         }
     }
 }
