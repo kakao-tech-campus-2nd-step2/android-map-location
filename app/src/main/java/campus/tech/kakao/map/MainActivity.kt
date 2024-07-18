@@ -1,5 +1,6 @@
 package campus.tech.kakao.map
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -46,6 +47,7 @@ class MainActivity : AppCompatActivity() {
 
         val resultAdapter = RecyclerViewAdapter {
             mainViewModel.resultItemClickListener(it)
+            moveMapView(it)
         }
         recyclerView.adapter = resultAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -93,6 +95,13 @@ class MainActivity : AppCompatActivity() {
             input.setText("")
             mainViewModel.inputCloseButtonClickListener()
         }
+    }
+
+    private fun moveMapView(place: Place) {
+        val intent = Intent(this, MapViewActivity::class.java)
+        intent.putExtra("PLACE_NAME", place.name)
+        intent.putExtra("PLACE_LOCATION", place.location)
+        startActivity(intent)
     }
 
     override fun onDestroy() {
