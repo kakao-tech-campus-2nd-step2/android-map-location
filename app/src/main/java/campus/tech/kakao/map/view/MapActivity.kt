@@ -4,11 +4,15 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.map.Model.LocationData
 import campus.tech.kakao.map.R
 import campus.tech.kakao.map.Adapter.MapViewAdapter
+import campus.tech.kakao.map.viewmodel.MapViewModel
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
@@ -20,8 +24,10 @@ class MapActivity : AppCompatActivity() {
 
     private lateinit var mapView: MapView
     private lateinit var inputText: View
-    private lateinit var mapViewAdapter: MapViewAdapter
     private lateinit var recyclerView: RecyclerView
+
+    private val mapViewModel: MapViewModel by viewModels()
+    private lateinit var mapViewAdapter: MapViewAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +37,12 @@ class MapActivity : AppCompatActivity() {
         inputText = findViewById(R.id.MapinputText)
         recyclerView = findViewById(R.id.recyclerView)
 
+        recyclerView.layoutManager = LinearLayoutManager(this)
+
+        mapViewModel.locationData.observe(this, Observer { locations ->
+            val mapViewAdapter = MapViewAdapter(locations)
+            recyclerView.adapter = mapViewAdapter
+        })
 
         mapView.start(
             object : MapLifeCycleCallback() {
@@ -45,6 +57,10 @@ class MapActivity : AppCompatActivity() {
                     val mapCenter = LatLng.from(37.566, 126.978)  // 서울시청 좌표
                     kakaoMap.moveCamera(CameraUpdateFactory.newCenterPosition(mapCenter))
                     kakaoMap.moveCamera(CameraUpdateFactory.zoomTo(15))
+
+//                    val selectedLocation = intent.getStringExtra("selectedLocation")
+//
+//                    mapViewModel.setMapViewAdapter(selectedLocation)
                 }
             }
         )
@@ -53,9 +69,8 @@ class MapActivity : AppCompatActivity() {
             val intent = Intent(this@MapActivity, MainActivity::class.java)
             startActivity(intent)
         }
-
-        val selectedLocation = intent.getStringExtra("selectedLocation")
     }
+
 
     override fun onResume() {
         super.onResume()
