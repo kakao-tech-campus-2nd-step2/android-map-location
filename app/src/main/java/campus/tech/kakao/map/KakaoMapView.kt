@@ -80,7 +80,6 @@ class KakaoMapView : AppCompatActivity() {
             }
 
             override fun onMapError(error: Exception) {
-                // 인증 실패 및 지도 사용 중 에러가 발생할 때 호출됨
                 Log.e("SharedPreff", "error2")
             }
         }, object : KakaoMapReadyCallback() {
