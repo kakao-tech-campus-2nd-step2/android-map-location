@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
     private var selectedItems = mutableListOf<MapItem>()
 
     companion object {
-        private const val SEARCH_REQUEST_CODE = 1
+        const val SEARCH_REQUEST_CODE = 1
         private const val PREFS_NAME = "LastMarkerPrefs"
         private const val PREF_LATITUDE = "lastLatitude"
         private const val PREF_LONGITUDE = "lastLongitude"
@@ -161,7 +161,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // 결과 반환
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == SEARCH_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             data?.let {

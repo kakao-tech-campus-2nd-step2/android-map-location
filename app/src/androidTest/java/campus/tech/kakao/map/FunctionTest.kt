@@ -61,6 +61,23 @@ class FunctionTest {
                     val searchResultsRecyclerView: RecyclerView = searchActivity.findViewById(R.id.searchResultsRecyclerView)
                     searchResultsRecyclerView.adapter?.notifyDataSetChanged()
                     assertEquals(1, searchResultsRecyclerView.adapter?.itemCount)
+
+                    //3. 해당 검색결과 중 하나 눌러서 지도 마커표시, bottomsheet 정보 표시
+                    searchResultsRecyclerView.findViewHolderForAdapterPosition(0)?.itemView?.performClick()
+
+                    searchActivity.setResultAndFinish(MapItem("0", "바다 정원", "강원도 고성군", "카페", 127.0, 37.0))
+                    val resultIntent = Intent().apply {
+                        putExtra("place_name", "바다 정원")
+                        putExtra("road_address_name", "강원도 고성군")
+                        putExtra("x", 127.0)
+                        putExtra("y", 37.0)
+                    }
+
+                    mainActivity.onActivityResult(MainActivity.SEARCH_REQUEST_CODE, Activity.RESULT_OK, resultIntent)
+                    val bottomSheetTitle: TextView = mainActivity.findViewById(R.id.bottomSheetTitle)
+                    val bottomSheetAddress: TextView = mainActivity.findViewById(R.id.bottomSheetAddress)
+                    assertEquals("바다 정원", bottomSheetTitle.text.toString())
+                    assertEquals("강원도 고성군", bottomSheetAddress.text.toString())
                 }
             }
         }
