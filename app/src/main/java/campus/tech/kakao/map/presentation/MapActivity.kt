@@ -5,22 +5,16 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import campus.tech.kakao.map.R
 import campus.tech.kakao.map.data.repository.PlaceRepositoryImpl
 import campus.tech.kakao.map.data.usecase.GetLastPlaceUseCaseImpl
-import campus.tech.kakao.map.data.usecase.GetSearchHistoryUseCaseImpl
-import campus.tech.kakao.map.data.usecase.GetSearchPlacesUseCaseImpl
-import campus.tech.kakao.map.data.usecase.RemoveSearchQueryUseCaseImpl
 import campus.tech.kakao.map.data.usecase.SaveLastPlaceUseCaseImpl
-import campus.tech.kakao.map.data.usecase.SaveSearchQueryUseCaseImpl
 import campus.tech.kakao.map.databinding.ActivityMapBinding
 import campus.tech.kakao.map.domain.model.PlaceVO
-import campus.tech.kakao.map.domain.usecase.GetLastPlaceUseCase
-import campus.tech.kakao.map.domain.usecase.SaveLastPlaceUseCase
 import campus.tech.kakao.map.utils.ApiKeyProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kakao.vectormap.KakaoMap
@@ -45,6 +39,7 @@ class MapActivity : AppCompatActivity() {
     private lateinit var kakaoMap: KakaoMap
     private lateinit var mapViewModel: MapViewModel
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
+    private var hasInitializedMap = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,8 +50,9 @@ class MapActivity : AppCompatActivity() {
 
         bindingViews()
         initializeViewModel()
-        setUpSearchBox()
+        handleIntentData()
         setUpMap()
+        setUpSearchBox()
     }
 
     private fun bindingViews() {
@@ -81,19 +77,20 @@ class MapActivity : AppCompatActivity() {
     }
 
     private fun setUpMap() {
-        // 만약 마지막으로 찍은 장소 있으면 get, 없으면 null
-        var place = mapViewModel.getLastPlace() ?: null
-        // intent로 받은 장소가 있으면 그 장소로 지도 시작, 없으면 place 에 저장된 장소로 지도 시작(null or LastPlace)
-        place = intent.getSerializableExtra("place") as? PlaceVO ?: place
-
-        if (place != null) {
-            // place 가 null 이 아니면 해당 장소로 맵 뷰 표시
-            startMap(place)
+        if (mapViewModel.lastPlace.value != null) {
+            startMap(mapViewModel.lastPlace.value as PlaceVO)
         } else {
-            // place 가 null 이면(아마 첫 어플 시작) 기본 위치로 맵 뷰 표시
             startDefaultMap()
         }
     }
+
+    private fun handleIntentData() {
+        val placeFromIntent = intent.getSerializableExtra("place")
+        if (placeFromIntent != null) {
+            mapViewModel.setLastPlace(placeFromIntent)
+        }
+    }
+
 
     private fun startMap(place: PlaceVO) {
         mapView.start(object : MapLifeCycleCallback() {
@@ -108,7 +105,7 @@ class MapActivity : AppCompatActivity() {
             override fun onMapReady(kakaoMap: KakaoMap) {
                 this@MapActivity.kakaoMap = kakaoMap
                 setCameraPosition(place.latitude, place.longitude)
-                addMarker(place.latitude, place.longitude, place.placeName)
+                addMarker(place)
                 displayBottomSheet(place)
                 mapViewModel.saveLastPlace(place)
             }
@@ -135,9 +132,10 @@ class MapActivity : AppCompatActivity() {
 
 
     private fun setCameraPosition(latitude: Double, longitude: Double) {
-        val cameraPositionBuilder = CameraPosition.Builder()
-        cameraPositionBuilder.setPosition(LatLng.from(latitude, longitude))
-        cameraPositionBuilder.setZoomLevel(21)
+        val cameraPositionBuilder = CameraPosition.Builder().apply {
+            setPosition(LatLng.from(latitude, longitude))
+            setZoomLevel(21)
+        }
 
         kakaoMap.moveCamera(
             CameraUpdateFactory.newCameraPosition(
@@ -148,7 +146,7 @@ class MapActivity : AppCompatActivity() {
         )
     }
 
-    private fun addMarker(latitude: Double, longitude: Double, text: String) {
+    private fun addMarker(place: PlaceVO) {
         var styles = LabelStyles.from(
             "marker",
             LabelStyle.from(R.drawable.marker).setZoomLevel(8)
@@ -158,8 +156,8 @@ class MapActivity : AppCompatActivity() {
         styles = kakaoMap.labelManager!!.addLabelStyles(styles!!)
 
         val label = kakaoMap.labelManager!!.layer!!.addLabel(
-            LabelOptions.from(LatLng.from(latitude, longitude))
-                .setTexts(LabelTextBuilder().setTexts(text))
+            LabelOptions.from(LatLng.from(place.latitude, place.longitude))
+                .setTexts(LabelTextBuilder().setTexts(place.placeName))
                 .setStyles(styles)
         )
     }
@@ -173,10 +171,11 @@ class MapActivity : AppCompatActivity() {
     private fun handleError(error: Exception) {
         Log.d("testt", error.message ?: "Unknown error")
         runOnUiThread {
-            Thread.sleep(1000)
             val intent = Intent(this@MapActivity, ErrorActivity::class.java)
             intent.putExtra("error", error.message)
             startActivity(intent)
         }
     }
+
+
 }
