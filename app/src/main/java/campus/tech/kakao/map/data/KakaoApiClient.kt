@@ -1,6 +1,6 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.data
 
-import com.kakao.vectormap.BuildConfig
+import campus.tech.kakao.map.BuildConfig
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -8,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class KakaoApiClient {
     companion object {
         private const val BASE_URL = "https://dapi.kakao.com/"
-        private const val API_KEY = "KakaoAK e095dcc88588dc0a6314a7f3c6a880c0"
+        private const val API_KEY = "KakaoAK ${BuildConfig.KAKAO_REST_API_KEY}"
 
         private val client = OkHttpClient.Builder()
             .addInterceptor { chain ->

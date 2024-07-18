@@ -1,7 +1,9 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.viewModel
 
 import android.content.Context
 import androidx.lifecycle.*
+import campus.tech.kakao.map.data.Keyword
+import campus.tech.kakao.map.repository.Repository
 import kotlinx.coroutines.launch
 
 class SearchViewModel(private val context: Context) : ViewModel() {

@@ -1,4 +1,4 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.ui
 
 import android.app.Activity
 import android.content.Context
@@ -9,7 +9,6 @@ import android.view.View
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import campus.tech.kakao.map.R
-import campus.tech.kakao.map.SearchActivity
 import campus.tech.kakao.map.databinding.ActivityMainBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kakao.vectormap.KakaoMap

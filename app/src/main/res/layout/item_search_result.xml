@@ -5,7 +5,7 @@
     <data>
         <variable
             name="keyword"
-            type="campus.tech.kakao.map.Keyword" />
+            type="campus.tech.kakao.map.data.Keyword" />
     </data>
 
     <LinearLayout

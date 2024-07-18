@@ -1,14 +1,17 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.ui
 
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import campus.tech.kakao.map.viewModel.SearchViewModel
+import campus.tech.kakao.map.viewModel.SearchViewModelFactory
+import campus.tech.kakao.map.adapter.SavedKeywordsAdapter
+import campus.tech.kakao.map.adapter.SearchResultsAdapter
 import campus.tech.kakao.map.databinding.ActivitySearchBinding
 
 class SearchActivity : AppCompatActivity() {

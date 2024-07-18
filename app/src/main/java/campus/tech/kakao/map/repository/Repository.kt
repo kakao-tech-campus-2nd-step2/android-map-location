@@ -1,13 +1,14 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.repository
 
 import android.content.Context
 import android.content.SharedPreferences
+import campus.tech.kakao.map.data.DatabaseHelper
+import campus.tech.kakao.map.data.KakaoApiClient
+import campus.tech.kakao.map.data.Keyword
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class Repository(context: Context) {
     private val dbHelper = DatabaseHelper.getInstance(context)
@@ -75,6 +76,4 @@ class Repository(context: Context) {
         val type = object : TypeToken<List<Keyword>>() {}.type
         return Gson().fromJson(savedKeywordsJson, type)
     }
-
-
 }
