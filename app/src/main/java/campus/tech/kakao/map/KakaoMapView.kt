@@ -59,8 +59,11 @@ class KakaoMapView : AppCompatActivity() {
         val initialX = xCoordinate ?: defaultX
         val initialY = yCoordinate ?: defaultY
 
-        val key = getString(R.string.kakao_api_key)
-        KakaoMapSdk.init(this, key)
+        // onMapError 호출하기
+        KakaoMapSdk.init(this, "dfsfdsdsdasfds")
+
+        /*val key = getString(R.string.kakao_api_key)
+        KakaoMapSdk.init(this, key)*/
 
         var keyHash = Utility.getKeyHash(this)
         Log.d("testt", keyHash)
@@ -80,6 +83,7 @@ class KakaoMapView : AppCompatActivity() {
             }
 
             override fun onMapError(error: Exception) {
+                startActivity(Intent(this@KakaoMapView, MapErrorActivity::class.java))
                 Log.e("SharedPreff", "error2")
             }
         }, object : KakaoMapReadyCallback() {
