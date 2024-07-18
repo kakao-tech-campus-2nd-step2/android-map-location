@@ -78,7 +78,20 @@ class FunctionTest {
                     val bottomSheetAddress: TextView = mainActivity.findViewById(R.id.bottomSheetAddress)
                     assertEquals("바다 정원", bottomSheetTitle.text.toString())
                     assertEquals("강원도 고성군", bottomSheetAddress.text.toString())
+
+                    // 4. 마지막 위치 저장해서 다시 앱 실행시 해당 위치로 지도 뜨도록 하기
+                    mainActivity.saveLastMarkerPosition(37.0, 127.0, "바다 정원", "강원도 고성군")
                 }
+
+                scenarioMain.recreate()
+                scenarioMain.onActivity { activity ->
+                    activity.loadLastMarkerPosition()
+
+                    val bottomSheetTitle: TextView = activity.findViewById(R.id.bottomSheetTitle)
+                    val bottomSheetAddress: TextView = activity.findViewById(R.id.bottomSheetAddress)
+                    assertEquals("바다 정원", bottomSheetTitle.text.toString())
+                    assertEquals("강원도 고성군", bottomSheetAddress.text.toString())
+                    assertEquals(View.VISIBLE, activity.findViewById<FrameLayout>(R.id.bottomSheetLayout).visibility)
             }
         }
     }

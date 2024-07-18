@@ -226,7 +226,7 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    private fun saveLastMarkerPosition(latitude: Double, longitude: Double, placeName: String, roadAddressName: String) {
+    fun saveLastMarkerPosition(latitude: Double, longitude: Double, placeName: String, roadAddressName: String) {
         val sharedPreferences = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         with(sharedPreferences.edit()) {
             putFloat(PREF_LATITUDE, latitude.toFloat())
@@ -238,7 +238,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     //마커 다시 로드하기
-    private fun loadLastMarkerPosition() {
+    fun loadLastMarkerPosition() {
         val sharedPreferences = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         if (sharedPreferences.contains(PREF_LATITUDE) && sharedPreferences.contains(PREF_LONGITUDE)) {
             val latitude = sharedPreferences.getFloat(PREF_LATITUDE, 0.0f).toDouble()
