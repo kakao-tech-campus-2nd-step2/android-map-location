@@ -5,7 +5,10 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.kakao.sdk.common.util.Utility
 import com.kakao.vectormap.KakaoMap
@@ -26,19 +29,28 @@ class KakaoMapView : AppCompatActivity() {
 
     private lateinit var mapView: MapView
     private lateinit var searchButton: Button
+    private lateinit var placeName: TextView
+    private lateinit var placeAddress: TextView
+    private lateinit var persistentBottomSheet: LinearLayout
+
+    private var kakaoMap: KakaoMap? = null
+    private var position: LatLng? = null
+    /*private var name: String? = null
+    private var address: String? = null*/
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_kakao_map_view)
 
         val sharedPref = getSharedPreferences("Coordinates", Context.MODE_PRIVATE)
-        val xCoordinate = sharedPref.getString("xCoordinate", null)?.toDoubleOrNull()
-        val yCoordinate = sharedPref.getString("yCoordinate", null)?.toDoubleOrNull()
+        val xCoordinate = sharedPref.getString("xCoordinate", "127.108621")?.toDoubleOrNull()
+        val yCoordinate = sharedPref.getString("yCoordinate", "37.402005")?.toDoubleOrNull()
         Log.e("SharedPreff", "X:$xCoordinate, Y:$yCoordinate")
 
         val sharedPref1 = getSharedPreferences("BottomSheet", Context.MODE_PRIVATE)
-        val name = sharedPref1.getString("name", null)
-        val address = sharedPref1.getString("address", null)
+        val name = sharedPref1.getString("name", "이름")
+        val address = sharedPref1.getString("address", "주소")
         Log.e("SharedPreff", "이름:$name, 주소:$address")
 
         val defaultX = 37.402005
@@ -55,6 +67,11 @@ class KakaoMapView : AppCompatActivity() {
 
         mapView = findViewById(R.id.mapView)
         searchButton = findViewById(R.id.searchButton)
+        placeName = findViewById(R.id.placeName)
+        placeAddress = findViewById(R.id.placeAddress)
+        persistentBottomSheet = findViewById(R.id.persistent_bottom_sheet)
+
+        persistentBottomSheet.visibility = View.GONE
 
         mapView.start(object : MapLifeCycleCallback() {
             override fun onMapDestroy() {
@@ -85,6 +102,16 @@ class KakaoMapView : AppCompatActivity() {
                 val cameraUpdate =
                     CameraUpdateFactory.newCenterPosition(position)
                 kakaoMap.moveCamera(cameraUpdate, CameraAnimation.from(500, true, true))
+
+                if (name == "이름"){
+                    persistentBottomSheet.visibility = View.GONE
+                    layer?.hideAllLabel()
+                }else{
+                    placeName.text = name
+                    placeAddress.text = address
+                    layer?.showAllLabel()
+                    persistentBottomSheet.visibility = View.VISIBLE
+                }
             }
         })
 
