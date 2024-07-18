@@ -99,6 +99,7 @@ class MapActivity : AppCompatActivity() {
 
             override fun onMapError(error: Exception) {
                 Log.e("KakaoMap", "onMapError: ", error)
+                showErrorView(error.message ?: "Unknown error")
             }
         }, object : KakaoMapReadyCallback() {
             override fun onMapReady(map: KakaoMap) {
@@ -151,5 +152,11 @@ class MapActivity : AppCompatActivity() {
         val latitude = spf.getString("latitude", "37.394660")?.toDouble() ?: 37.394660
         val longitude = spf.getString("longitude", "127.111182")?.toDouble() ?: 127.111182
         pos = LatLng.from(latitude, longitude)
+    }
+
+    private fun showErrorView(error: String) {
+        errorDetail.text = error
+        errorView.visibility = View.VISIBLE
+        mapView.visibility = View.GONE
     }
 }
