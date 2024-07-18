@@ -6,12 +6,15 @@ import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import campus.tech.kakao.map.BuildConfig
 import campus.tech.kakao.map.R
 import campus.tech.kakao.map.view.search.MainActivity
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.KakaoMapSdk
@@ -26,6 +29,10 @@ import com.kakao.vectormap.label.LabelStyles
 class MapActivity : AppCompatActivity() {
     private lateinit var searchEditText: EditText
     private lateinit var mapView: MapView
+    private val bottomSheetLayout by lazy { findViewById<ConstraintLayout>(R.id.bottom_sheet_layout) }
+    private val bottom_sheet_title by lazy { findViewById<TextView>(R.id.bottom_sheet_title) }
+    private val bottom_sheet_address by lazy { findViewById<TextView>(R.id.bottom_sheet_address) }
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     companion object{
         private val DEFAULT_LONGITUDE = 127.115587
         private val DEFAULT_LATITUDE = 37.406960
@@ -36,6 +43,7 @@ class MapActivity : AppCompatActivity() {
         setContentView(R.layout.activity_map)
 
         initViews()
+        initBottomSheet()
         setupEditText()
         setupMapView()
 
@@ -53,9 +61,15 @@ class MapActivity : AppCompatActivity() {
         }
     }
 
+    // Persistent BottomSheet 초기화
+    private fun initBottomSheet() {
+        // BottomSheetBehavior에 layout 설정
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout)
+    }
+
     private fun setupMapView() {
-//        KakaoMapSdk.init(this, BuildConfig.KAKAO_API_KEY);
-        KakaoMapSdk.init(this, BuildConfig.KAKAO_REST_API_KEY);
+        KakaoMapSdk.init(this, BuildConfig.KAKAO_API_KEY);
+//        KakaoMapSdk.init(this, BuildConfig.KAKAO_REST_API_KEY);
         mapView.start(object : MapLifeCycleCallback() {
             override fun onMapDestroy() {
                 // 지도 API 가 정상적으로 종료될 때 호출됨
@@ -73,7 +87,7 @@ class MapActivity : AppCompatActivity() {
             val coordinates = getCoordinates()
             override fun onMapReady(kakaoMap: KakaoMap) {
                 // 인증 후 API 가 정상적으로 실행될 때 호출됨
-//                Log.d("jieun", "onMapReady coordinates: " + coordinates.toString())
+                Log.d("jieun", "onMapReady coordinates: " + coordinates.toString())
                 if (coordinates != null) {
                     val labelStyles: LabelStyles = LabelStyles.from(
                         LabelStyle.from(R.drawable.location_red_icon_resized).setZoomLevel(8),
@@ -85,6 +99,11 @@ class MapActivity : AppCompatActivity() {
                         .setStyles(labelStyles)
                         .setTexts(coordinates.title)
                     )
+                    runOnUiThread {
+                        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                        bottom_sheet_title.text = coordinates.title
+                        bottom_sheet_address.text = coordinates.address
+                    }
 
                     setSharedData("pref", coordinates)
 //                    Log.d("jieun", "onMapReady setSharedData: " + getSharedData("pref"))
@@ -117,14 +136,16 @@ class MapActivity : AppCompatActivity() {
     }
 
     private fun getCoordinatesByIntent(): Coordinates? {
-        if (intent.hasExtra("title") && intent.hasExtra("longitude") && intent.hasExtra("latitude")) {
+        if (intent.hasExtra("title") && intent.hasExtra("longitude")
+            && intent.hasExtra("latitude") && intent.hasExtra("address")) {
             val title = intent.getStringExtra("title").toString()
             val longitudeString = intent.getStringExtra("longitude")
             val latitudeString = intent.getStringExtra("latitude")
+            val address = intent.getStringExtra("address").toString()
             if (longitudeString != null && latitudeString != null) {
                 val longitude = longitudeString.toDouble()
                 val latitude = latitudeString.toDouble()
-                return Coordinates(title, longitude, latitude)
+                return Coordinates(title, longitude, latitude, address)
             } else return null
         } else return null
     }
@@ -146,6 +167,7 @@ class MapActivity : AppCompatActivity() {
             editor.putString("longitude", coordinates.longitude.toString())
             editor.putString("latitude", coordinates.latitude.toString())
             editor.putString("title", coordinates.title.toString())
+            editor.putString("address", coordinates.address.toString())
             editor.apply()
         }
     }
@@ -155,6 +177,7 @@ class MapActivity : AppCompatActivity() {
         val title = pref.getString("title", "").toString()
         val longitude = pref.getString("longitude", "").toString().toDouble()
         val latitude = pref.getString("latitude", "").toString().toDouble()
-        return Coordinates(title, longitude, latitude)
+        val address = pref.getString("address", "").toString()
+        return Coordinates(title, longitude, latitude, address)
     }
 }
