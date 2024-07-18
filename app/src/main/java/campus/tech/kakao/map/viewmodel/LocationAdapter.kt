@@ -10,7 +10,7 @@ import campus.tech.kakao.map.R
 
 class LocationAdapter(
     private val locationList: List<LocationData>,
-    private val onItemClick: (LocationData) -> Unit
+    private val onItemViewClick: (LocationData) -> Unit
 ) : RecyclerView.Adapter<LocationAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -22,7 +22,7 @@ class LocationAdapter(
             itemView.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
-                    onItemClick(locationList[position])
+                    onItemViewClick(locationList[position])
                 }
             }
         }
@@ -41,5 +41,9 @@ class LocationAdapter(
         holder.nameTextView.text = location.name
         holder.locationTextView.text = location.location
         holder.categoryTextView.text = location.category
+
+        holder.itemView.setOnClickListener {
+            onItemViewClick(location)
+        }
     }
 }

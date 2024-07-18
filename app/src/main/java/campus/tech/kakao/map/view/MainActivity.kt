@@ -1,6 +1,7 @@
 package campus.tech.kakao.map.view
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -48,6 +49,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        db = DataDbHelper(this)
+
         mainViewModel.setUiStateChangedListener {uiState ->
             locationList.clear()
             locationList.addAll(uiState.locationList)
@@ -79,25 +82,55 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setRecyclerView() {
-        locationAdapter = LocationAdapter(locationList) { locationData ->
-            onItemClick(locationData)
-        }
+        locationAdapter = LocationAdapter(
+            locationList,
+            onItemViewClick = { item ->
+                Log.d("MainActivity", "Item clicked: ${item.name}")
+                addToSearchList(item)
+                Log.d("MainActivity", "Location item clicked: ${item.name}")
+                val intent = Intent(this, MapActivity::class.java)
+                intent.putExtra("selectedLocation", item.name)
+                startActivity(intent)
+                finish()
+            }
+        )
         recyclerView.adapter = locationAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
     }
 
-    private fun setSearchView() {
-        searchAdapter = SearchViewAdapter(searchList) { removedItem ->
-            val index = searchList.indexOf(removedItem)
-            if (index != -1) {
+    private fun addToSearchList(locationData: LocationData) {
+        if (!searchList.contains(locationData)) {
+            searchList.add(0, locationData)
+            searchAdapter.notifyItemInserted(0)
+        } else {
+            val index = searchList.indexOf(locationData)
+            if (index > 0) {
                 searchList.removeAt(index)
-                searchAdapter.notifyItemRemoved(index)
-                if (searchList.isEmpty()) {
-                    searchView.visibility = View.GONE
-                }
-                saveSearchList()
+                searchList.add(0, locationData)
+                searchAdapter.notifyItemMoved(index, 0)
             }
         }
+        searchView.visibility = View.VISIBLE
+        searchView.scrollToPosition(0)
+        saveSearchList()
+        Log.d("MainActivity", "Item added to search list and saved. Size: ${searchList.size}")
+    }
+
+    private fun setSearchView() {
+        searchAdapter = SearchViewAdapter(
+            searchList,
+            onRemoveClick = { removedItem ->
+                val index = searchList.indexOf(removedItem)
+                if (index != -1) {
+                    searchList.removeAt(index)
+                    searchAdapter.notifyItemRemoved(index)
+                    if (searchList.isEmpty()) {
+                        searchView.visibility = View.GONE
+                    }
+                    saveSearchList()
+                }
+            }
+        )
         searchView.adapter = searchAdapter
         searchView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
     }
@@ -108,7 +141,7 @@ class MainActivity : AppCompatActivity() {
         val jsonString = Gson().toJson(searchList)
         editor.putString("search_list", jsonString)
         editor.apply()
-        Log.d("MainActivity", "Search list saved")
+        Log.d("MainActivity", "Search list saved. JSON: $jsonString")
     }
 
     private fun loadSearchList() {
@@ -140,33 +173,16 @@ class MainActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {}
         })
     }
-
-    fun onItemClick(locationData: LocationData) {
-        if (!searchList.contains(locationData)) {
-            searchList.add(0, locationData)
-            searchAdapter.notifyItemInserted(0)
-            searchView.scrollToPosition(0)
-        } else {
-            val index = searchList.indexOf(locationData)
-            if (index > 0) {
-                searchList.removeAt(index)
-                searchList.add(0, locationData)
-                searchAdapter.notifyItemMoved(index, 0)
-                searchView.scrollToPosition(0)
-            }
-        }
-        searchView.visibility = View.VISIBLE
-        saveSearchList()
-        Log.d("MainActivity", "Item clicked: ${locationData.name}")
-    }
-
     private fun updateRecyclerView() {
         locationAdapter.notifyDataSetChanged()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        db.close()
-        Log.d("MainActivity", "Database closed")
+        if (::db.isInitialized) {
+            db.close()
+            Log.d("MainActivity", "Database closed")
+        }
+
     }
 }

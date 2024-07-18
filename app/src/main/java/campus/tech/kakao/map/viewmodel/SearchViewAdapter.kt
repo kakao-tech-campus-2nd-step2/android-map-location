@@ -11,7 +11,7 @@ import campus.tech.kakao.map.R
 
 class SearchViewAdapter(
     private val searchList: ArrayList<LocationData>,
-    private val onRemoveClick: (LocationData) -> Unit // 콜백 함수
+    private val onRemoveClick: (LocationData) -> Unit, // 콜백 함수
 ) : RecyclerView.Adapter<SearchViewAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
