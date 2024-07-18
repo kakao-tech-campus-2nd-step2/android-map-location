@@ -39,8 +39,12 @@ class MainViewModel(
     }
 
     fun callResultList(userInput: String){
-        mainModel.callKakao(userInput) {
-            _placeList.value = it
+        if (userInput == ""){
+            _placeList.value = emptyList()
+        } else{
+            mainModel.callKakao(userInput) {
+                _placeList.value = it
+            }
         }
     }
 
