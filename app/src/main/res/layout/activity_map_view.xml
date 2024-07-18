@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MapViewActivity">
+    <data>
+        <variable
+            name="viewModel"
+            type="campus.tech.kakao.map.MapViewModel" />
+    </data>
+    <FrameLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.kakao.vectormap.MapView
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </com.kakao.vectormap.MapView>
+
+        <FrameLayout
+            android:layout_width="380dp"
+            android:layout_height="70dp"
+            android:layout_marginTop="15dp"
+            android:layout_gravity="center_horizontal">
+
+            <TextView
+                android:id="@+id/search"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:padding="10dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/search_box"
+                android:text="검색어를 입력해 주세요."
+                android:textColor="#5A5A5A"
+                android:gravity="center_vertical"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/detail"/>
+
+        </FrameLayout>
+
+
+    </FrameLayout>
+</layout>
