@@ -72,41 +72,21 @@ class MapActivity : AppCompatActivity() {
                 Log.d("jieun", "onMapDestroy")
             }
 
-            override fun onMapError(error: Exception) {
-                // 인증 실패 및 지도 사용 중 에러가 발생할 때 호출됨
+            override fun onMapError(error: Exception) {  // 인증 실패 및 지도 사용 중 에러가 발생할 때 호출됨
                 Log.d("jieun", "onMapError" + error)
-                runOnUiThread {
-                    setContentView(R.layout.error_map)
-                    errorMessageTextView.text = "지도 인증을 실패했습니다.\n다시 시도해주세요.\n\n"+error.message
-                }
+                showErrorMessage(error)
             }
         }, object : KakaoMapReadyCallback() {
             val coordinates = getCoordinates()
-            override fun onMapReady(kakaoMap: KakaoMap) {
-                // 인증 후 API 가 정상적으로 실행될 때 호출됨
+            override fun onMapReady(kakaoMap: KakaoMap) { // 인증 후 API 가 정상적으로 실행될 때 호출됨
                 Log.d("jieun", "onMapReady coordinates: " + coordinates.toString())
                 if (coordinates != null) {
-                    val labelStyles: LabelStyles = LabelStyles.from(
-                        LabelStyle.from(R.drawable.location_red_icon_resized).setZoomLevel(8),
-                        LabelStyle.from(R.drawable.location_red_icon_resized).setTextStyles(32, Color.BLACK, 1, Color.GRAY).setZoomLevel(15)
-                    )
-                    val position = LatLng.from(coordinates.latitude, coordinates.longitude)
-                    kakaoMap.labelManager?.getLayer()?.addLabel(
-                        LabelOptions.from(position)
-                        .setStyles(labelStyles)
-                        .setTexts(coordinates.title)
-                    )
-                    runOnUiThread {
-                        bottomSheetLayout.visibility = View.VISIBLE
-                        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-                        bottom_sheet_title.text = coordinates.title
-                        bottom_sheet_address.text = coordinates.address
-                    }
-
+                    showLabel(coordinates, kakaoMap)
+                    showBottomSheet(coordinates)
                     setSharedData("pref", coordinates)
 //                    Log.d("jieun", "onMapReady setSharedData: " + getSharedData("pref"))
                 } else{
-                    runOnUiThread { bottomSheetLayout.visibility = View.GONE }
+                    hideBottomSheet()
                 }
             }
 
@@ -122,6 +102,44 @@ class MapActivity : AppCompatActivity() {
 
         })
     }
+
+    private fun showErrorMessage(error: Exception) {
+        runOnUiThread {
+            setContentView(R.layout.error_map)
+            errorMessageTextView.text = "지도 인증을 실패했습니다.\n다시 시도해주세요.\n\n" + error.message
+        }
+    }
+
+    private fun showLabel(
+        coordinates: Coordinates,
+        kakaoMap: KakaoMap
+    ) {
+        val labelStyles: LabelStyles = LabelStyles.from(
+            LabelStyle.from(R.drawable.location_red_icon_resized).setZoomLevel(8),
+            LabelStyle.from(R.drawable.location_red_icon_resized)
+                .setTextStyles(32, Color.BLACK, 1, Color.GRAY).setZoomLevel(15)
+        )
+        val position = LatLng.from(coordinates.latitude, coordinates.longitude)
+        kakaoMap.labelManager?.getLayer()?.addLabel(
+            LabelOptions.from(position)
+                .setStyles(labelStyles)
+                .setTexts(coordinates.title)
+        )
+    }
+
+    private fun hideBottomSheet() {
+        runOnUiThread { bottomSheetLayout.visibility = View.GONE }
+    }
+
+    private fun showBottomSheet(coordinates: Coordinates) {
+        runOnUiThread {
+            bottomSheetLayout.visibility = View.VISIBLE
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            bottom_sheet_title.text = coordinates.title
+            bottom_sheet_address.text = coordinates.address
+        }
+    }
+
     private fun getCoordinates(): Coordinates? {
         var coordinates = getCoordinatesByIntent()
         if(coordinates == null) {
