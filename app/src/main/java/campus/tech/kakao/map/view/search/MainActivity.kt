@@ -139,6 +139,7 @@ class MainActivity : AppCompatActivity(), OnItemSelectedListener {
         savedLocationViewModel.addSavedLocation(title)
 
         val intent = Intent(this@MainActivity, MapActivity::class.java)
+        intent.putExtra("title", title)
         intent.putExtra("longitude", longitude)
         intent.putExtra("latitude", latitude)
         startActivity(intent)

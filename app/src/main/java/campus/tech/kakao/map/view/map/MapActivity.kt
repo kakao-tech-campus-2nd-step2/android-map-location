@@ -1,6 +1,7 @@
 package campus.tech.kakao.map.view.map
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.widget.EditText
@@ -14,11 +15,20 @@ import com.kakao.vectormap.KakaoMapSdk
 import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.MapView
+import com.kakao.vectormap.label.LabelManager
+import com.kakao.vectormap.label.LabelOptions
+import com.kakao.vectormap.label.LabelStyle
+import com.kakao.vectormap.label.LabelStyles
 
 
 class MapActivity : AppCompatActivity() {
     private lateinit var searchEditText: EditText
     private lateinit var mapView: MapView
+    companion object{
+        private val DEFAULT_LONGITUDE = 127.115587
+        private val DEFAULT_LATITUDE = 37.406960
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
@@ -26,6 +36,8 @@ class MapActivity : AppCompatActivity() {
         initViews()
         setupEditText()
         setupMapView()
+        Log.d("jieun", "MapActivity onCreate"+Thread.currentThread())
+
     }
 
     override fun onStart() {
@@ -60,30 +72,45 @@ class MapActivity : AppCompatActivity() {
         }, object : KakaoMapReadyCallback() {
             override fun onMapReady(kakaoMap: KakaoMap) {
                 // 인증 후 API 가 정상적으로 실행될 때 호출됨
-                Log.d("jieun", "onMapReady")
-
+                val coordinates = getCoordinates()
+                Log.d("jieun", "onMapReady coordinates: " + coordinates.toString())
+                if (coordinates != null) {
+                    val labelStyles: LabelStyles = LabelStyles.from(
+                        LabelStyle.from(R.drawable.location_red_icon_resized).setZoomLevel(8),
+                        LabelStyle.from(R.drawable.location_red_icon_resized).setTextStyles(32, Color.BLACK, 1, Color.GRAY).setZoomLevel(15)
+                    )
+                    val position = LatLng.from(coordinates.latitude, coordinates.longitude)
+                    kakaoMap.labelManager?.getLayer()?.addLabel(
+                        LabelOptions.from(position)
+                        .setStyles(labelStyles)
+                        .setTexts(coordinates.title)
+                    )
+                }
             }
 
             override fun getPosition(): LatLng {
-                Log.d("jieun", "getPosition")
-                val coordinates = getXY()
+                val coordinates = getCoordinates()
+                Log.d("jieun", "getPosition coordinates: " + coordinates.toString())
+
                 if (coordinates != null) {
                     return LatLng.from(coordinates.latitude, coordinates.longitude)
                 }
-                return LatLng.from(37.406960, 127.115587);
+                return LatLng.from(DEFAULT_LATITUDE, DEFAULT_LONGITUDE);
             }
+
         })
     }
-    private fun getXY(): Coordinates? {
-        if(intent == null)
-            return null
+    private fun getCoordinates(): Coordinates? {
+        if(intent == null) return null
+        val title = intent.getStringExtra("title")
         val longitudeString = intent.getStringExtra("longitude")
         val latitudeString = intent.getStringExtra("latitude")
-        if (longitudeString != null && latitudeString != null) {
+
+        if (title!=null && longitudeString != null && latitudeString != null) {
             val longitude = longitudeString.toDouble()
             val latitude = latitudeString.toDouble()
-            Log.d("jieun", "longitude: " + longitude + " latitude:" + latitude)
-            return Coordinates(longitude, latitude)
+            val coordinates = Coordinates(title, longitude, latitude)
+            return coordinates
         }
         return null
     }
