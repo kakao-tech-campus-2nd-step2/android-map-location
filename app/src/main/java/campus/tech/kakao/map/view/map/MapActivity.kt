@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -96,6 +97,7 @@ class MapActivity : AppCompatActivity() {
                         .setTexts(coordinates.title)
                     )
                     runOnUiThread {
+                        bottomSheetLayout.visibility = View.VISIBLE
                         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                         bottom_sheet_title.text = coordinates.title
                         bottom_sheet_address.text = coordinates.address
@@ -103,6 +105,8 @@ class MapActivity : AppCompatActivity() {
 
                     setSharedData("pref", coordinates)
 //                    Log.d("jieun", "onMapReady setSharedData: " + getSharedData("pref"))
+                } else{
+                    runOnUiThread { bottomSheetLayout.visibility = View.GONE }
                 }
             }
 
@@ -110,25 +114,21 @@ class MapActivity : AppCompatActivity() {
 //                Log.d("jieun", "getPosition coordinates: " + coordinates.toString())
                 if (coordinates != null) {
                     return LatLng.from(coordinates.latitude, coordinates.longitude)
+                } else{
+                    return LatLng.from(DEFAULT_LATITUDE, DEFAULT_LONGITUDE)
                 }
-                return LatLng.from(DEFAULT_LATITUDE, DEFAULT_LONGITUDE);
+
             }
 
         })
     }
-    private fun getCoordinates(): Coordinates {
+    private fun getCoordinates(): Coordinates? {
         var coordinates = getCoordinatesByIntent()
         if(coordinates == null) {
-            coordinates = getCoordinatedBySharedPreference()
+            coordinates = getCoordinatedBySharedPreference("pref")
         }
         return coordinates
 
-    }
-
-    private fun getCoordinatedBySharedPreference(): Coordinates {
-        val coordinates = getSharedData("pref")
-        Log.d("jieun", "getSharedIntData " + coordinates)
-        return coordinates
     }
 
     private fun getCoordinatesByIntent(): Coordinates? {
@@ -158,8 +158,11 @@ class MapActivity : AppCompatActivity() {
         }
     }
 
-    fun getSharedData(name: String): Coordinates {
+    fun getCoordinatedBySharedPreference(name: String): Coordinates? {
         var pref: SharedPreferences = getSharedPreferences(name, Activity.MODE_PRIVATE)
+        if(pref.getString("title", "") == ""){
+            return null
+        }
         val title = pref.getString("title", "").toString()
         val longitude = pref.getString("longitude", "").toString().toDouble()
         val latitude = pref.getString("latitude", "").toString().toDouble()
