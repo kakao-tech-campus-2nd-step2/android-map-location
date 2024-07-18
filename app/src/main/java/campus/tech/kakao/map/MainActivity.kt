@@ -100,12 +100,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         savedSearchAdapter = SavedSearchAdapter (
-            onSearchClicked = { searchQuery ->
-                viewModel.searchSavedPlace(searchQuery)
-            },
-            onDeleteClicked = { searchQuery ->
-                viewModel.removeSearch(searchQuery)
-            }
+            onSearchClicked = viewModel::searchSavedPlace,
+            onDeleteClicked = viewModel::removeSearch
         )
 
         binding.searchRecyclerView.layoutManager = LinearLayoutManager(this)
