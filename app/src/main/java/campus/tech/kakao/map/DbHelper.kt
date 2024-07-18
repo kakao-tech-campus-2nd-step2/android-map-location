@@ -1,5 +1,5 @@
 package campus.tech.kakao.map
-/*
+
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
@@ -116,4 +116,4 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         return results
     }
 }
-*/
+
