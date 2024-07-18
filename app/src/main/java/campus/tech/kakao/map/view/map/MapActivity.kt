@@ -6,7 +6,6 @@ import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -27,8 +26,8 @@ import com.kakao.vectormap.label.LabelStyles
 
 
 class MapActivity : AppCompatActivity() {
-    private lateinit var searchEditText: EditText
-    private lateinit var mapView: MapView
+    private val searchEditText by lazy { findViewById<EditText>(R.id.SearchEditTextInMap) }
+    private val mapView by lazy { findViewById<MapView>(R.id.map_view) }
     private val bottomSheetLayout by lazy { findViewById<ConstraintLayout>(R.id.bottom_sheet_layout) }
     private val bottom_sheet_title by lazy { findViewById<TextView>(R.id.bottom_sheet_title) }
     private val bottom_sheet_address by lazy { findViewById<TextView>(R.id.bottom_sheet_address) }
@@ -42,16 +41,9 @@ class MapActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
 
-        initViews()
-        initBottomSheet()
+        setupBottomSheet()
         setupEditText()
         setupMapView()
-
-    }
-
-    private fun initViews() {
-        searchEditText = findViewById(R.id.SearchEditTextInMap)
-        mapView = findViewById(R.id.map_view)
     }
 
     private fun setupEditText() {
@@ -62,7 +54,7 @@ class MapActivity : AppCompatActivity() {
     }
 
     // Persistent BottomSheet 초기화
-    private fun initBottomSheet() {
+    private fun setupBottomSheet() {
         // BottomSheetBehavior에 layout 설정
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout)
     }
