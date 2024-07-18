@@ -1,8 +1,9 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import campus.tech.kakao.map.data.Keyword
 import campus.tech.kakao.map.databinding.ItemSearchResultBinding
 
 class SearchResultsAdapter(

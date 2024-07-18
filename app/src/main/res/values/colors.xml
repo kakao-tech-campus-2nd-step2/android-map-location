@@ -2,9 +2,5 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-<<<<<<< HEAD
-</resources>
-=======
     <color name="transpose">#00000000</color>
 </resources>
->>>>>>> search/step2

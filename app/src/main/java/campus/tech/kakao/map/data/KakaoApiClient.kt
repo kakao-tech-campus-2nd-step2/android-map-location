@@ -1,5 +1,6 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.data
 
+import campus.tech.kakao.map.BuildConfig
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
