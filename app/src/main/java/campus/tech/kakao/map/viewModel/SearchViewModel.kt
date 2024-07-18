@@ -1,6 +1,7 @@
 package campus.tech.kakao.map.viewModel
 
 import android.content.Context
+import android.content.Intent
 import androidx.lifecycle.*
 import campus.tech.kakao.map.data.Keyword
 import campus.tech.kakao.map.repository.Repository
@@ -14,6 +15,9 @@ class SearchViewModel(private val context: Context) : ViewModel() {
 
     private val _savedKeywords = MutableLiveData<List<Keyword>>()
     val savedKeywords: LiveData<List<Keyword>> = _savedKeywords
+
+    private val _selectedKeyword = MutableLiveData<Keyword>()
+    val selectedKeyword: LiveData<Keyword> = _selectedKeyword
 
     init {
         _savedKeywords.value = repository.getAllSavedKeywordsFromPrefs()
@@ -40,6 +44,16 @@ class SearchViewModel(private val context: Context) : ViewModel() {
         currentSavedKeywords.remove(keyword)
         _savedKeywords.value = currentSavedKeywords
         repository.deleteKeywordFromPrefs(keyword)
+    }
+
+    fun processActivityResult(data: Intent) {
+        val placeName = data.getStringExtra("place_name")
+        val roadAddressName = data.getStringExtra("road_address_name")
+        val x = data.getDoubleExtra("x", 0.0)
+        val y = data.getDoubleExtra("y", 0.0)
+        if (placeName != null && roadAddressName != null) {
+            _selectedKeyword.value = Keyword(0, placeName, roadAddressName, x, y)
+        }
     }
 }
 

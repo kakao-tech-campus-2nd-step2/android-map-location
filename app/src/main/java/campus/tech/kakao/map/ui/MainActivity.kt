@@ -7,9 +7,12 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import campus.tech.kakao.map.R
 import campus.tech.kakao.map.databinding.ActivityMainBinding
+import campus.tech.kakao.map.viewModel.SearchViewModel
+import campus.tech.kakao.map.viewModel.SearchViewModelFactory
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
@@ -28,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var kakaoMap: KakaoMap
     private lateinit var labelLayer: LabelLayer
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<FrameLayout>
+    private val viewModel: SearchViewModel by viewModels { SearchViewModelFactory(applicationContext) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +48,8 @@ class MainActivity : AppCompatActivity() {
         binding.bottomSheet.visibility = View.GONE
 
         binding.errorLayout.visibility = View.GONE
+
+        observeViewModel()
     }
 
     private fun initializeKakaoSdk() {
@@ -96,14 +102,7 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == SEARCH_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             data?.let {
-                val placeName = it.getStringExtra("place_name")
-                val roadAddressName = it.getStringExtra("road_address_name")
-                val x = it.getDoubleExtra("x", 0.0)
-                val y = it.getDoubleExtra("y", 0.0)
-                addMarker(placeName, roadAddressName, x, y)
-                if (placeName != null && roadAddressName != null) {
-                    saveLastMarkerPosition(x, y, placeName, roadAddressName)
-                }
+                viewModel.processActivityResult(it)
             }
         }
     }
@@ -187,6 +186,13 @@ class MainActivity : AppCompatActivity() {
             }
         } else {
             Log.d("MainActivity", "No last marker position found in SharedPreferences")
+        }
+    }
+
+    private fun observeViewModel() {
+        viewModel.selectedKeyword.observe(this) { keyword ->
+            addMarker(keyword.name, keyword.address, keyword.x, keyword.y)
+            saveLastMarkerPosition(keyword.x, keyword.y, keyword.name, keyword.address)
         }
     }
 
