@@ -1,6 +1,8 @@
 package campus.tech.kakao.map.view.map
 
+import android.app.Activity
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -15,7 +17,6 @@ import com.kakao.vectormap.KakaoMapSdk
 import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.MapView
-import com.kakao.vectormap.label.LabelManager
 import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.label.LabelStyle
 import com.kakao.vectormap.label.LabelStyles
@@ -36,13 +37,7 @@ class MapActivity : AppCompatActivity() {
         initViews()
         setupEditText()
         setupMapView()
-        Log.d("jieun", "MapActivity onCreate"+Thread.currentThread())
 
-    }
-
-    override fun onStart() {
-        super.onStart()
-        Log.d("jieun", "onStart")
     }
 
     private fun initViews() {
@@ -70,10 +65,10 @@ class MapActivity : AppCompatActivity() {
                 Log.d("jieun", "onMapError" + error)
             }
         }, object : KakaoMapReadyCallback() {
+            val coordinates = getCoordinates()
             override fun onMapReady(kakaoMap: KakaoMap) {
                 // 인증 후 API 가 정상적으로 실행될 때 호출됨
-                val coordinates = getCoordinates()
-                Log.d("jieun", "onMapReady coordinates: " + coordinates.toString())
+//                Log.d("jieun", "onMapReady coordinates: " + coordinates.toString())
                 if (coordinates != null) {
                     val labelStyles: LabelStyles = LabelStyles.from(
                         LabelStyle.from(R.drawable.location_red_icon_resized).setZoomLevel(8),
@@ -85,13 +80,14 @@ class MapActivity : AppCompatActivity() {
                         .setStyles(labelStyles)
                         .setTexts(coordinates.title)
                     )
+
+                    setSharedData("pref", coordinates)
+//                    Log.d("jieun", "onMapReady setSharedData: " + getSharedData("pref"))
                 }
             }
 
             override fun getPosition(): LatLng {
-                val coordinates = getCoordinates()
-                Log.d("jieun", "getPosition coordinates: " + coordinates.toString())
-
+//                Log.d("jieun", "getPosition coordinates: " + coordinates.toString())
                 if (coordinates != null) {
                     return LatLng.from(coordinates.latitude, coordinates.longitude)
                 }
@@ -101,18 +97,31 @@ class MapActivity : AppCompatActivity() {
         })
     }
     private fun getCoordinates(): Coordinates? {
-        if(intent == null) return null
-        val title = intent.getStringExtra("title")
-        val longitudeString = intent.getStringExtra("longitude")
-        val latitudeString = intent.getStringExtra("latitude")
-
-        if (title!=null && longitudeString != null && latitudeString != null) {
-            val longitude = longitudeString.toDouble()
-            val latitude = latitudeString.toDouble()
-            val coordinates = Coordinates(title, longitude, latitude)
-            return coordinates
+        var coordinates = getCoordinatesByIntent()
+        if(coordinates == null) {
+            coordinates = getCoordinatedBySharedPreference()
         }
-        return null
+        return coordinates
+
+    }
+
+    private fun getCoordinatedBySharedPreference(): Coordinates {
+        val coordinates = getSharedData("pref")
+        Log.d("jieun", "getSharedIntData " + coordinates)
+        return coordinates
+    }
+
+    private fun getCoordinatesByIntent(): Coordinates? {
+        if (intent.hasExtra("title") && intent.hasExtra("longitude") && intent.hasExtra("latitude")) {
+            val title = intent.getStringExtra("title").toString()
+            val longitudeString = intent.getStringExtra("longitude")
+            val latitudeString = intent.getStringExtra("latitude")
+            if (longitudeString != null && latitudeString != null) {
+                val longitude = longitudeString.toDouble()
+                val latitude = latitudeString.toDouble()
+                return Coordinates(title, longitude, latitude)
+            } else return null
+        } else return null
     }
 
     override fun onResume() {
@@ -122,8 +131,25 @@ class MapActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        Log.d("jieun", "onPause")
         mapView.pause() // MapView 의 pause 호출
     }
 
+    fun setSharedData(name: String, coordinates: Coordinates?) {
+        if (coordinates != null) {
+            var pref: SharedPreferences = getSharedPreferences(name, Activity.MODE_PRIVATE)
+            var editor: SharedPreferences.Editor = pref.edit()
+            editor.putString("longitude", coordinates.longitude.toString())
+            editor.putString("latitude", coordinates.latitude.toString())
+            editor.putString("title", coordinates.title.toString())
+            editor.apply()
+        }
+    }
+
+    fun getSharedData(name: String): Coordinates {
+        var pref: SharedPreferences = getSharedPreferences(name, Activity.MODE_PRIVATE)
+        val title = pref.getString("title", "").toString()
+        val longitude = pref.getString("longitude", "").toString().toDouble()
+        val latitude = pref.getString("latitude", "").toString().toDouble()
+        return Coordinates(title, longitude, latitude)
+    }
 }
