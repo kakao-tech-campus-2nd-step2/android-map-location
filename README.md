@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # android-map-location
 ## 🙋‍♀️ 개요
 
