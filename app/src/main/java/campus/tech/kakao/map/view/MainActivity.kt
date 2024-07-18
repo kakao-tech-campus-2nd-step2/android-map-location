@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
     private fun initKakaoMap() {
         val keyHash = Utility.getKeyHash(this)
         Log.d("testt", keyHash)
-        val key = getString(R.string.kakao_api_key)
+        val key = getString(R.string.kakao_api_key) + 1
         KakaoMapSdk.init(this, key)
     }
 
@@ -79,7 +79,6 @@ class MainActivity : AppCompatActivity() {
                     499 -> "서버 통신 실패"
                     else -> "알 수 없는 오류"
                 }
-                Toast.makeText(this@MainActivity, errorMessage, Toast.LENGTH_SHORT).show()
                 val intent = Intent(this@MainActivity, ErrorActivity::class.java)
                 intent.putExtra("error", errorMessage)
                 startActivity(intent)
@@ -90,7 +89,6 @@ class MainActivity : AppCompatActivity() {
                 setCameraPosition()
                 setMarker()
                 setBottomSheet()
-
             }
         })
     }
