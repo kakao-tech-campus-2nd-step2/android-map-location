@@ -1,4 +1,4 @@
-package campus.tech.kakao.map.view
+package campus.tech.kakao.map.view.search
 
 import android.content.Intent
 import android.os.Bundle
@@ -11,13 +11,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
-import campus.tech.kakao.map.repository.SavedSearchKeywordRepository
-import campus.tech.kakao.map.model.SearchKeyword
-import campus.tech.kakao.map.repository.SearchRepository
+import campus.tech.kakao.map.repository.search.SavedSearchKeywordRepository
+import campus.tech.kakao.map.model.search.SearchKeyword
+import campus.tech.kakao.map.repository.search.SearchRepository
 import campus.tech.kakao.map.databinding.ActivitySearchWindowBinding
-import campus.tech.kakao.map.model.Place
-import campus.tech.kakao.map.viewmodel.SearchViewModel
-import campus.tech.kakao.map.viewmodel.SearchViewModelFactory
+import campus.tech.kakao.map.model.search.Place
+import campus.tech.kakao.map.view.ActivityKeys
+import campus.tech.kakao.map.viewmodel.search.SearchViewModel
+import campus.tech.kakao.map.viewmodel.search.SearchViewModelFactory
 import kotlinx.coroutines.launch
 
 class SearchWindowActivity : AppCompatActivity() {

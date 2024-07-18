@@ -1,9 +1,9 @@
-package campus.tech.kakao.map.repository
+package campus.tech.kakao.map.repository.search
 
 import android.content.ContentValues
 import android.content.Context
-import campus.tech.kakao.map.model.SearchKeyword
-import campus.tech.kakao.map.model.SearchKeywordEntry
+import campus.tech.kakao.map.model.search.SearchKeyword
+import campus.tech.kakao.map.model.search.SearchKeywordEntry
 
 class SavedSearchKeywordRepository(context: Context) {
 

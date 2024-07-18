@@ -1,7 +1,7 @@
-package campus.tech.kakao.map.viewmodel
+package campus.tech.kakao.map.viewmodel.kakaomap
 
 import androidx.lifecycle.ViewModel
-import campus.tech.kakao.map.repository.LastPositionRepository
+import campus.tech.kakao.map.repository.kakaomap.LastPositionRepository
 import com.kakao.vectormap.LatLng
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

@@ -1,11 +1,11 @@
-package campus.tech.kakao.map.viewmodel
+package campus.tech.kakao.map.viewmodel.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import campus.tech.kakao.map.model.Place
-import campus.tech.kakao.map.repository.SavedSearchKeywordRepository
-import campus.tech.kakao.map.model.SearchKeyword
-import campus.tech.kakao.map.repository.SearchRepository
+import campus.tech.kakao.map.model.search.Place
+import campus.tech.kakao.map.repository.search.SavedSearchKeywordRepository
+import campus.tech.kakao.map.model.search.SearchKeyword
+import campus.tech.kakao.map.repository.search.SearchRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

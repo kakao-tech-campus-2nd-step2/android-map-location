@@ -1,4 +1,4 @@
-package campus.tech.kakao.map.view
+package campus.tech.kakao.map.view.kakaomap
 
 import android.content.Intent
 import android.os.Build
@@ -11,10 +11,12 @@ import androidx.lifecycle.ViewModelProvider
 import campus.tech.kakao.map.BuildConfig
 import campus.tech.kakao.map.R
 import campus.tech.kakao.map.databinding.ActivityKakaoMapBinding
-import campus.tech.kakao.map.model.Place
-import campus.tech.kakao.map.repository.LastPositionRepository
-import campus.tech.kakao.map.viewmodel.KakaoMapViewModel
-import campus.tech.kakao.map.viewmodel.KakaoMapViewModelFactory
+import campus.tech.kakao.map.model.search.Place
+import campus.tech.kakao.map.repository.kakaomap.LastPositionRepository
+import campus.tech.kakao.map.view.ActivityKeys
+import campus.tech.kakao.map.view.search.SearchWindowActivity
+import campus.tech.kakao.map.viewmodel.kakaomap.KakaoMapViewModel
+import campus.tech.kakao.map.viewmodel.kakaomap.KakaoMapViewModelFactory
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback

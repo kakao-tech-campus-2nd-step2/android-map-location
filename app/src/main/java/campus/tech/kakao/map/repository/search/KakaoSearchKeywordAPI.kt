@@ -1,6 +1,6 @@
-package campus.tech.kakao.map.repository
+package campus.tech.kakao.map.repository.search
 
-import campus.tech.kakao.map.model.SearchResults
+import campus.tech.kakao.map.model.search.SearchResults
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Query

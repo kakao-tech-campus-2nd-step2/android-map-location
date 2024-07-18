@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="10dp"
-    tools:context=".view.SearchWindowActivity">
+    tools:context=".view.search.SearchWindowActivity">
 
     <EditText
         android:id="@+id/searchWindow"

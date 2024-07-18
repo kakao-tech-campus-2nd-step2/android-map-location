@@ -1,4 +1,4 @@
-package campus.tech.kakao.map.model
+package campus.tech.kakao.map.model.search
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName

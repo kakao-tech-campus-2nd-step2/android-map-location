@@ -1,10 +1,10 @@
-package campus.tech.kakao.map.view
+package campus.tech.kakao.map.view.search
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.map.databinding.SavedSearchKeywordItemBinding
-import campus.tech.kakao.map.model.SearchKeyword
+import campus.tech.kakao.map.model.search.SearchKeyword
 
 class SavedSearchKeywordsAdapter(
     private val savedSearchKeywords: List<SearchKeyword>,

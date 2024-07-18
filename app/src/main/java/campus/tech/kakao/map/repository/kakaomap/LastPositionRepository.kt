@@ -1,4 +1,4 @@
-package campus.tech.kakao.map.repository
+package campus.tech.kakao.map.repository.kakaomap
 
 import android.content.Context
 import campus.tech.kakao.map.view.ActivityKeys
