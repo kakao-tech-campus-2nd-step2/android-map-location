@@ -31,7 +31,9 @@ class MapActivity : AppCompatActivity() {
     private val bottomSheetLayout by lazy { findViewById<ConstraintLayout>(R.id.bottom_sheet_layout) }
     private val bottom_sheet_title by lazy { findViewById<TextView>(R.id.bottom_sheet_title) }
     private val bottom_sheet_address by lazy { findViewById<TextView>(R.id.bottom_sheet_address) }
-    private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
+    private val errorMessageTextView by lazy { findViewById<TextView>(R.id.errorMessageTextView) }
+    private val bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout> by lazy { BottomSheetBehavior.from(bottomSheetLayout) }
+
     companion object{
         private val DEFAULT_LONGITUDE = 127.115587
         private val DEFAULT_LATITUDE = 37.406960
@@ -41,9 +43,18 @@ class MapActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
 
-        setupBottomSheet()
         setupEditText()
         setupMapView()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mapView.resume() // MapView 의 resume 호출
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mapView.pause() // MapView 의 pause 호출
     }
 
     private fun setupEditText() {
@@ -53,27 +64,20 @@ class MapActivity : AppCompatActivity() {
         }
     }
 
-    // Persistent BottomSheet 초기화
-    private fun setupBottomSheet() {
-        // BottomSheetBehavior에 layout 설정
-        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout)
-    }
-
     private fun setupMapView() {
         KakaoMapSdk.init(this, BuildConfig.KAKAO_API_KEY);
-//        KakaoMapSdk.init(this, BuildConfig.KAKAO_REST_API_KEY);
         mapView.start(object : MapLifeCycleCallback() {
             override fun onMapDestroy() {
-                // 지도 API 가 정상적으로 종료될 때 호출됨
                 Log.d("jieun", "onMapDestroy")
             }
 
             override fun onMapError(error: Exception) {
                 // 인증 실패 및 지도 사용 중 에러가 발생할 때 호출됨
                 Log.d("jieun", "onMapError" + error)
-                setContentView(R.layout.error_map)
-                val errorMessageTextView: TextView = findViewById(R.id.errorMessageTextView)
-                errorMessageTextView.text = "지도 인증을 실패했습니다.\n다시 시도해주세요.\n\n"+error.message
+                runOnUiThread {
+                    setContentView(R.layout.error_map)
+                    errorMessageTextView.text = "지도 인증을 실패했습니다.\n다시 시도해주세요.\n\n"+error.message
+                }
             }
         }, object : KakaoMapReadyCallback() {
             val coordinates = getCoordinates()
@@ -112,7 +116,7 @@ class MapActivity : AppCompatActivity() {
 
         })
     }
-    private fun getCoordinates(): Coordinates? {
+    private fun getCoordinates(): Coordinates {
         var coordinates = getCoordinatesByIntent()
         if(coordinates == null) {
             coordinates = getCoordinatedBySharedPreference()
@@ -140,16 +144,6 @@ class MapActivity : AppCompatActivity() {
                 return Coordinates(title, longitude, latitude, address)
             } else return null
         } else return null
-    }
-
-    override fun onResume() {
-        super.onResume()
-        mapView.resume() // MapView 의 resume 호출
-    }
-
-    override fun onPause() {
-        super.onPause()
-        mapView.pause() // MapView 의 pause 호출
     }
 
     fun setSharedData(name: String, coordinates: Coordinates?) {
