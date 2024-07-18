@@ -4,7 +4,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClient {
-private const val BASE_URL = "https://dapi.kakao.com/"
+const val BASE_URL = "https://dapi.kakao.com/"
 
         val instance: KakaoApiService by lazy {
         val retrofit = Retrofit.Builder()
