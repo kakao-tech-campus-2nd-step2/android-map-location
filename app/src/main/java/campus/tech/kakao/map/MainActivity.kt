@@ -22,6 +22,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var searchAdapter: SearchAdapter
     private lateinit var savedSearchAdapter: SavedSearchAdapter
 
+    companion object {
+        const val EXTRA_PLACE_NAME = "place_name"
+        const val EXTRA_PLACE_ADDRESS = "place_address"
+        const val EXTRA_PLACE_X = "place_x"
+        const val EXTRA_PLACE_Y = "place_y"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d("MainActivity", "onCreate called")
@@ -84,10 +91,10 @@ class MainActivity : AppCompatActivity() {
         searchAdapter = SearchAdapter { result ->
             viewModel.addSearch(result.place_name)
             val intent = Intent(this, MapActivity::class.java).apply {
-                putExtra("place_name", result.place_name)
-                putExtra("place_address", result.address_name)
-                putExtra("place_x", result.x)
-                putExtra("place_y", result.y)
+                putExtra(EXTRA_PLACE_NAME, result.place_name)
+                putExtra(EXTRA_PLACE_ADDRESS, result.address_name)
+                putExtra(EXTRA_PLACE_X, result.x)
+                putExtra(EXTRA_PLACE_Y, result.y)
             }
             startActivity(intent)
         }
