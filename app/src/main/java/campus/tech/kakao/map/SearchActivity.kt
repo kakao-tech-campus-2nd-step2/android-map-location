@@ -136,7 +136,7 @@ class SearchActivity : AppCompatActivity() {
         })
     }
 
-    private fun performSearch(query: String) {
+    fun performSearch(query: String) {
         binding.searchEditText.setText(query)
         viewModel.searchQuery.value = query
     }

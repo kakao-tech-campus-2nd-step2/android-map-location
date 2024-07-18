@@ -37,4 +37,23 @@ class FunctionTest {
             scenarioSearch.close()
         }
     }
+
+    @Test
+    fun testCompleteFlow() {
+        scenarioMain.onActivity { mainActivity ->
+
+            val searchEditText: EditText = mainActivity.findViewById(R.id.search_edit_text)
+            searchEditText.performClick()
+
+            Executors.newSingleThreadExecutor().execute {
+                scenarioSearch = ActivityScenario.launch(SearchActivity::class.java)
+                scenarioSearch.onActivity { searchActivity ->
+                    //1 검색 기능 테스트
+                    val searchEditText: EditText = searchActivity.findViewById(R.id.searchEditText)
+                    searchEditText.setText("바다 정원")
+                    searchActivity.performSearch("바다 정원")
+                }
+            }
+        }
+    }
 }
