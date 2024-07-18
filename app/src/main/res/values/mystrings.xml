@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="search_hint">검색어를 입력해 주세요.</string>
+    <string name="no_search_result">검색 결과가 없습니다.</string>
+    <string name="explanation_no_search">누르면 입력중인 검색어가 사라지는 버튼입니다.</string>
+    <string name="explanation_map_icon">지도의 위치 모양 이미지입니다.</string>
+    <string name="explanation_delete_recent_search">누르면 최근 검색어가 삭제되는 버튼입니다.</string>
+    <string name="searchBar_text">검색어를 입력해 주세요.</string>
+</resources>
