@@ -10,6 +10,7 @@ import androidx.activity.result.contract.ActivityResultContracts.StartActivityFo
 import androidx.appcompat.app.AppCompatActivity
 import campus.tech.kakao.map.BuildConfig
 import campus.tech.kakao.map.R
+import campus.tech.kakao.map.data.repository.LocationRepository
 import campus.tech.kakao.map.databinding.ActivityMapBinding
 import campus.tech.kakao.map.ui.IntentKeys.EXTRA_MAP_ERROR_MESSAGE
 import campus.tech.kakao.map.ui.IntentKeys.EXTRA_PLACE_ADDRESS
@@ -26,11 +27,17 @@ import com.kakao.vectormap.label.LabelManager
 import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.label.LabelStyle
 import com.kakao.vectormap.label.LabelStyles
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MapActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMapBinding
     private lateinit var searchActivityResultLauncher: ActivityResultLauncher<Intent>
     private lateinit var markerData: MarkerData
+
+    @Inject
+    lateinit var locationRepository: LocationRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -131,18 +138,7 @@ class MapActivity : AppCompatActivity() {
      * 데이터가 존재한다면 정보를 가져와서 저장. 그 외의 경우는 기본값(부산대 컴공관) 저장.
      */
     private fun loadLocation() {
-        val sharedPref = getSharedPreferences(PREF_NAME, MODE_PRIVATE)
-        val placeName = sharedPref.getString(MARKER_PLACE_NAME, null)
-        val latitude = sharedPref.getString(MARKER_LATITUDE, null)
-        val longitude = sharedPref.getString(MARKER_LONGITUDE, null)
-        val address = sharedPref.getString(MARKER_ADDRESS, null)
-
-        markerData =
-            if (placeName != null && latitude != null && longitude != null && address != null) {
-                MarkerData(placeName, latitude.toDouble(), longitude.toDouble(), address)
-            } else {
-                MarkerData("부산대 컴공관", 35.230934, 129.082476, "부산광역시 금정구 부산대학로 63번길 2")
-            }
+        markerData = locationRepository.loadLocation()
     }
 
     /**
@@ -290,22 +286,7 @@ class MapActivity : AppCompatActivity() {
      * location 정보를 SharedPreferences에 저장하는 함수.
      */
     private fun saveLocation() {
-        val sharedPref = getSharedPreferences(PREF_NAME, MODE_PRIVATE)
-        with(sharedPref.edit()) {
-            putString(MARKER_PLACE_NAME, markerData.name)
-            putString(MARKER_LATITUDE, markerData.latitude.toString())
-            putString(MARKER_LONGITUDE, markerData.longitude.toString())
-            putString(MARKER_ADDRESS, markerData.address)
-            apply()
-        }
-    }
-
-    companion object {
-        private const val PREF_NAME = "location_prefs"
-        private const val MARKER_PLACE_NAME = "placeName"
-        private const val MARKER_LATITUDE = "latitude"
-        private const val MARKER_LONGITUDE = "longitude"
-        private const val MARKER_ADDRESS = "address"
+        locationRepository.saveLocation(markerData)
     }
 
     data class MarkerData(
