@@ -3,10 +3,13 @@ package campus.tech.kakao.map.model
 import android.content.Context
 import androidx.datastore.preferences.core.doublePreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.kakao.vectormap.LatLng
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
+import java.io.IOException
 
 class DataStoreRepository(private val context: Context) {
     companion object {
@@ -23,7 +26,13 @@ class DataStoreRepository(private val context: Context) {
         }
     }
 
-    fun loadLocation(): Flow<LatLng?> = context.dataStore.data.map {
+    fun loadLocation(): Flow<LatLng?> = context.dataStore.data.catch { exception ->
+        if (exception is IOException) {
+            emit(emptyPreferences())
+        } else {
+            throw exception
+        }
+    }.map {
         it[latitudeKey]?.let { latitude ->
             it[longitudeKey]?.let { longitude ->
                 LatLng.from(latitude, longitude)
