@@ -16,9 +16,9 @@ interface RetrofitService {
     ) : Call<ServerResult>
 
     @GET("v2/local/search/keyword")
-    fun requestLocationByKeyword(
+    suspend fun requestLocationByKeyword(
         @Header("Authorization") authorization: String,
         @Query("query") keyword: String,
         @Query("page") page: Int = 1
-    ) : Call<ServerResult>
+    ) : ServerResult
 }

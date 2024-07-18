@@ -12,7 +12,13 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import campus.tech.kakao.map.domain.model.Location
 import campus.tech.kakao.map.R
+import campus.tech.kakao.map.data.repository.HistoryRepositoryImpl
+import campus.tech.kakao.map.data.repository.LastLocationRepositoryImpl
+import campus.tech.kakao.map.data.repository.ResultRepositoryImpl
 import campus.tech.kakao.map.data.source.MapDbHelper
+import campus.tech.kakao.map.data.source.RetrofitServiceClient
+import campus.tech.kakao.map.domain.repository.HistoryRepository
+import campus.tech.kakao.map.domain.repository.ResultRepository
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
@@ -47,7 +53,11 @@ class MapActivity : AppCompatActivity() {
         infoSheetAddress = findViewById(R.id.info_sheet_address)
         errorLayout = findViewById(R.id.error_layout)
         errorCode = findViewById(R.id.error_code)
-        viewModel = MapViewModel(MapDbHelper(this))
+        val dbhelper = MapDbHelper(this)
+        val resultRepo = ResultRepositoryImpl(RetrofitServiceClient.retrofitService)
+        val historyRepo = HistoryRepositoryImpl(dbhelper)
+        val lastRepo = LastLocationRepositoryImpl(dbhelper)
+        viewModel = MapViewModel(dbhelper, resultRepo, historyRepo, lastRepo)
         kakaoMapView.start(object : MapLifeCycleCallback() {
             override fun onMapDestroy() {
                 // TODO: 필요시 구현 예정

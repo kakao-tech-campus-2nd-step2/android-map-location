@@ -15,11 +15,15 @@ import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.map.DatabaseListener
 import campus.tech.kakao.map.domain.model.Location
 import campus.tech.kakao.map.R
+import campus.tech.kakao.map.data.repository.HistoryRepositoryImpl
+import campus.tech.kakao.map.data.repository.LastLocationRepositoryImpl
+import campus.tech.kakao.map.data.repository.ResultRepositoryImpl
 import campus.tech.kakao.map.data.source.MapDbHelper
+import campus.tech.kakao.map.data.source.RetrofitServiceClient
 
 class SearchActivity : AppCompatActivity(), DatabaseListener {
+//    private val viewModel: MapViewModel by viewModels()
     private lateinit var viewModel: MapViewModel
-
     private lateinit var searchBox: EditText
     private lateinit var searchHistoryView: RecyclerView
     private lateinit var searchResultView: RecyclerView
@@ -35,7 +39,13 @@ class SearchActivity : AppCompatActivity(), DatabaseListener {
         setContentView(R.layout.activity_search)
 
         val dbHelper = MapDbHelper(this)
-        viewModel = MapViewModel(dbHelper)
+        val retrofit = RetrofitServiceClient.retrofitService
+        viewModel = MapViewModel(
+            dbHelper,
+            ResultRepositoryImpl(retrofit) ,
+            HistoryRepositoryImpl(dbHelper),
+            LastLocationRepositoryImpl(dbHelper)
+        )
         searchBox = findViewById(R.id.search_box)
         searchHistoryView = findViewById(R.id.search_history)
         searchResultView = findViewById(R.id.search_result)
@@ -75,11 +85,11 @@ class SearchActivity : AppCompatActivity(), DatabaseListener {
         searchBox.removeTextChangedListener(searchBoxWatcher)
         searchBox.setText(locName)
         searchBox.addTextChangedListener(searchBoxWatcher)
-        viewModel.searchByKeywordFromServer(locName, isExactMatch)
+        viewModel.searchKeyword(locName)
     }
 
-    private fun search(locName: String, isExactMatch: Boolean) {
-        viewModel.searchByKeywordFromServer(locName, isExactMatch)
+    private fun search(locName: String) {
+        viewModel.searchKeyword(locName)
     }
 
     private fun hideResult() {
@@ -93,7 +103,7 @@ class SearchActivity : AppCompatActivity(), DatabaseListener {
 
     private fun initSearchResultView() {
         searchResultAdapter =
-            ResultRecyclerAdapter(viewModel.searchResult.value!!, layoutInflater, this)
+            ResultRecyclerAdapter(viewModel.getAllResult(), layoutInflater, this)
         searchResultView.adapter = searchResultAdapter
         searchResultView.layoutManager =
             LinearLayoutManager(this@SearchActivity, LinearLayoutManager.VERTICAL, false)
@@ -137,7 +147,7 @@ class SearchActivity : AppCompatActivity(), DatabaseListener {
                 if (s.isNullOrEmpty()) {
                     hideResult()
                 } else {
-                    search(s.toString(), false)
+                    search(s.toString())
                 }
             }
         }
