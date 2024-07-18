@@ -103,6 +103,7 @@ class MapActivity : AppCompatActivity() {
         }, object : KakaoMapReadyCallback() {
             override fun onMapReady(map: KakaoMap) {
                 kakaoMap = map
+                getLastPosition()
                 handleIntent()
                 moveClickedPlace(pos.latitude, pos.longitude)
             }
@@ -144,5 +145,11 @@ class MapActivity : AppCompatActivity() {
             editor.putString("longitude", camera.position.longitude.toString())
             editor.apply()
         }
+    }
+
+    private fun getLastPosition() {
+        val latitude = spf.getString("latitude", "37.394660")?.toDouble() ?: 37.394660
+        val longitude = spf.getString("longitude", "127.111182")?.toDouble() ?: 127.111182
+        pos = LatLng.from(latitude, longitude)
     }
 }
