@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="10dp"
+    android:gravity="center"
+    android:layout_marginRight="15dp"
+    android:layout_marginBottom="5dp"
+    android:background="@drawable/search_history_background"
+    >
+
+    <TextView
+        android:id="@+id/history"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="history"
+        android:textSize="17sp"
+        android:layout_marginRight="10dp"
+        />
+
+    <ImageView
+        android:id="@+id/xmark"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:src="@drawable/xmark"
+        />
+
+</androidx.appcompat.widget.LinearLayoutCompat>
