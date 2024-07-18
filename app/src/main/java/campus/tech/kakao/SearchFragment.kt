@@ -18,11 +18,11 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class SearchFragment : Fragment() {
-    private lateinit var searchView: SearchView
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var noResultTextView: TextView
+    lateinit var searchView: SearchView
+    lateinit var recyclerView: RecyclerView
+    lateinit var noResultTextView: TextView
     private lateinit var databaseHelper: SQLiteDb
-    private lateinit var historyRecyclerView: RecyclerView
+    lateinit var historyRecyclerView: RecyclerView
     private lateinit var historyAdapter: HistoryAdapter
     private lateinit var adapter: PlacesAdapter
 
@@ -46,15 +46,15 @@ class SearchFragment : Fragment() {
         updateHistoryData()
     }
 
-    private fun initializeViews(view: View) {
-        searchView = view.findViewById(R.id.searchView)
+    fun initializeViews(view: View) {
+        searchView = view.findViewById(R.id.searchView2)
         recyclerView = view.findViewById(R.id.recyclerView)
         noResultTextView = view.findViewById(R.id.noResultTextView)
         historyRecyclerView = view.findViewById(R.id.historyRecyclerView)
         databaseHelper = SQLiteDb(requireContext())
     }
 
-    private fun setupRecyclerViews() {
+    fun setupRecyclerViews() {
         recyclerView.layoutManager = LinearLayoutManager(context)
         historyRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
@@ -93,7 +93,7 @@ class SearchFragment : Fragment() {
         })
     }
 
-    private fun searchPlaces(query: String) {
+    fun searchPlaces(query: String) {
         val apiKey = "KakaoAK ${campus.tech.kakao.map.BuildConfig.KAKAO_REST_API_KEY}"
 
         RetrofitClient.instance.searchPlaces(apiKey, query).enqueue(object : Callback<ResultSearchKeyword> {
@@ -117,19 +117,19 @@ class SearchFragment : Fragment() {
         })
     }
 
-    private fun showNoResultMessage() {
+    fun showNoResultMessage() {
         noResultTextView.visibility = View.VISIBLE
         recyclerView.visibility = View.GONE
         historyRecyclerView.visibility = if (historyAdapter.itemCount > 0) View.VISIBLE else View.GONE
     }
 
-    private fun hideNoResultMessage() {
+    fun hideNoResultMessage() {
         noResultTextView.visibility = View.GONE
         recyclerView.visibility = View.VISIBLE
         historyRecyclerView.visibility = if (historyAdapter.itemCount > 0) View.VISIBLE else View.GONE
     }
 
-    private fun updateHistoryData() {
+    fun updateHistoryData() {
         val historyData = databaseHelper.getAllSelectedData()
         historyAdapter.updateData(historyData)
         historyRecyclerView.visibility = if (historyData.isNotEmpty()) View.VISIBLE else View.GONE
