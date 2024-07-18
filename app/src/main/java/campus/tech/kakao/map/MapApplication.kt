@@ -8,7 +8,7 @@ import campus.tech.kakao.map.data.source.MapDbHelper
 import campus.tech.kakao.map.data.source.RetrofitServiceClient
 import com.kakao.vectormap.KakaoMapSdk
 
-class MapApplication: Application() {
+class MapApplication : Application() {
     lateinit var dbHelper: MapDbHelper
     lateinit var resultRepositoryImpl: ResultRepositoryImpl
     lateinit var historyRepositoryImpl: HistoryRepositoryImpl

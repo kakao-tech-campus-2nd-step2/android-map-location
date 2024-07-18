@@ -10,13 +10,4 @@ object RetrofitServiceClient {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(RetrofitService::class.java)
-
-//    fun getRetrofit(baseUrl: String): RetrofitService {
-//        retrofitService = Retrofit.Builder()
-//            .baseUrl(baseUrl)
-//            .addConverterFactory(GsonConverterFactory.create())
-//            .build()
-//            .create(RetrofitService::class.java)
-//        return retrofitService
-//    }
 }

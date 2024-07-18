@@ -28,7 +28,7 @@ class MapViewModel(
     private val _searchHistory = MutableLiveData<List<Location>>()
     val searchHistory: LiveData<List<Location>> = _searchHistory
     private val _lastLocation = MutableLiveData<Location>()
-    val lastLocation = _lastLocation as LiveData<Location>
+    val lastLocation: LiveData<Location> = _lastLocation
 
     fun searchKeyword(keyword: String) {
         viewModelScope.launch {

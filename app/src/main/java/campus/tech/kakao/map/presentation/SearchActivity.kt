@@ -72,9 +72,7 @@ class SearchActivity : AppCompatActivity(), DatabaseListener {
     }
 
     override fun showMap(newHistory: Location) {
-        val locInfo = Intent(this, MapActivity::class.java)
-        locInfo.putExtra(Location.LOCATION, newHistory)
-        startActivity(locInfo)
+        finish()
     }
 
     override fun insertLastLocation(location: Location) {

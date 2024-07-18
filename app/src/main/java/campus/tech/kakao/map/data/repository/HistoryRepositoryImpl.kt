@@ -87,9 +87,11 @@ class HistoryRepositoryImpl(
         val address =
             cursor.getString(cursor.getColumnIndexOrThrow(MapContract.MapEntry.COLUMN_NAME_ADDRESS))
         val x =
-            cursor.getString(cursor.getColumnIndexOrThrow(MapContract.MapEntry.COLUMN_NAME_X)).toDouble()
+            cursor.getString(cursor.getColumnIndexOrThrow(MapContract.MapEntry.COLUMN_NAME_X))
+                .toDouble()
         val y =
-            cursor.getString(cursor.getColumnIndexOrThrow(MapContract.MapEntry.COLUMN_NAME_Y)).toDouble()
+            cursor.getString(cursor.getColumnIndexOrThrow(MapContract.MapEntry.COLUMN_NAME_Y))
+                .toDouble()
 
         return Location(id, name, category, address, x, y)
     }

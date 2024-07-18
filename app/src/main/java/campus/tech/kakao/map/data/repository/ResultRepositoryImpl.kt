@@ -16,8 +16,6 @@ class ResultRepositoryImpl(
     override suspend fun search(keyword: String): List<Location> {
         clearResult()
         request(keyword)
-        Log.d("ResultRepository", result.size.toString())
-        Log.d("ResultRepository", keyword.toString())
         return result
     }
 
@@ -29,7 +27,6 @@ class ResultRepositoryImpl(
         if (keyword.isNotEmpty()) {
             val authorization = "KakaoAK ${BuildConfig.KAKAO_REST_API_KEY}"
             val serverResult = retrofit.requestLocationByKeyword(authorization, keyword, currPage)
-            Log.d("ResultRepository", serverResult.toString())
             serverResult.docList.forEach {
                 result.add(documentToLocation(it))
             }
