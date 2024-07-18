@@ -69,7 +69,11 @@ class MapViewActivity : AppCompatActivity() {
                 }
 
                 override fun onMapError(exception: Exception?) {
-                    Log.e("KakaoMap", "카카오맵 인증실패", exception)
+                    val errorMsg = extractErrorMsg(exception.toString())
+                    val intent = Intent(this@MapViewActivity, ErrorActivity::class.java)
+                    intent.putExtra("ERROR", errorMsg)
+                    startActivity(intent)
+                    Log.d("KakaoMap", errorMsg.toString())
                 }
             }, object : KakaoMapReadyCallback() {
                 override fun onMapReady(map: KakaoMap) {
@@ -120,6 +124,11 @@ class MapViewActivity : AppCompatActivity() {
 
     private fun hideBottomSheet(){
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+    }
+
+    private fun extractErrorMsg(fullMsg: String): String {
+        val parts = fullMsg.split(": ", limit = 2)
+        return if (parts.size > 1) parts[1] else ""
     }
 
     override fun onStart() {
