@@ -6,4 +6,5 @@
     <string name="address">"주소"</string>
     <string name="category">"카테고리"</string>
     <string name="enter_search">"검색어를 입력해 주세요."</string>
+    <string name="fail_authorization">"지도 인증을 실패 했습니다.\n다시 시도해 주세요.\n\nMapAuthException(401): Unauthorized\n"</string>
 </resources>
