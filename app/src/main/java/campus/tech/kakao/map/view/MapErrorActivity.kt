@@ -19,7 +19,6 @@ class MapErrorActivity : AppCompatActivity() {
             intent.getStringExtra("errorCode") ?: "Unknown error code"
 
         binding.refreshBackgroundView.setOnClickListener {
-            setResult(RESULT_OK)
             finish()
         }
     }

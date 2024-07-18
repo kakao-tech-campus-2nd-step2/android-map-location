@@ -81,9 +81,7 @@ class MapActivity : AppCompatActivity() {
 
     private fun createMapErrorLauncher(): ActivityResultLauncher<Intent> {
         return registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (it.resultCode == RESULT_OK) {
-                setKakaoMap(binding.kakaoMapView)
-            }
+            setKakaoMap(binding.kakaoMapView)
         }
     }
 
