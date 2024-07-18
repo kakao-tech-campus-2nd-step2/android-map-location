@@ -11,7 +11,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import campus.tech.kakao.map.R
-import campus.tech.kakao.map.dataStore
 import campus.tech.kakao.map.databinding.ActivityMapBinding
 import campus.tech.kakao.map.model.Location
 import campus.tech.kakao.map.viewmodel.MapViewModel
@@ -43,7 +42,7 @@ class MapActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this)[MapViewModel::class.java]
-        viewModel.setDataStore(dataStore)
+        viewModel.setDataStoreRepository(this)
         binding = ActivityMapBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
