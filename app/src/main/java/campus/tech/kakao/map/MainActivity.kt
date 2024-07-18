@@ -101,6 +101,8 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(this, MapViewActivity::class.java)
         intent.putExtra("PLACE_NAME", place.name)
         intent.putExtra("PLACE_LOCATION", place.location)
+        intent.putExtra("PLACE_X", place.x)
+        intent.putExtra("PLACE_Y", place.y)
         startActivity(intent)
     }
 

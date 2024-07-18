@@ -9,5 +9,7 @@ object MyPlaceContract {
         const val COLUMN_IMG = "img"
         const val COLUMN_LOCATION = "location"
         const val COLUMN_CATEGORY = "category"
+        const val COLUMN_X = "x"
+        const val COLUMN_Y = "y"
     }
 }

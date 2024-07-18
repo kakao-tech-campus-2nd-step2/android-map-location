@@ -42,7 +42,7 @@ class MainModel(private val application: MyApplication) {
                         val documentList = response.body()?.documents ?: emptyList()
                         placeList = documentList.map {
                             val category = PlaceCategory.fromCategory(query)
-                            Place(img = category.imgId, name = it.placeName, location = it.addressName, category = category)
+                            Place(img = category.imgId, name = it.placeName, location = it.addressName, category = category, x = it.x, y = it.y)
                         }.toMutableList()
                         callback(placeList)
                     } else {
@@ -63,8 +63,8 @@ class MainModel(private val application: MyApplication) {
     fun insertLog(place: Place) {
         dbHelper.writableDatabase.use { db ->
             db.rawQuery(
-                "SELECT 1 FROM ${MyPlaceContract.Research.TABLE_NAME} WHERE ${MyPlaceContract.Research.COLUMN_NAME} = ? AND ${MyPlaceContract.Research.COLUMN_LOCATION} = ? AND ${MyPlaceContract.Research.COLUMN_CATEGORY} = ?",
-                arrayOf(place.name, place.location, place.category.category)
+                "SELECT 1 FROM ${MyPlaceContract.Research.TABLE_NAME} WHERE ${MyPlaceContract.Research.COLUMN_NAME} = ? AND ${MyPlaceContract.Research.COLUMN_LOCATION} = ? AND ${MyPlaceContract.Research.COLUMN_CATEGORY} = ? AND ${MyPlaceContract.Research.COLUMN_X} = ? AND ${MyPlaceContract.Research.COLUMN_Y} = ?",
+                arrayOf(place.name, place.location, place.category.category, place.x, place.y)
             ).use { cursor ->
                 if (cursor.moveToFirst()) {
                     Log.d("PlaceRepository", "Place already exists: ${place.name}")
@@ -74,6 +74,8 @@ class MainModel(private val application: MyApplication) {
                         put(MyPlaceContract.Research.COLUMN_IMG, place.img)
                         put(MyPlaceContract.Research.COLUMN_LOCATION, place.location)
                         put(MyPlaceContract.Research.COLUMN_CATEGORY, place.category.category)
+                        put(MyPlaceContract.Research.COLUMN_X, place.x)
+                        put(MyPlaceContract.Research.COLUMN_Y, place.y)
                     }
                     db.insert(MyPlaceContract.Research.TABLE_NAME, null, values)
                     logList.add(place)
@@ -101,8 +103,8 @@ class MainModel(private val application: MyApplication) {
         dbHelper.writableDatabase.use {
             it.delete(
                 MyPlaceContract.Research.TABLE_NAME,
-                "${MyPlaceContract.Research.COLUMN_NAME} = ? AND ${MyPlaceContract.Research.COLUMN_IMG} = ? AND ${MyPlaceContract.Research.COLUMN_LOCATION} = ? AND ${MyPlaceContract.Research.COLUMN_CATEGORY} = ?",
-                arrayOf(place.name, place.img.toString(), place.location, place.category.category)
+                "${MyPlaceContract.Research.COLUMN_NAME} = ? AND ${MyPlaceContract.Research.COLUMN_IMG} = ? AND ${MyPlaceContract.Research.COLUMN_LOCATION} = ? AND ${MyPlaceContract.Research.COLUMN_CATEGORY} = ? AND ${MyPlaceContract.Research.COLUMN_X} = ? AND ${MyPlaceContract.Research.COLUMN_Y} = ?",
+                arrayOf(place.name, place.img.toString(), place.location, place.category.category, place.x, place.y)
             )
         }
         logList.remove(place)
@@ -117,7 +119,9 @@ class MainModel(private val application: MyApplication) {
                     MyPlaceContract.Research.COLUMN_IMG,
                     MyPlaceContract.Research.COLUMN_NAME,
                     MyPlaceContract.Research.COLUMN_LOCATION,
-                    MyPlaceContract.Research.COLUMN_CATEGORY
+                    MyPlaceContract.Research.COLUMN_CATEGORY,
+                    MyPlaceContract.Research.COLUMN_X,
+                    MyPlaceContract.Research.COLUMN_Y
                 ),
                 null, null, null, null, null
             ).use { cursor ->
@@ -127,7 +131,9 @@ class MainModel(private val application: MyApplication) {
                     val location = cursor.getString(cursor.getColumnIndexOrThrow(MyPlaceContract.Research.COLUMN_LOCATION))
                     val categoryDisplayName = cursor.getString(cursor.getColumnIndexOrThrow(MyPlaceContract.Research.COLUMN_CATEGORY))
                     val category = PlaceCategory.fromCategory(categoryDisplayName)
-                    val place = Place(img = img, name = name, location = location, category = category)
+                    val x = cursor.getString(cursor.getColumnIndexOrThrow(MyPlaceContract.Research.COLUMN_X))
+                    val y = cursor.getString(cursor.getColumnIndexOrThrow(MyPlaceContract.Research.COLUMN_Y))
+                    val place = Place(img = img, name = name, location = location, category = category, x = x, y = y)
                     logList.add(place)
                 }
             }

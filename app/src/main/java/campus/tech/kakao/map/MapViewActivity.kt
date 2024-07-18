@@ -79,7 +79,7 @@ class MapViewActivity : AppCompatActivity() {
     private fun processIntent() {
         val placeName: String? = intent.getStringExtra("PLACE_NAME")
         val placeAddress: String? = intent.getStringExtra("PLACE_LOCATION")
-        Log.d("mytest", "call processIntent")
+        Log.d("mytest", "call processIntent\n${intent.getStringExtra("PLACE_X")}")
         if (!placeName.isNullOrBlank() && !placeAddress.isNullOrBlank()) {
             showBottomSheet(placeName, placeAddress)
             Log.d("mytest", "Intent exist")

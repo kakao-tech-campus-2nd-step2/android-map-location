@@ -19,7 +19,9 @@ class PlaceDbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                 "${MyPlaceContract.Research.COLUMN_IMG} INTEGER," +
                 "${MyPlaceContract.Research.COLUMN_NAME} TEXT," +
                 "${MyPlaceContract.Research.COLUMN_CATEGORY} TEXT," +
-                "${MyPlaceContract.Research.COLUMN_LOCATION} TEXT)"
+                "${MyPlaceContract.Research.COLUMN_LOCATION} TEXT," +
+                "${MyPlaceContract.Research.COLUMN_X} TEXT," +
+                "${MyPlaceContract.Research.COLUMN_Y} TEXT)"
 
         private const val SQL_DELETE_RESEARCH= "DROP TABLE IF EXISTS ${MyPlaceContract.Research.TABLE_NAME}"
     }
