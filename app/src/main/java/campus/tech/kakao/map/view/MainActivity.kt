@@ -15,20 +15,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import campus.tech.kakao.map.BuildConfig
 import campus.tech.kakao.map.viewmodel.DataDbHelper
-import campus.tech.kakao.map.viewmodel.LocationAdapter
+import campus.tech.kakao.map.Adapter.LocationAdapter
 import campus.tech.kakao.map.Model.LocationData
-import campus.tech.kakao.map.Model.RetrofitClient
-import campus.tech.kakao.map.Model.Place
 import campus.tech.kakao.map.R
-import campus.tech.kakao.map.Model.SearchCallback
-import campus.tech.kakao.map.Model.SearchResult
 import campus.tech.kakao.map.viewmodel.MainViewModel
-import campus.tech.kakao.map.viewmodel.SearchViewAdapter
+import campus.tech.kakao.map.Adapter.SearchViewAdapter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import retrofit2.Call
 
 class MainActivity : AppCompatActivity() {
 

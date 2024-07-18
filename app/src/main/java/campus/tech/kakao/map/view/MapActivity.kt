@@ -5,7 +5,10 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.RecyclerView
+import campus.tech.kakao.map.Model.LocationData
 import campus.tech.kakao.map.R
+import campus.tech.kakao.map.Adapter.MapViewAdapter
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
@@ -17,6 +20,8 @@ class MapActivity : AppCompatActivity() {
 
     private lateinit var mapView: MapView
     private lateinit var inputText: View
+    private lateinit var mapViewAdapter: MapViewAdapter
+    private lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,6 +29,7 @@ class MapActivity : AppCompatActivity() {
 
         mapView = findViewById(R.id.map_view)
         inputText = findViewById(R.id.MapinputText)
+        recyclerView = findViewById(R.id.recyclerView)
 
 
         mapView.start(
@@ -47,6 +53,8 @@ class MapActivity : AppCompatActivity() {
             val intent = Intent(this@MapActivity, MainActivity::class.java)
             startActivity(intent)
         }
+
+        val selectedLocation = intent.getStringExtra("selectedLocation")
     }
 
     override fun onResume() {
