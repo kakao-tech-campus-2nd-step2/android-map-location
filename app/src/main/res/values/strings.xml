@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">Map</string>
+    <string name="app_name"> Map </string>
+    <string name="Search_name"> 검색어를 입력해 주세요. </string>
+    <string name="X_name">X</string>
+    <string name="No_Search"> 검색 결과가 없습니다. </string>
+    <string name= "Pin"> 📍</string>
 </resources>
