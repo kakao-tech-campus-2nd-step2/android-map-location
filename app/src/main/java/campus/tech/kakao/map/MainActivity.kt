@@ -69,7 +69,12 @@ class MainActivity : AppCompatActivity() {
         }, object : KakaoMapReadyCallback() {
             override fun onMapReady(map: KakaoMap) {
                 kakaoMap = map
-                labelLayer = kakaoMap.labelManager?.layer!!
+                val labelManager = kakaoMap.labelManager
+                if (labelManager != null) {
+                    labelLayer = labelManager.layer!!
+                } else {
+                    Log.e("MainActivity", "LabelManager is null")
+                }
                 loadLastMarkerPosition()
                 Log.d("MainActivity", "Map is ready")
             }
