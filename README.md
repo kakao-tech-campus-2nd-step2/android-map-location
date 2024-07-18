@@ -11,6 +11,9 @@
 
  
 ### 테스트 성공 화면
-
+- Function Test Success
+<img src="https://github.com/user-attachments/assets/9dc0b904-f397-4b69-93cc-387cf29c4048"/>
+- ErrorScreen Test Success
+<img src="https://github.com/user-attachments/assets/50f75bb3-e4d6-4fb2-ac9d-35e6cea6dc37"/>
 
 
