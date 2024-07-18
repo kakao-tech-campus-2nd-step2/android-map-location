@@ -12,7 +12,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val apiService = KakaoAPIRetrofitClient.retrofitService
     private val repository = PlaceRepository(apiService)
-    //private val sharedPreferences = application.getSharedPreferences("search_prefs", Context.MODE_PRIVATE)
     private val preferencesRepository = PreferencesRepository(application.applicationContext)
 
     private val _searchResults = MutableLiveData<List<Document>>()
@@ -33,18 +32,17 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun addSearch(search: String) {
-        val currentSearches = _savedSearches.value?.toMutableList() ?: mutableListOf()
-        currentSearches.remove(search)
-        currentSearches.add(0, search)
-        _savedSearches.postValue(currentSearches)
-        saveSearchesToPreferences(currentSearches)
+        val old = _savedSearches.value ?: emptyList()
+        val new = listOf(search) + (old - setOf(search))
+        _savedSearches.postValue(new)
+        saveSearchesToPreferences(new)
     }
 
     fun removeSearch(search: String) {
-        val currentSearches = _savedSearches.value?.toMutableList() ?: mutableListOf()
-        currentSearches.remove(search)
-        _savedSearches.postValue(currentSearches)
-        saveSearchesToPreferences(currentSearches)
+        val old = _savedSearches.value ?: emptyList()
+        val new = old - search
+        _savedSearches.postValue(new)
+        saveSearchesToPreferences(new)
     }
 
     private fun loadSavedSearches() {
