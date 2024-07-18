@@ -12,8 +12,14 @@ import campus.tech.kakao.map.databinding.ActivityMapViewBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
+import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.MapView
+import com.kakao.vectormap.camera.CameraAnimation
+import com.kakao.vectormap.camera.CameraUpdateFactory
+import com.kakao.vectormap.label.LabelOptions
+import com.kakao.vectormap.label.LabelStyle
+import com.kakao.vectormap.label.LabelStyles
 
 class MapViewActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMapViewBinding
@@ -48,7 +54,12 @@ class MapViewActivity : AppCompatActivity() {
         bottomSheetPlaceAddr = binding.bottomView.placeAddress
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout)
 
-        processIntent()
+        val placeName = intent.getStringExtra("PLACE_NAME")
+        val placeAddr = intent.getStringExtra("PLACE_LOCATION")
+        val placeX = intent.getStringExtra("PLACE_X")
+        val placeY = intent.getStringExtra("PLACE_Y")
+
+        processBottomSheet(placeName, placeAddr)
 
         try {
             mapView.start(object : MapLifeCycleCallback() {
@@ -62,7 +73,12 @@ class MapViewActivity : AppCompatActivity() {
             }, object : KakaoMapReadyCallback() {
                 override fun onMapReady(map: KakaoMap) {
                     Log.d("KakaoMap", "카카오맵 정상실행")
+                    // 카메라 이동
+                    val position = LatLng.from(placeY!!.toDouble(), placeX!!.toDouble())
+                    val cameraUpdate = CameraUpdateFactory.newCenterPosition(position)
+                    map.moveCamera(cameraUpdate, CameraAnimation.from(500, true, true))
                 }
+
             })
             Log.d("MapViewActivity", "mapView start called")
         } catch (e: Exception) {
@@ -76,12 +92,9 @@ class MapViewActivity : AppCompatActivity() {
         startActivity(Intent(this@MapViewActivity, MainActivity::class.java))
     }
 
-    private fun processIntent() {
-        val placeName: String? = intent.getStringExtra("PLACE_NAME")
-        val placeAddress: String? = intent.getStringExtra("PLACE_LOCATION")
-        Log.d("mytest", "call processIntent\n${intent.getStringExtra("PLACE_X")}")
-        if (!placeName.isNullOrBlank() && !placeAddress.isNullOrBlank()) {
-            showBottomSheet(placeName, placeAddress)
+    private fun processBottomSheet(placeName: String?, placeAddr: String?) {
+        if (!placeName.isNullOrEmpty() && !placeAddr.isNullOrEmpty()) {
+            showBottomSheet(placeName, placeAddr)
             Log.d("mytest", "Intent exist")
         } else {
             Log.d("mytest", "No Intent")
