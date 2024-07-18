@@ -20,13 +20,12 @@ class SavedSearchWordViewModel
         val savedSearchWords: StateFlow<List<SavedSearchWord>> get() = _savedSearchWords
 
         init {
-            getAllSearchWords()
+            updateSavedSearchWords()
         }
 
         fun insertSearchWord(searchWord: SavedSearchWord) {
             viewModelScope.launch(Dispatchers.IO) {
                 repository.insertOrUpdateSearchWord(searchWord)
-                getAllSearchWords()
             }
         }
 
@@ -39,7 +38,7 @@ class SavedSearchWordViewModel
             }
         }
 
-        private fun getAllSearchWords() {
+        fun updateSavedSearchWords() {
             viewModelScope.launch(Dispatchers.IO) {
                 val searchWords = repository.getAllSearchWords()
                 _savedSearchWords.emit(searchWords)

@@ -104,7 +104,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     /**
-     * 검색된 장소 정보를 저장하는 함수.
+     * 검색된 장소 정보를 저장하고 업데이트 함수.
      *
      * @param place 저장할 장소 정보를 담고 있는 Place 객체
      */
@@ -118,6 +118,7 @@ class SearchActivity : AppCompatActivity() {
                 longitude = place.longitude,
             ),
         )
+        savedSearchWordViewModel.updateSavedSearchWords()
     }
 
     /**
