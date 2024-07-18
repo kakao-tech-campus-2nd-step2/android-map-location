@@ -92,6 +92,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun saveData() {
         lifecycleScope.launch {
+            showDb()
             db.fetchApi(authorization)
             loadData()
         }

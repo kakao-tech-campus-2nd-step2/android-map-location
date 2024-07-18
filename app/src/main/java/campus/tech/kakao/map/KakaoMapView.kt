@@ -34,93 +34,94 @@ class KakaoMapView : AppCompatActivity() {
     private lateinit var persistentBottomSheet: LinearLayout
 
     private var kakaoMap: KakaoMap? = null
-    private var position: LatLng? = null
-    /*private var name: String? = null
-    private var address: String? = null*/
-
+    private var xCoordinate: Double = 0.0
+    private var yCoordinate: Double = 0.0
+    private var name: String = ""
+    private var address: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_kakao_map_view)
 
-        val sharedPref = getSharedPreferences("Coordinates", Context.MODE_PRIVATE)
-        val xCoordinate = sharedPref.getString("xCoordinate", "127.108621")?.toDoubleOrNull()
-        val yCoordinate = sharedPref.getString("yCoordinate", "37.402005")?.toDoubleOrNull()
-        Log.e("SharedPreff", "X:$xCoordinate, Y:$yCoordinate")
+        getData()
+        initKakaoMap()
 
-        val sharedPref1 = getSharedPreferences("BottomSheet", Context.MODE_PRIVATE)
-        val name = sharedPref1.getString("name", "이름")
-        val address = sharedPref1.getString("address", "주소")
-        Log.e("SharedPreff", "이름:$name, 주소:$address")
-
-        val defaultX = 37.402005
-        val defaultY = 127.108621
-
-        val initialX = xCoordinate ?: defaultX
-        val initialY = yCoordinate ?: defaultY
-
-        // onMapError 호출하기
-        KakaoMapSdk.init(this, "dfsfdsdsdasfds")
-
-        /*val key = getString(R.string.kakao_api_key)
-        KakaoMapSdk.init(this, key)*/
-
-        var keyHash = Utility.getKeyHash(this)
-        Log.d("testt", keyHash)
-
-        mapView = findViewById(R.id.mapView)
         searchButton = findViewById(R.id.searchButton)
         placeName = findViewById(R.id.placeName)
         placeAddress = findViewById(R.id.placeAddress)
         persistentBottomSheet = findViewById(R.id.persistent_bottom_sheet)
-
         persistentBottomSheet.visibility = View.GONE
 
+        clickSearchButton()
+    }
+
+    private fun getData() {
+        val sharedPref = getSharedPreferences("Coordinates", Context.MODE_PRIVATE)
+        xCoordinate = sharedPref.getString("xCoordinate", "127.108621")?.toDoubleOrNull() ?: 127.108621
+        yCoordinate = sharedPref.getString("yCoordinate", "37.402005")?.toDoubleOrNull() ?: 37.402005
+
+        val sharedPref1 = getSharedPreferences("BottomSheet", Context.MODE_PRIVATE)
+        name = sharedPref1.getString("name", "이름") ?: "이름"
+        address = sharedPref1.getString("address", "주소") ?: "주소"
+    }
+
+    private fun initKakaoMap() {
+        // onMapError 호출하기
+        //KakaoMapSdk.init(this, "dfsfdsdsdasfds")
+
+        val key = getString(R.string.kakao_api_key)
+        KakaoMapSdk.init(this, key)
+
+        mapView = findViewById(R.id.mapView)
         mapView.start(object : MapLifeCycleCallback() {
             override fun onMapDestroy() {
-                // 지도 API 가 정상적으로 종료될 때 호출됨
-                Log.e("SharedPreff", "error1")
+                Log.e("KakaoMapView", "Map destroyed")
             }
 
             override fun onMapError(error: Exception) {
                 startActivity(Intent(this@KakaoMapView, MapErrorActivity::class.java))
-                Log.e("SharedPreff", "error2")
+                Log.e("KakaoMapView", "Map error: ${error.message}")
             }
         }, object : KakaoMapReadyCallback() {
             override fun onMapReady(kakaoMap: KakaoMap) {
-                // 인증 후 API 가 정상적으로 실행될 때 호출됨
-                val position = LatLng.from(initialY, initialX)
-
-                val style =
-                    kakaoMap.labelManager?.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.kakaomap_logo).setTextStyles(30, Color.BLUE)))
-
-                val options: LabelOptions = LabelOptions.from(position)
-                    .setStyles(style)
-                val layer = kakaoMap.labelManager?.layer
-                layer?.addLabel(options)
-                val label = layer?.addLabel(options)
-                label?.changeText(name)
-
-                Log.e("SharedPreff", "X1:$initialX, Y1:$initialY")
-                val cameraUpdate =
-                    CameraUpdateFactory.newCenterPosition(position)
-                kakaoMap.moveCamera(cameraUpdate, CameraAnimation.from(500, true, true))
-
-                if (name == "이름"){
-                    persistentBottomSheet.visibility = View.GONE
-                    layer?.hideAllLabel()
-                }else{
-                    placeName.text = name
-                    placeAddress.text = address
-                    layer?.showAllLabel()
-                    persistentBottomSheet.visibility = View.VISIBLE
-                }
+                this@KakaoMapView.kakaoMap = kakaoMap
+                mapReady()
             }
         })
+    }
 
+    private fun clickSearchButton() {
         searchButton.setOnClickListener {
             Intent(this, SearchActivity::class.java).let {
                 startActivity(it)
+            }
+        }
+    }
+
+    private fun mapReady() {
+        kakaoMap?.let { map ->
+            val position = LatLng.from(yCoordinate, xCoordinate)
+
+            val style = map.labelManager?.addLabelStyles(
+                LabelStyles.from(LabelStyle.from(R.drawable.kakaomap_logo).setTextStyles(30, Color.BLUE))
+            )
+
+            val options: LabelOptions = LabelOptions.from(position).setStyles(style)
+
+            val layer = map.labelManager?.layer
+            layer?.addLabel(options)?.changeText(name)
+
+            val cameraUpdate = CameraUpdateFactory.newCenterPosition(position)
+            map.moveCamera(cameraUpdate, CameraAnimation.from(500, true, true))
+
+            if (name == "이름") {
+                persistentBottomSheet.visibility = View.GONE
+                layer?.hideAllLabel()
+            } else {
+                placeName.text = name
+                placeAddress.text = address
+                layer?.showAllLabel()
+                persistentBottomSheet.visibility = View.VISIBLE
             }
         }
     }
