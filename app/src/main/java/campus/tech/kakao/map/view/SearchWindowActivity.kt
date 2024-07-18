@@ -83,7 +83,7 @@ class SearchWindowActivity : AppCompatActivity() {
                                 viewModel.saveSearchKeyword(searchKeyword)
 
                                 val intent = Intent()
-                                intent.putExtra(ActivityKeys.KEY_INTENT_PLACE, item)
+                                intent.putExtra(ActivityKeys.INTENT_PLACE, item)
                                 setResult(RESULT_OK, intent)
                                 finish()
                             }

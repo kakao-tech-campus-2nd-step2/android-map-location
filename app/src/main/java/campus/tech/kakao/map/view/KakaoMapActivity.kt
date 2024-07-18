@@ -4,7 +4,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -38,7 +37,7 @@ class KakaoMapActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        sharedPreferences = getSharedPreferences(ActivityKeys.KEY_PREFS, MODE_PRIVATE)
+        sharedPreferences = getSharedPreferences(ActivityKeys.PREFS, MODE_PRIVATE)
         binding = ActivityKakaoMapBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -86,9 +85,9 @@ class KakaoMapActivity : AppCompatActivity() {
     }
 
     fun loadKakaoMapLastPosition(): LatLng? {
-        if (sharedPreferences.contains(ActivityKeys.KEY_PREFS_PLACE)) {
+        if (sharedPreferences.contains(ActivityKeys.PREFS_PLACE)) {
             val gson = Gson()
-            val json = sharedPreferences.getString(ActivityKeys.KEY_PREFS_PLACE, "")
+            val json = sharedPreferences.getString(ActivityKeys.PREFS_PLACE, "")
             try {
                 return gson.fromJson(json, LatLng::class.java)
             } catch (e: JsonParseException) {
@@ -102,7 +101,7 @@ class KakaoMapActivity : AppCompatActivity() {
         val editor = sharedPreferences.edit()
         val gson = Gson()
         val json = gson.toJson(position)
-        editor.putString(ActivityKeys.KEY_INTENT_PLACE, json)
+        editor.putString(ActivityKeys.INTENT_PLACE, json)
         editor.apply()
     }
 
@@ -119,11 +118,11 @@ class KakaoMapActivity : AppCompatActivity() {
                 if (it.resultCode == RESULT_OK) {
                     val place = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                         it.data?.getParcelableExtra(
-                            ActivityKeys.KEY_INTENT_PLACE,
+                            ActivityKeys.INTENT_PLACE,
                             Place::class.java
                         )
                     } else {
-                        it.data?.getParcelableExtra<Place>(ActivityKeys.KEY_INTENT_PLACE)
+                        it.data?.getParcelableExtra<Place>(ActivityKeys.INTENT_PLACE)
                     }
                     if (place != null) {
                         displayPlaceOnKakaoMap(place)
