@@ -9,17 +9,20 @@ import campus.tech.kakao.map.databinding.ItemSavedSearchWordBinding
 import campus.tech.kakao.map.model.SavedSearchWord
 import campus.tech.kakao.map.ui.search.SearchActivity
 
-class SavedSearchWordRecyclerViewAdapter(private val clickListener: SearchActivity.OnSavedSearchWordClearImageViewClickListener) :
+class SavedSearchWordRecyclerViewAdapter(
+    private val savedSearchWordClearImageViewClickListener: SearchActivity.OnSavedSearchWordClearImageViewClickListener,
+    private val savedSearchWordTextViewClickListener: SearchActivity.OnSavedSearchWordTextViewClickListener,
+) :
     ListAdapter<SavedSearchWord, SavedSearchWordRecyclerViewAdapter.SavedSearchWordViewHolder>(
-        SavedSearchWordDiffCallback(),
-    ) {
+            SavedSearchWordDiffCallback(),
+        ) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
     ): SavedSearchWordViewHolder {
         val binding =
             ItemSavedSearchWordBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return SavedSearchWordViewHolder(binding, clickListener)
+        return SavedSearchWordViewHolder(binding, savedSearchWordClearImageViewClickListener, savedSearchWordTextViewClickListener)
     }
 
     override fun onBindViewHolder(
@@ -32,12 +35,16 @@ class SavedSearchWordRecyclerViewAdapter(private val clickListener: SearchActivi
 
     class SavedSearchWordViewHolder(
         private val binding: ItemSavedSearchWordBinding,
-        private val clickListener: SearchActivity.OnSavedSearchWordClearImageViewClickListener,
+        private val savedSearchWordImageViewClickListener: SearchActivity.OnSavedSearchWordClearImageViewClickListener,
+        private val savedSearchWordTextViewClickListener: SearchActivity.OnSavedSearchWordTextViewClickListener,
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(savedSearchWord: SavedSearchWord) {
             binding.savedSearchWordTextView.text = savedSearchWord.name
+            binding.savedSearchWordTextView.setOnClickListener {
+                savedSearchWordTextViewClickListener.onSavedSearchWordTextViewClicked(savedSearchWord)
+            }
             binding.savedSearchWordClearImageView.setOnClickListener {
-                clickListener.onSavedSearchWordClearImageViewClicked(savedSearchWord)
+                savedSearchWordImageViewClickListener.onSavedSearchWordClearImageViewClicked(savedSearchWord)
             }
         }
     }

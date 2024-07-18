@@ -5,4 +5,7 @@
     <string name="place_name">카페1</string>
     <string name="place_address">서울 성동구 성수동 1</string>
     <string name="place_category">카페</string>
+    <string name="bottom_sheet_place_name">부산대 컴공관</string>
+    <string name="bottom_sheet_place_address">부산광역시 금정구 부산대학로 63번길 2</string>
+    <string name="map_error_description">지도 인증을 실패했습니다.\n다시 시도해 주세요.</string>
 </resources>

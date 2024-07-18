@@ -1,13 +1,10 @@
 package campus.tech.kakao.map.di
 
 import android.content.Context
+import android.content.SharedPreferences
 import campus.tech.kakao.map.data.SavedSearchWordDBHelper
-import campus.tech.kakao.map.data.network.service.KakaoLocalService
-import campus.tech.kakao.map.data.repository.PlaceRepository
-import campus.tech.kakao.map.data.repository.PlaceRepositoryImpl
-import campus.tech.kakao.map.data.repository.SavedSearchWordRepository
-import campus.tech.kakao.map.data.repository.SavedSearchWordRepositoryImpl
-import campus.tech.kakao.map.ui.ViewModelFactory
+import campus.tech.kakao.map.data.repository.LocationRepository
+import campus.tech.kakao.map.data.repository.LocationRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,22 +25,15 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providePlaceRepository(kakaoLocalService: KakaoLocalService): PlaceRepository {
-        return PlaceRepositoryImpl(kakaoLocalService)
+    fun provideSharedPreferences(
+        @ApplicationContext context: Context,
+    ): SharedPreferences {
+        return context.getSharedPreferences(LocationRepositoryImpl.PREF_NAME, Context.MODE_PRIVATE)
     }
 
     @Provides
     @Singleton
-    fun provideSavedSearchWordRepository(dbHelper: SavedSearchWordDBHelper): SavedSearchWordRepository {
-        return SavedSearchWordRepositoryImpl(dbHelper)
-    }
-
-    @Provides
-    @Singleton
-    fun provideViewModelFactory(
-        placeRepository: PlaceRepository,
-        savedSearchWordRepository: SavedSearchWordRepository,
-    ): ViewModelFactory {
-        return ViewModelFactory(placeRepository, savedSearchWordRepository)
+    fun provideLocationRepository(sharedPreferences: SharedPreferences): LocationRepository {
+        return LocationRepositoryImpl(sharedPreferences)
     }
 }
