@@ -9,9 +9,13 @@ import campus.tech.kakao.map.Model.LocationData
 import campus.tech.kakao.map.R
 
 class MapViewAdapter(
-    private val information: List<LocationData>,
+    private var information: List<LocationData>,
 ) : RecyclerView.Adapter<MapViewAdapter.ViewHolder>() {
 
+    fun updateData(newInformation: List<LocationData>) {
+        information = newInformation
+        notifyDataSetChanged()
+    }
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val nameTextView: TextView = itemView.findViewById(R.id.place_name)
         val locationTextView: TextView = itemView.findViewById(R.id.place_address)

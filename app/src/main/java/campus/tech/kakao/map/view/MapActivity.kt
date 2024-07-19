@@ -13,6 +13,7 @@ import campus.tech.kakao.map.Model.LocationData
 import campus.tech.kakao.map.R
 import campus.tech.kakao.map.Adapter.MapViewAdapter
 import campus.tech.kakao.map.viewmodel.MapViewModel
+import com.google.gson.Gson
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
@@ -37,11 +38,18 @@ class MapActivity : AppCompatActivity() {
         inputText = findViewById(R.id.MapinputText)
         recyclerView = findViewById(R.id.recyclerView)
 
+        val selectedLocationJson = intent.getStringExtra("selectedLocation")
+        if (selectedLocationJson != null) {
+            val selectedLocation = Gson().fromJson(selectedLocationJson, LocationData::class.java)
+            mapViewModel.setMapViewAdapter(listOf(selectedLocation))
+        }
+
         recyclerView.layoutManager = LinearLayoutManager(this)
+        mapViewAdapter = MapViewAdapter(emptyList())
+        recyclerView.adapter = mapViewAdapter
 
         mapViewModel.locationData.observe(this, Observer { locations ->
-            val mapViewAdapter = MapViewAdapter(locations)
-            recyclerView.adapter = mapViewAdapter
+            mapViewAdapter.updateData(locations)
         })
 
         mapView.start(
@@ -57,10 +65,6 @@ class MapActivity : AppCompatActivity() {
                     val mapCenter = LatLng.from(37.566, 126.978)  // 서울시청 좌표
                     kakaoMap.moveCamera(CameraUpdateFactory.newCenterPosition(mapCenter))
                     kakaoMap.moveCamera(CameraUpdateFactory.zoomTo(15))
-
-//                    val selectedLocation = intent.getStringExtra("selectedLocation")
-//
-//                    mapViewModel.setMapViewAdapter(selectedLocation)
                 }
             }
         )

@@ -83,7 +83,7 @@ class MainActivity : AppCompatActivity() {
                 addToSearchList(item)
                 Log.d("MainActivity", "Location item clicked: ${item.name}")
                 val intent = Intent(this, MapActivity::class.java)
-                intent.putExtra("selectedLocation", item.name)
+                intent.putExtra("selectedLocation", Gson().toJson(item))
                 startActivity(intent)
                 finish()
             }
