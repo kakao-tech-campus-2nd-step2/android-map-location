@@ -41,4 +41,16 @@ class SearchActivityTest {
         onView(withId(R.id.recyclerView))
             .perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()))
     }
+
+    @Test
+    fun testDeleteSavedKeyword() {
+        onView(withId(R.id.edit_search)).perform(typeText("cafe"))
+        Thread.sleep(3000)
+
+        onView(withId(R.id.saved_keywords_recycler_view))
+            .perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()))
+
+        onView(withId(R.id.btnDelete)).perform(click())
+        onView(withText("바다정원")).check(matches(isDisplayed()))
+    }
 }
