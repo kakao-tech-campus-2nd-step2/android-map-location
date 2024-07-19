@@ -62,6 +62,7 @@ class MapActivity : AppCompatActivity() {
                 override fun onMapDestroy() {}
                 override fun onMapError(error: Exception) {
                     Log.e("MapError", "${error.message}", error)
+                    showErrorActivity(error.message ?: "Unknown error")
                 }
             },
             object : KakaoMapReadyCallback() {
@@ -97,6 +98,13 @@ class MapActivity : AppCompatActivity() {
             val intent = Intent(this@MapActivity, MainActivity::class.java)
             startActivity(intent)
         }
+    }
+
+    private fun showErrorActivity(errorMessage: String) {
+        val intent = Intent(this, ErrorActivity::class.java)
+        intent.putExtra("errorMessage", errorMessage)
+        startActivity(intent)
+        finish()  // Optional: Close the current activity if needed
     }
 
     override fun onResume() {
