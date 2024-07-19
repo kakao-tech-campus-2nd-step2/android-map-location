@@ -2,20 +2,14 @@ package campus.tech.kakao.map
 
 import android.app.Application
 import android.content.Context
-import android.os.Looper
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.ViewModelProvider
+import android.util.Log
 import androidx.lifecycle.ViewModelStore
-import androidx.lifecycle.map
-import androidx.test.core.app.ApplicationProvider
-import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
-import org.robolectric.Shadows
 import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
@@ -38,12 +32,12 @@ class FunTest {
 			"대우이안아파트 상가동", "CU 화명대우이안점", "대우이안아파트 지하주차장",
 			"이안공인중개사사무소", "부산시 북구 대우이안아파트 전기차충전소", "대우이안공인중개사사무소",
 			"삼계이안아파트", "이안센트럴포레장유1단지아파트", "성일이안시티아파트")
-		val expectedQueryResultCount = 15
 		model.searchLocalAPI(query)
 		val actualQueryResult = model.documentList.value
 		actualQueryResult?.forEach { document ->
-			assertTrue(expectedQueryResultName.contains(document.placeName))
+			assert(expectedQueryResultName.contains(document.placeName))
 		}
+
 
 	}
 }
