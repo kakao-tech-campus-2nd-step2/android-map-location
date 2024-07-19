@@ -48,6 +48,8 @@ class MainViewModel(
         }
     }
 
+    fun callLogList() = mainModel.getLogList()
+
     // recyclerVIewAdapter 인자에 들어갈 내용 -> ⓐ Click_DB에 넣고 ⓑ 로컬 ResearchList에 넣기
     fun resultItemClickListener(item: Place) {
         mainModel.insertLog(item)

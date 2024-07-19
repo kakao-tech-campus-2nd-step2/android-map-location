@@ -1,5 +1,6 @@
 package campus.tech.kakao.map
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -37,7 +38,6 @@ class MapViewActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("mytest", "onCreate")
         binding = DataBindingUtil.setContentView(this, R.layout.activity_map_view)
 
         mapModel = MapModel(application as MyApplication)
@@ -54,6 +54,8 @@ class MapViewActivity : AppCompatActivity() {
         bottomSheetPlaceName = binding.bottomView.placeName
         bottomSheetPlaceAddr = binding.bottomView.placeAddress
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout)
+
+        val lastLocation = getLastLocation(this)
 
         val placeName = intent.getStringExtra("PLACE_NAME")
         val placeAddr = intent.getStringExtra("PLACE_LOCATION")
@@ -78,15 +80,20 @@ class MapViewActivity : AppCompatActivity() {
             }, object : KakaoMapReadyCallback() {
                 override fun onMapReady(map: KakaoMap) {
                     Log.d("KakaoMap", "카카오맵 정상실행")
-                    val position = LatLng.from(placeY!!.toDouble(), placeX!!.toDouble())
-                    // 라벨표시
-                    val style = map.labelManager?.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.flag).setTextStyles(40, Color.BLACK)))
-                    val options: LabelOptions = LabelOptions.from(position)
-                        .setStyles(style)
-                    val layer = map.labelManager?.layer
-                    val label = layer?.addLabel(options)
-                    label?.changeText(placeName)
-
+                    val position: LatLng
+                    if (!placeName.isNullOrEmpty() && !placeAddr.isNullOrEmpty()) { // 아이템 클릭으로 인해 Intent를 전달받았을 경우
+                        position = LatLng.from(placeY!!.toDouble(), placeX!!.toDouble())
+                        // 라벨표시
+                        val style = map.labelManager?.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.flag).setTextStyles(40, Color.BLACK)))
+                        val options: LabelOptions = LabelOptions.from(position)
+                            .setStyles(style)
+                        val layer = map.labelManager?.layer
+                        val label = layer?.addLabel(options)
+                        label?.changeText(placeName)
+                    } else { // 앱 첫 실행일 경우 -> 인텐트를 받지 못하는 대신 sharedPreference를 전달받음
+                        val (x, y) =  lastLocation!!
+                        position = LatLng.from(y, x)
+                    }
                     //카메라 이동
                     val cameraUpdate = CameraUpdateFactory.newCenterPosition(position)
                     map.moveCamera(cameraUpdate, CameraAnimation.from(500, true, true))
@@ -131,25 +138,35 @@ class MapViewActivity : AppCompatActivity() {
         return if (parts.size > 1) parts[1] else ""
     }
 
-    override fun onStart() {
-        super.onStart()
-        Log.d("mytest", "onStart called")
-    }
+    private fun getLastLocation(context: Context): Pair<Double, Double>? {
+        val sharedPreferences = context.getSharedPreferences("LastLocation", Context.MODE_PRIVATE)
 
-    override fun onRestart() {
-        super.onRestart()
-        Log.d("mytest", "onReStart called")
+        val x = sharedPreferences.getString("PLACE_X", "NULL")
+        val y = sharedPreferences.getString("PLACE_Y", "NULL")
+        return if (x != "NULL" && y != "NULL") {
+            Pair(x!!.toDouble(), y!!.toDouble())
+        } else {
+            null
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        Log.d("mytest", "onResume called")
         mapView.resume()
     }
 
     override fun onPause() {
         super.onPause()
-        Log.d("mytest", "onPause called")
         mapView.pause()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d("mytest", "onStop called")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("mytest", "onDestroy called")
     }
 }

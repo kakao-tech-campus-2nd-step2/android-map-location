@@ -1,9 +1,11 @@
 package campus.tech.kakao.map
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
@@ -19,6 +21,7 @@ import campus.tech.kakao.map.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var mainModel: MainModel
+    private lateinit var mainViewModel: MainViewModel
 
     private lateinit var input: EditText
     private lateinit var researchCloseButton: ImageView
@@ -28,12 +31,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d("mytest", "MainAcitivty_onCreate")
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         mainModel = MainModel(application as MyApplication)
 
         val viewModelFactory = MainViewModelFactory(application as MyApplication, mainModel)
-        val mainViewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
+        mainViewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
 
         binding.viewModel = mainViewModel
         binding.lifecycleOwner = this
@@ -105,9 +109,28 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    private fun saveLastLocation(context: Context) {
+        val lastLocation = mainViewModel.callLogList().lastOrNull()
+
+        val sharedPreferences = context.getSharedPreferences("LastLocation", Context.MODE_PRIVATE)
+        with(sharedPreferences.edit()) {
+            putString("PLACE_X", lastLocation?.x.toString())
+            putString("PLACE_Y", lastLocation?.y.toString())
+            apply()
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        saveLastLocation(this)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
-        input.removeTextChangedListener(null)
     }
 }
 
