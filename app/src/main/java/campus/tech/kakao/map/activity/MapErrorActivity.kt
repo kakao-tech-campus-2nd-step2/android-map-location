@@ -1,7 +1,10 @@
 package campus.tech.kakao.map.activity
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.TextView
+import android.window.OnBackInvokedDispatcher
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -23,5 +26,11 @@ class MapErrorActivity : AppCompatActivity() {
         val errorMessage = intent.getStringExtra("errorMessage")?.substringAfterLast(":")
         val errorTextView = findViewById<TextView>(R.id.error_detail)
         errorTextView.text = errorMessage
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                finishAffinity()
+            }
+        })
     }
 }
