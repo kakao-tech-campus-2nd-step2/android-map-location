@@ -17,22 +17,4 @@ interface MapViewRepository {
     fun updateCameraPositionWithFixedZoom(latitude: Double, longitude: Double)
     fun updateCameraPosition(context:Context, position: CameraPosition)
     fun clearSelectedLocation()
-
-    companion object{
-        private var _instance: MapViewRepository? = null
-
-        fun injectDependency(repository: MapViewRepository){
-            if (_instance == null) {
-                _instance = repository
-            }
-        }
-
-        fun getInstance(): MapViewRepository{
-            if(_instance == null){
-                Log.e("KSC","instance is null")
-                throw NullPointerException()
-            }
-            return _instance!!
-        }
-    }
 }

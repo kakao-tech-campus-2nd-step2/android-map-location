@@ -27,9 +27,7 @@ class SearchActivityViewModel(application: Application) : AndroidViewModel(appli
     private val searchResultRepository: SearchResultRepository by lazy {
         (application as MyApplication).appContainer.getSingleton<SearchResultRepository>()
     }
-    private val keywordRepository: SearchKeywordRepository by lazy {
-        (application as MyApplication).appContainer.getSingleton<SearchKeywordRepository>()
-    }
+    private val keywordRepository: SearchKeywordRepository =(application as MyApplication).appContainer.getSingleton<SearchKeywordRepository>()
 
     private val _searchText: MutableLiveData<String> = MutableLiveData("")
     private val _activeContent: MutableLiveData<ContentType> = MutableLiveData(ContentType.MAP)
@@ -50,10 +48,6 @@ class SearchActivityViewModel(application: Application) : AndroidViewModel(appli
 
 
     init {
-        SearchKeywordRepository.injectDependency(SearchKeywordRepositoryImpl(getApplication()))
-        MapViewRepository.injectDependency(MapViewRepositoryImpl())
-        SearchResultRepository.injectDependency(SearchResultRepositoryImpl())
-
         keywordRepository.getKeywords()
         mapViewRepository.loadFromSharedPreference(application)
     }
