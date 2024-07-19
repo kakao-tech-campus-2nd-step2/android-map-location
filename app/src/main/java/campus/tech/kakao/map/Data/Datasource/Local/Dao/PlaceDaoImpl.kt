@@ -20,7 +20,7 @@ class PlaceDaoImpl(private val db : SQLiteDatabase) : PlaceDao {
         return PlaceContract.getPlaceListByCursor(cursor)
     }
 
-    override fun getPlaceById(id: Int): Place {
+    override fun getPlaceById(id: Int): Place? {
         val cursor = getCursorById(id)
         return PlaceContract.getPlaceByCursor(cursor)
     }

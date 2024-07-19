@@ -6,5 +6,5 @@ interface FavoriteDao {
     fun getCurrentFavorite(): MutableList<Place>
     fun deleteFavorite(id : Int)
     fun addFavorite(place: Place)
-    fun getFavoriteById(id: Int): Place
+    fun getFavoriteById(id: Int): Place?
 }
