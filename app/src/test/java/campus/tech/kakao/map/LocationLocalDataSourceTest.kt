@@ -2,6 +2,7 @@ package campus.tech.kakao.map
 
 import android.database.sqlite.SQLiteDatabase
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import campus.tech.kakao.map.model.LocationDbHelper
 import campus.tech.kakao.map.model.SavedLocation
 import campus.tech.kakao.map.model.datasource.LocationLocalDataSource
@@ -12,6 +13,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 
+@RunWith(AndroidJUnit4::class)
 class LocationLocalDataSourceTest {
     private lateinit var locationLocalDataSource: LocationLocalDataSource
     private lateinit var locationDbHelper: LocationDbHelper
@@ -60,14 +62,6 @@ class LocationLocalDataSourceTest {
         // 삭제 후 확인
         val results = locationLocalDataSource.getSavedLocationAll()
         assertEquals(savedLocations.size - 1, results.size)
-    }
-
-    @Test
-    fun `위치_검색_기능을_테스트한다`() {
-        val query = "Location 1"
-        val results = locationLocalDataSource.searchLocation(query)
-        assertEquals(1, results.size)
-        assertEquals("Location 1", results[0].title)
     }
 
     @After

@@ -60,6 +60,8 @@ dependencies {
     implementation("com.android.identity:identity-credential-android:20231002")
     implementation("androidx.activity:activity:1.9.0")
     implementation("androidx.test:core-ktx:1.6.1")
+    testImplementation("androidx.test.ext:junit:1.1.1")
+    testImplementation ("org.robolectric:robolectric:4.9")
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.mockito:mockito-core:5.8.0")
