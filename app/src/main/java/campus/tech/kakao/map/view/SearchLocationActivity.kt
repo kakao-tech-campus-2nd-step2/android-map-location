@@ -7,8 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import campus.tech.kakao.map.databinding.ActivitySearchLocationBinding
-import campus.tech.kakao.map.model.SearchLocationRepository
 import campus.tech.kakao.map.viewmodel.SearchLocationViewModel
+import campus.tech.kakao.map.viewmodel.SearchLocationViewModelFactory
 
 class SearchLocationActivity : AppCompatActivity() {
     private lateinit var viewModel: SearchLocationViewModel
@@ -16,10 +16,11 @@ class SearchLocationActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this)[SearchLocationViewModel::class.java]
-        viewModel.setRepository(SearchLocationRepository(this))
         binding = ActivitySearchLocationBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val viewModelFactory = SearchLocationViewModelFactory(this)
+        viewModel = ViewModelProvider(this, viewModelFactory)[SearchLocationViewModel::class.java]
 
         binding.removeSearchInputButton.setOnClickListener {
             binding.searchInputEditText.text.clear()
