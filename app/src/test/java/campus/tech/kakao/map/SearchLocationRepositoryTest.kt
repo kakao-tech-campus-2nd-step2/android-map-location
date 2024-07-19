@@ -54,7 +54,7 @@ class SearchLocationRepositoryTest {
         val result = repository.getHistory()
 
         // then
-        assertArrayEquals(result.toTypedArray(), arrayOf("test1", "test2", "test3"))
+        assertArrayEquals(arrayOf("test1", "test2", "test3"), result.toTypedArray())
     }
 
     @Test
@@ -130,16 +130,16 @@ class SearchLocationRepositoryTest {
         val result = repository.searchLocation("testCategory")
 
         // then
-        assertEquals(result.size, 2)
-        assertEquals(result[0].name, "place_name1")
-        assertEquals(result[0].address, "address_name1")
-        assertEquals(result[0].category, "category_group_name1")
-        assertEquals(result[0].latitude, 1.0, 0.0)
-        assertEquals(result[0].longitude, 1.0, 0.0)
-        assertEquals(result[1].name, "place_name2")
-        assertEquals(result[1].address, "address_name2")
-        assertEquals(result[1].category, "category_group_name2")
-        assertEquals(result[1].latitude, 2.0, 0.0)
-        assertEquals(result[1].longitude, 2.0, 0.0)
+        assertEquals(2, result.size)
+        assertEquals("place_name1", result[0].name)
+        assertEquals("address_name1", result[0].address)
+        assertEquals("category_group_name1", result[0].category)
+        assertEquals(1.0, result[0].latitude, 0.0)
+        assertEquals(1.0, result[0].longitude, 0.0)
+        assertEquals("place_name2", result[1].name)
+        assertEquals("address_name2", result[1].address)
+        assertEquals("category_group_name2", result[1].category)
+        assertEquals(2.0, result[1].latitude, 0.0)
+        assertEquals(2.0, result[1].longitude, 0.0)
     }
 }
