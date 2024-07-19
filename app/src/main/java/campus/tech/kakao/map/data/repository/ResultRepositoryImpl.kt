@@ -1,6 +1,7 @@
 package campus.tech.kakao.map.data.repository
 
-import android.util.Log
+import android.app.Application
+import android.widget.Toast
 import campus.tech.kakao.map.BuildConfig
 import campus.tech.kakao.map.data.Document
 import campus.tech.kakao.map.data.ServerResult
@@ -23,15 +24,22 @@ class ResultRepositoryImpl(
         return result
     }
 
-    private suspend fun request(keyword: String, currPage: Int = 1) {
+    private suspend fun request(keyword: String, currPage: Int = 1, tryCount: Int = 0) {
         if (keyword.isNotEmpty()) {
             val authorization = "KakaoAK ${BuildConfig.KAKAO_REST_API_KEY}"
-            val serverResult = retrofit.requestLocationByKeyword(authorization, keyword, currPage)
-            serverResult.docList.forEach {
-                result.add(documentToLocation(it))
+            val response = retrofit.requestLocationByKeyword(authorization, keyword, currPage)
+            if (response.isSuccessful) {
+                val resBody = response.body()
+                resBody?.let { serverResult ->
+                    serverResult.docList.forEach { document ->
+                        result.add(documentToLocation(document))
+                    }
+                    if (!serverResult.meta.isEnd)
+                        requestNextPage(serverResult, currPage)
+                }
+            } else if (tryCount < 3) {
+                request(keyword, currPage, tryCount + 1)
             }
-            if (!serverResult.meta.isEnd)
-                requestNextPage(serverResult, currPage)
         }
     }
 
@@ -42,7 +50,7 @@ class ResultRepositoryImpl(
     private suspend fun requestNextPage(serverResult: ServerResult, page: Int) {
         val keyword = serverResult.meta.sameName.keyword
         val nextPage = page + 1
-        request(keyword, nextPage)
+        request(keyword, nextPage, 0)
     }
 
     private fun documentToLocation(document: Document): Location {
