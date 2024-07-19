@@ -14,6 +14,7 @@ import campus.tech.kakao.map.R
 import campus.tech.kakao.map.databinding.ActivityMapBinding
 import campus.tech.kakao.map.model.Location
 import campus.tech.kakao.map.viewmodel.MapViewModel
+import campus.tech.kakao.map.viewmodel.MapViewModelFactory
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HIDDEN
@@ -41,10 +42,11 @@ class MapActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this)[MapViewModel::class.java]
-        viewModel.setDataStoreRepository(this)
         binding = ActivityMapBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val viewModelFactory = MapViewModelFactory(this)
+        viewModel = ViewModelProvider(this, viewModelFactory)[MapViewModel::class.java]
 
         searchLocationLauncher = createSearchLocationLauncher()
         mapErrorLauncher = createMapErrorLauncher()

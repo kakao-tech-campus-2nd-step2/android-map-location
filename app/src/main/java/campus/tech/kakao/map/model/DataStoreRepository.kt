@@ -13,8 +13,7 @@ import java.io.IOException
 
 class DataStoreRepository(private val context: Context) {
     companion object {
-        private val Context.dataStore by preferencesDataStore(name = "last_location_datastore")
-
+        private val Context.dataStore by preferencesDataStore(name = "last_location")
         private val latitudeKey = doublePreferencesKey("latitude")
         private val longitudeKey = doublePreferencesKey("longitude")
     }
