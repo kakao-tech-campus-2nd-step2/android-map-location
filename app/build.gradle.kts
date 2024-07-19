@@ -61,6 +61,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1")  //추가
     implementation("com.kakao.sdk:v2-all:2.20.3")  //추가
     implementation("androidx.test:core-ktx:1.5.0")
+    implementation("androidx.test.espresso:espresso-contrib:3.6.1")
     testImplementation("junit:junit:4.13.2")
     testImplementation("io.mockk:mockk-android:1.13.11")
     testImplementation("io.mockk:mockk-agent:1.13.11")
