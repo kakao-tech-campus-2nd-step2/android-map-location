@@ -23,8 +23,8 @@ import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.label.LabelStyle
 import com.kakao.vectormap.label.LabelStyles
 import ksc.campus.tech.kakao.map.R
-import ksc.campus.tech.kakao.map.models.LocationInfo
 import ksc.campus.tech.kakao.map.models.MapViewRepository
+import ksc.campus.tech.kakao.map.models.repositories.LocationInfo
 import ksc.campus.tech.kakao.map.view_models.SearchActivityViewModel
 import java.lang.Exception
 
