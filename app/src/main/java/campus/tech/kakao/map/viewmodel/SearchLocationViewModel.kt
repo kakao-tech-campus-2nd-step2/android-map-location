@@ -21,6 +21,16 @@ class SearchLocationViewModel : ViewModel() {
     private val _history = MutableLiveData<List<String>>()
     val history: LiveData<List<String>> = _history
 
+    private val _searchInput = MutableLiveData<String>()
+    val searchInput: LiveData<String> = _searchInput
+
+    private val _markerLocation = MutableLiveData<Location>()
+    val markerLocation: LiveData<Location> = _markerLocation
+
+    fun searchLocationByHistory(locationName: String) {
+        _searchInput.value = locationName
+    }
+    
     fun searchLocation(category: String) {
         viewModelScope.launch {
             _location.value = repository.searchLocation(category)
@@ -35,5 +45,9 @@ class SearchLocationViewModel : ViewModel() {
     fun removeHistory(locationName: String) {
         repository.removeHistory(locationName)
         _history.value = repository.getHistory()
+    }
+
+    fun addMarker(location: Location) {
+        _markerLocation.value = location
     }
 }

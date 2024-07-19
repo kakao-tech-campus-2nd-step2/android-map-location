@@ -19,7 +19,9 @@ class SearchLocationRepository(context: Context) {
             Location(
                 name = it.place_name,
                 address = it.address_name,
-                category = it.category_group_name
+                category = it.category_group_name,
+                latitude = it.y.toDouble(),
+                longitude = it.x.toDouble()
             )
         } ?: emptyList()
     }

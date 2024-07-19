@@ -33,6 +33,13 @@ class SearchLocationActivity : AppCompatActivity() {
             }
         })
 
+        viewModel.searchInput.observe(this) {
+            it?.let { searchInput ->
+                binding.searchInputEditText.setText(searchInput)
+                binding.searchInputEditText.setSelection(searchInput.length)
+            }
+        }
+
         viewModel.location.observe(this) {
             it?.let { locationData ->
                 binding.searchResultRecyclerView.adapter =
@@ -54,6 +61,15 @@ class SearchLocationActivity : AppCompatActivity() {
 
                 binding.searchHistoryRecyclerView.isVisible = historyData.isNotEmpty()
                 binding.executePendingBindings()
+            }
+        }
+
+        viewModel.markerLocation.observe(this) {
+            it?.let { location ->
+                val intent = intent
+                intent.putExtra("markerLocation", location)
+                setResult(RESULT_OK, intent)
+                finish()
             }
         }
     }

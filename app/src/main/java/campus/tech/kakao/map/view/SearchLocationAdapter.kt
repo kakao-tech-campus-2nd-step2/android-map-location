@@ -19,6 +19,7 @@ class SearchLocationAdapter(
         init {
             binding.root.setOnClickListener {
                 viewModel.addHistory(dataList[bindingAdapterPosition].name)
+                viewModel.addMarker(dataList[bindingAdapterPosition])
             }
         }
 

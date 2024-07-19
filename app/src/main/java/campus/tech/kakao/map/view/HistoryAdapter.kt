@@ -17,6 +17,10 @@ class HistoryAdapter(
     inner class MyViewHolder(private val binding: ItemHistoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
         init {
+            binding.locationHistoryNameTextView.setOnClickListener {
+                viewModel.searchLocationByHistory(dataList[bindingAdapterPosition])
+            }
+
             binding.removeLocationHistoryButton.setOnClickListener {
                 viewModel.removeHistory(dataList[bindingAdapterPosition])
             }
