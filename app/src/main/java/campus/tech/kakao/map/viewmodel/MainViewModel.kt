@@ -36,7 +36,9 @@ class MainViewModel: ViewModel() {
                 LocationData(
                     result.place_name,
                     result.address_name,
-                    result.category_group_name
+                    result.category_group_name,
+                    result.y.toDouble(),
+                    result.x.toDouble()
                 )
             )
         }

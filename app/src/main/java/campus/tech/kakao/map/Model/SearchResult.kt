@@ -8,4 +8,6 @@ data class Place(
     val place_name: String,
     val address_name: String,
     val category_group_name: String,
+    val x: String, // longitude
+    val y: String // latitude
 )
