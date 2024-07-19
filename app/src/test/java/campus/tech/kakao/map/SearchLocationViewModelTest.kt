@@ -102,4 +102,29 @@ class SearchLocationViewModelTest {
         verify { mockRepository.getHistory() }
         assertEquals(listOf("History1"), viewModel.history.value)
     }
+
+    @Test
+    fun testAddMarker() {
+        // given
+        viewModel.markerLocation.observeForever(mockk<Observer<Location>>(relaxed = true))
+        val testLocation = Location("name", "address", "category", 1.0, 2.0)
+
+        // when
+        viewModel.addMarker(testLocation)
+
+        // then
+        assertEquals(testLocation, viewModel.markerLocation.value)
+    }
+
+    @Test
+    fun testSearchLocationByHistory() {
+        // given
+        viewModel.searchInput.observeForever(mockk<Observer<String>>(relaxed = true))
+
+        // when
+        viewModel.searchLocationByHistory("testHistory")
+
+        // then
+        assertEquals("testHistory", viewModel.searchInput.value)
+    }
 }
