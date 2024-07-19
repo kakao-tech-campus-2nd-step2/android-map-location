@@ -1,7 +1,9 @@
 package campus.tech.kakao.map
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -23,9 +25,14 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var searchHistoryList: MutableList<Place>
     private lateinit var kakaoRepository: KakaoRepository
     private lateinit var backButton: ImageButton
+    private lateinit var mapX: String
+    private lateinit var mapY: String
+    private lateinit var name: String
+    private lateinit var address: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d("here", "I'm in SearchActivity")
         setContentView(R.layout.activity_search)
 
         searchView = findViewById(R.id.search_view)
@@ -45,6 +52,8 @@ class SearchActivity : AppCompatActivity() {
             onItemClick = { place ->
                 searchHistoryDB.insertSearchHistory(place)
                 updateSearchHistoryRecyclerView(place)
+                updateMapPosition(place)
+                goBackToMap()
             }
         )
         resultRecyclerView.adapter = resultRecyclerViewAdapter
@@ -113,7 +122,21 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun goBackToMap() {
-        val intent = Intent(this, MapActivity::class.java)
-        startActivity(intent)
+        val searchToMapIntent = Intent(this, MapActivity::class.java)
+        searchToMapIntent.putExtra("mapX",mapX)
+        searchToMapIntent.putExtra("mapY",mapY)
+        searchToMapIntent.putExtra("name",name)
+        searchToMapIntent.putExtra("address", address)
+        Log.d("goBackToMap", "goBackToMap: $mapX, $mapY")
+        finish()
+        startActivity(searchToMapIntent)
+    }
+
+    private fun updateMapPosition(place: Place) {
+        mapX = place.x
+        mapY = place.y
+        name = place.place_name
+        address = place.address_name
+        Log.d("goBackToMap", "updateMapPosition: $mapX, $mapY")
     }
 }
