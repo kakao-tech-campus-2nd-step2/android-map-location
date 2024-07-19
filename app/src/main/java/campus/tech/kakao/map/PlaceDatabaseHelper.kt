@@ -34,7 +34,6 @@ class PlaceDatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHe
         db.execSQL(SQL_DELETE_ENTRIES)
         onCreate(db)
     }
-
     override fun onDowngrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         onUpgrade(db, oldVersion, newVersion)
     }

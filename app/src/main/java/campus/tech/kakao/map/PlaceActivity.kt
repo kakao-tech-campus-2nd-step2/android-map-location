@@ -64,9 +64,11 @@ class PlaceActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
                 val keyword = s.toString()
                 Log.d("API response", "$keyword")
                 searchPlace(keyword)
+
             }
 
             override fun afterTextChanged(s: Editable?) {

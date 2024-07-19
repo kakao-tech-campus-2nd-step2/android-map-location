@@ -21,7 +21,6 @@ import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.label.LabelStyle
 import com.kakao.vectormap.label.LabelStyles
 
-
 class MapActivity : AppCompatActivity() {
 
     private lateinit var mapView: MapView
@@ -58,7 +57,6 @@ class MapActivity : AppCompatActivity() {
         override fun getZoomLevel(): Int {
             return startZoomLevel
         }
-
     }
 
     private fun detectNotInitialScreen(intentLatitude: String?, intentLongitude: String?) =
@@ -117,6 +115,7 @@ class MapActivity : AppCompatActivity() {
                 .setStyles(yellowMarker)
         )
     }
+
 
     private val lifeCycleCallback: MapLifeCycleCallback = object : MapLifeCycleCallback() {
 
