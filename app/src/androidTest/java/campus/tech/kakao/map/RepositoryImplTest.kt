@@ -3,7 +3,6 @@ package campus.tech.kakao.map
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
 import campus.tech.kakao.map.data.PlaceRepositoryImpl
 import campus.tech.kakao.map.domain.model.Place
 import campus.tech.kakao.map.util.PlaceContract
