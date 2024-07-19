@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.kakao.vectormap.camera.CameraPosition
 import ksc.campus.tech.kakao.map.BuildConfig
+import ksc.campus.tech.kakao.map.MyApplication
 import ksc.campus.tech.kakao.map.models.repositories.LocationInfo
 import ksc.campus.tech.kakao.map.models.repositories.SearchKeywordRepository
 import ksc.campus.tech.kakao.map.models.repositories.SearchResult
@@ -20,14 +21,14 @@ import ksc.campus.tech.kakao.map.models.repositoriesImpl.SearchResultRepositoryI
 class SearchActivityViewModel(application: Application) : AndroidViewModel(application) {
 
     private val mapViewRepository: MapViewRepository by lazy{
-        MapViewRepository.getInstance()
+        (application as MyApplication).appContainer.getSingleton<MapViewRepository>()
     }
 
     private val searchResultRepository: SearchResultRepository by lazy {
-        SearchResultRepository.getInstance()
+        (application as MyApplication).appContainer.getSingleton<SearchResultRepository>()
     }
     private val keywordRepository: SearchKeywordRepository by lazy {
-        SearchKeywordRepository.getInstance()
+        (application as MyApplication).appContainer.getSingleton<SearchKeywordRepository>()
     }
 
     private val _searchText: MutableLiveData<String> = MutableLiveData("")
