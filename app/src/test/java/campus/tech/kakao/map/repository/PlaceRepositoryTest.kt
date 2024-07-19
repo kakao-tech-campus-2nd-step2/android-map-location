@@ -8,6 +8,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import kotlinx.coroutines.test.runTest
+import org.bouncycastle.util.test.SimpleTest
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule

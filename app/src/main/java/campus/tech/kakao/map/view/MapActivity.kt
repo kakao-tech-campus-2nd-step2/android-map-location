@@ -154,7 +154,7 @@ class MapActivity : AppCompatActivity() {
         resultLauncher.launch(intent, options)
     }
 
-    private fun showErrorMessageView(error: String) {
+    fun showErrorMessageView(error: String) {
         errorTextView.isVisible = true
         val errorText = getErrorMessage(error) + "\n\n" + error
         errorTextView.text = errorText
