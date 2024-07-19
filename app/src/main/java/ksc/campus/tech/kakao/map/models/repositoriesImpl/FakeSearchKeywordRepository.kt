@@ -1,11 +1,12 @@
-package ksc.campus.tech.kakao.map.models
+package ksc.campus.tech.kakao.map.models.repositoriesImpl
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import ksc.campus.tech.kakao.map.models.repositories.SearchKeywordRepository
 
 
-class FakeSearchKeywordRepositoryImpl: SearchKeywordRepository {
+class FakeSearchKeywordRepository: SearchKeywordRepository {
     private val _keywords: MutableLiveData<List<String>> = MutableLiveData(listOf())
     override val keywords: LiveData<List<String>>
         get() = _keywords
@@ -13,7 +14,7 @@ class FakeSearchKeywordRepositoryImpl: SearchKeywordRepository {
     override fun addKeyword(keyword: String) {
         if(_keywords.value == null)
             return
-
+        Log.d("KSC", "adding $keyword")
         _keywords.postValue(addElementWithoutDuplicates(_keywords.value!!, keyword))
     }
 

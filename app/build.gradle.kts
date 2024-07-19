@@ -19,7 +19,7 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "ksc.campus.tech.kakao.map.CustomTestRunner"
 
         resValue("string", "KAKAO_API_KEY", getApiKey("KAKAO_API_KEY"))
         buildConfigField("String", "KAKAO_REST_API_KEY", getApiKey("KAKAO_REST_API_KEY"))
@@ -46,6 +46,7 @@ android {
 
     testOptions{
         animationsDisabled = true
+        unitTests.isIncludeAndroidResources = true
     }
 
     buildFeatures {
