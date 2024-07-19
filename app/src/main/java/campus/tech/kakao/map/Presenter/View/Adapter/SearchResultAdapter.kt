@@ -1,5 +1,6 @@
 package campus.tech.kakao.map.Presenter.View.Adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,27 +13,32 @@ import campus.tech.kakao.map.R
 import campus.tech.kakao.map.Domain.Model.PlaceCategory
 
 class SearchResultAdapter(
-    val onClickAdd: (name: String) -> Unit
+    val onClickAdd: (id: Int) -> Unit
 ) : ListAdapter<Place, SearchResultAdapter.ViewHolder>(PlaceDiffUtil()) {
 
-    class ViewHolder(itemView: View, onClickAdd: (name: String) -> Unit) :
+    class ViewHolder(itemView: View, onClickAdd: (id : Int) -> Unit) :
         RecyclerView.ViewHolder(itemView) {
         private var placeName: TextView
         private var placeAddress: TextView
         private var placeCategory: TextView
+        private var id : Int?
 
         init {
             placeName = itemView.findViewById<TextView>(R.id.placeName)
             placeAddress = itemView.findViewById<TextView>(R.id.placeAddress)
             placeCategory = itemView.findViewById<TextView>(R.id.placeCategory)
+            id = null
 
             itemView.setOnClickListener {
-                onClickAdd.invoke(placeName.text.toString())
+                id?.let{
+                    onClickAdd.invoke(it)
+                }
             }
         }
 
         fun bind(place:Place){
             placeName.text = place.name
+            id = place.id
             placeAddress.text = place.address ?: ""
             placeCategory.text =
                 PlaceCategory.categoryToString(place.category ?: PlaceCategory.ELSE)

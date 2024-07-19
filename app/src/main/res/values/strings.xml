@@ -2,4 +2,6 @@
     <string name="app_name">Map</string>
     <string name="et_search_hint">검색어를 입력해 주세요.</string>
     <string name="search_result_empty">검색 결과가 없습니다.</string>
+    <string name="map_error">지도 불러오기에 실패하였습니다.\n다시 불러와주세요</string>
+    <string name="else_error">예상치 못한 에러입니다.\n다시 실행해주세요</string>
 </resources>

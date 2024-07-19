@@ -1,5 +1,6 @@
 package campus.tech.kakao.map.ViewModel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -26,12 +27,8 @@ class SearchViewModel(private val repository: PlaceRepository) : ViewModel() {
         _currentResult.postValue(repository.searchPlaceRemote(name))
     }
 
-    fun addFavorite(name: String) {
-        val place = _currentResult.value?.find {
-            it.name == name
-        }
-
-        if (isPlaceInFavorite(name)) return
+    fun addFavorite(id : Int) {
+        val place = findPlaceById(id)
 
         place?.let {
             repository.addFavorite(it).run {
@@ -40,15 +37,19 @@ class SearchViewModel(private val repository: PlaceRepository) : ViewModel() {
         }
     }
 
-    fun deleteFromFavorite(name: String) {
-        repository.deleteFavorite(name).run {
+    fun deleteFromFavorite(id : Int) {
+        repository.deleteFavorite(id).run {
             _favoritePlace.value = this
         }
     }
 
-    private fun isPlaceInFavorite(name: String): Boolean {
-        return (favoritePlace.value?.find { it.name == name }) != null
+    fun findPlaceById(id:Int) : Place?{
+        return currentResult.value?.find{
+            it.id == id
+        }
     }
 
-
+    fun findFavoriteById(id:Int) : Place?{
+        return repository.getFavoriteById(id)
+    }
 }

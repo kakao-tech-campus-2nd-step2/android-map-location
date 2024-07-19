@@ -7,11 +7,11 @@ import campus.tech.kakao.map.Domain.Model.PlaceContract
 
 class PlaceDaoImpl(private val db : SQLiteDatabase) : PlaceDao {
 
-    override fun deletePlace(name: String) {
+    override fun deletePlace(id : Int) {
         db.delete(
             PlaceContract.PlaceEntry.TABLE_NAME,
-            "${PlaceContract.PlaceEntry.COLUMN_NAME}=?",
-            arrayOf(name)
+            "${PlaceContract.PlaceEntry.COLUMN_ID}=?",
+            arrayOf(id.toString())
         )
     }
 
@@ -20,8 +20,8 @@ class PlaceDaoImpl(private val db : SQLiteDatabase) : PlaceDao {
         return PlaceContract.getPlaceListByCursor(cursor)
     }
 
-    override fun getPlaceByName(name: String): Place {
-        val cursor = getCursorByName(name)
+    override fun getPlaceById(id: Int): Place {
+        val cursor = getCursorById(id)
         return PlaceContract.getPlaceByCursor(cursor)
     }
 
@@ -45,10 +45,10 @@ class PlaceDaoImpl(private val db : SQLiteDatabase) : PlaceDao {
         )
     }
 
-    private fun getCursorByName(name: String): Cursor {
+    private fun getCursorById(id: Int): Cursor {
         return db.rawQuery(
-            "SELECT * FROM ${PlaceContract.PlaceEntry.TABLE_NAME} WHERE name=?",
-            arrayOf(name)
+            "SELECT * FROM ${PlaceContract.PlaceEntry.TABLE_NAME} WHERE id=?",
+            arrayOf(id.toString())
         )
     }
 }

@@ -12,7 +12,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class AppContainer(context: Context) {
-    private val sqliteDB = SqliteDB(context, PlaceContract.DATABASE_NAME, null, 1)
+    val sqliteDB = SqliteDB(context, PlaceContract.DATABASE_NAME, null, 1)
     private val placeDaoImpl = PlaceDaoImpl(sqliteDB.writableDatabase)
     private val favoriteDao = FavoriteDaoImpl(sqliteDB.writableDatabase)
     private val retrofitService = Retrofit.Builder()
@@ -20,7 +20,10 @@ class AppContainer(context: Context) {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
         .create(RetrofitService::class.java)
+
     val repository = PlaceRepositoryImpl(
         placeDaoImpl, favoriteDao, retrofitService, HttpUrlConnect()
     )
+
+
 }

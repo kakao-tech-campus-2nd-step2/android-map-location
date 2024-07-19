@@ -26,6 +26,18 @@
     <com.kakao.vectormap.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent">
+    </com.kakao.vectormap.MapView>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <include
+            android:id="@+id/bottomSheet"
+            android:visibility="gone"
+            layout="@layout/map_view_bottom_sheet"
+            android:elevation="10dp"/>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

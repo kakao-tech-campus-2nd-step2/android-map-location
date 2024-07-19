@@ -1,6 +1,8 @@
 package campus.tech.kakao.map.Presenter.View
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.EditText
@@ -104,7 +106,14 @@ class PlaceSearchActivity : AppCompatActivity() {
     private fun setSearchAdapter() {
         val adapter = SearchResultAdapter(
             onClickAdd = {
+//                viewModel.myFun(it)
                 viewModel.addFavorite(it)
+                val intent = Intent(this,MapActivity ::class.java)
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                intent.putExtra(INTENT_ID,it)
+                startActivity(intent)
+                finish()
+
             })
         viewModel.currentResult.observe(this) {
             adapter.submitList(it)
@@ -123,6 +132,9 @@ class PlaceSearchActivity : AppCompatActivity() {
         }
     }
 
+    companion object{
+        const val INTENT_ID = "id"
+    }
 }
 
 
