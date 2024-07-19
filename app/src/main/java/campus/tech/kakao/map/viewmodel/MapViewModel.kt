@@ -1,6 +1,5 @@
 package campus.tech.kakao.map.viewmodel
 
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,11 +7,9 @@ import campus.tech.kakao.map.model.DataStoreRepository
 import kotlinx.coroutines.launch
 import java.io.IOException
 
-class MapViewModel() : ViewModel() {
-    private lateinit var dataStoreRepository: DataStoreRepository
-    fun setDataStoreRepository(context: Context) {
-        this.dataStoreRepository = DataStoreRepository(context)
-    }
+class MapViewModel(
+    private val dataStoreRepository: DataStoreRepository
+) : ViewModel() {
 
     fun saveLastLocation(latitude: Double, longitude: Double) {
         viewModelScope.launch {

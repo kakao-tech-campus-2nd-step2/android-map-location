@@ -1,5 +1,6 @@
 package campus.tech.kakao.map.view
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Build
@@ -9,11 +10,13 @@ import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModelProvider
 import campus.tech.kakao.map.R
 import campus.tech.kakao.map.databinding.ActivityMapBinding
 import campus.tech.kakao.map.model.Location
 import campus.tech.kakao.map.viewmodel.MapViewModel
+import campus.tech.kakao.map.viewmodel.MapViewModelFactory
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HIDDEN
@@ -31,6 +34,8 @@ import com.kakao.vectormap.label.LabelStyle
 import com.kakao.vectormap.label.LabelStyles
 import com.kakao.vectormap.label.LabelTextBuilder
 
+val Context.dataStore by preferencesDataStore(name = "last_location_datastore")
+
 class MapActivity : AppCompatActivity() {
     private lateinit var viewModel: MapViewModel
     private lateinit var binding: ActivityMapBinding
@@ -41,10 +46,11 @@ class MapActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this)[MapViewModel::class.java]
-        viewModel.setDataStoreRepository(this)
         binding = ActivityMapBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val viewModelFactory = MapViewModelFactory(dataStore)
+        viewModel = ViewModelProvider(this, viewModelFactory)[MapViewModel::class.java]
 
         searchLocationLauncher = createSearchLocationLauncher()
         mapErrorLauncher = createMapErrorLauncher()
