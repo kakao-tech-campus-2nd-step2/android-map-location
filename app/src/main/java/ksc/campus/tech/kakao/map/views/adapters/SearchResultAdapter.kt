@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ksc.campus.tech.kakao.map.R
-import ksc.campus.tech.kakao.map.models.SearchResult
+import ksc.campus.tech.kakao.map.models.repositories.SearchResult
 
 
 class SearchResultAdapter(

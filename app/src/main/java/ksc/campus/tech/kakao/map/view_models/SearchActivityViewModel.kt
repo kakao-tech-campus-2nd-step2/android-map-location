@@ -5,24 +5,30 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.camera.CameraPosition
 import ksc.campus.tech.kakao.map.BuildConfig
-import ksc.campus.tech.kakao.map.models.LocationInfo
-import ksc.campus.tech.kakao.map.models.SearchKeywordRepository
-import ksc.campus.tech.kakao.map.models.SearchResult
-import ksc.campus.tech.kakao.map.models.SearchResultRepository
-import ksc.campus.tech.kakao.map.models.MapViewRepository
+import ksc.campus.tech.kakao.map.models.repositories.LocationInfo
+import ksc.campus.tech.kakao.map.models.repositories.SearchKeywordRepository
+import ksc.campus.tech.kakao.map.models.repositories.SearchResult
+import ksc.campus.tech.kakao.map.models.repositories.SearchResultRepository
+import ksc.campus.tech.kakao.map.models.repositories.MapViewRepository
+import ksc.campus.tech.kakao.map.models.repositoriesImpl.MapViewRepositoryImpl
+import ksc.campus.tech.kakao.map.models.repositoriesImpl.SearchKeywordRepositoryImpl
+import ksc.campus.tech.kakao.map.models.repositoriesImpl.SearchResultRepositoryImpl
 
 
 class SearchActivityViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val mapViewRepository: MapViewRepository =
+    private val mapViewRepository: MapViewRepository by lazy{
         MapViewRepository.getInstance()
-    private val searchResultRepository: SearchResultRepository =
+    }
+
+    private val searchResultRepository: SearchResultRepository by lazy {
         SearchResultRepository.getInstance()
-    private val keywordRepository: SearchKeywordRepository =
-        SearchKeywordRepository.getInstance(application)
+    }
+    private val keywordRepository: SearchKeywordRepository by lazy {
+        SearchKeywordRepository.getInstance()
+    }
 
     private val _searchText: MutableLiveData<String> = MutableLiveData("")
     private val _activeContent: MutableLiveData<ContentType> = MutableLiveData(ContentType.MAP)
@@ -43,6 +49,10 @@ class SearchActivityViewModel(application: Application) : AndroidViewModel(appli
 
 
     init {
+        SearchKeywordRepository.injectDependency(SearchKeywordRepositoryImpl(getApplication()))
+        MapViewRepository.injectDependency(MapViewRepositoryImpl())
+        SearchResultRepository.injectDependency(SearchResultRepositoryImpl())
+
         keywordRepository.getKeywords()
         mapViewRepository.loadFromSharedPreference(application)
     }
@@ -61,7 +71,9 @@ class SearchActivityViewModel(application: Application) : AndroidViewModel(appli
     }
 
     private fun updateLocation(address:String, name:String, latitude:Double, longitude:Double){
-        mapViewRepository.updateSelectedLocation(getApplication(),LocationInfo(address, name, latitude, longitude))
+        mapViewRepository.updateSelectedLocation(getApplication(),
+            LocationInfo(address, name, latitude, longitude)
+        )
         mapViewRepository.updateCameraPositionWithFixedZoom(latitude, longitude)
     }
 

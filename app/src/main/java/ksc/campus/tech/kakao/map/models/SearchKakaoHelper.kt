@@ -2,6 +2,7 @@ package ksc.campus.tech.kakao.map.models
 
 import android.util.Log
 import ksc.campus.tech.kakao.map.models.dto.KeywordSearchResponse
+import ksc.campus.tech.kakao.map.models.repositories.SearchResult
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
