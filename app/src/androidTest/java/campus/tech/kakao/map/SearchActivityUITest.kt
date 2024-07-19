@@ -20,7 +20,11 @@ class SearchActivityUITest {
 	@get:Rule
 	val searchActivityRule = ActivityScenarioRule(SearchActivity::class.java)
 
-
+	@Test
+	fun 검색창_표시_확인(){
+		val search = onView(withId(R.id.search))
+		search.check(matches(isDisplayed()))
+	}
 	@Test
 	fun 입력한_검색어_X_눌러_삭제() {
 		val query = "박물관"
