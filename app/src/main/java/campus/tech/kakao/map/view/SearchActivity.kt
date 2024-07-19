@@ -1,5 +1,6 @@
 package campus.tech.kakao.map.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -75,6 +76,9 @@ class SearchActivity : AppCompatActivity() {
     private fun setAdapters() {
         searchAdapter = SearchAdapter(emptyList()) {
             viewModel.savePlaces(it.place_name)
+            val intent = Intent(this, MapActivity::class.java)
+            intent.putExtra("placeInfo", it)
+            startActivity(intent)
         }
         recyclerView.adapter = searchAdapter
 

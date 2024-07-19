@@ -10,4 +10,9 @@
     <string name="deleteSavePlace">검색기록삭제</string>
     <string name="search_btn">검색 버튼</string>
     <string name="place_icon">place_icon</string>
+    <string name="click_place_name">클릭 된 장소</string>
+    <string name="click_place_address">클릭된 장소 주소</string>
+    <string name="errorMessage">지도 인증을 실패했습니다.\n다시 시도해 주세요.\n</string>
+    <string name="errorType">어떤 에러</string>
+    <string name="retryBtn">Retry</string>
 </resources>

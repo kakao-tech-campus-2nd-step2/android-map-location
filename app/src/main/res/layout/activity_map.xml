@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -7,21 +7,53 @@
     <com.kakao.vectormap.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent" />
 
-        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-            android:id="@+id/searchFloatingBtn"
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/searchFloatingBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:backgroundTint="@color/white"
+        android:text="@string/search_hint"
+        android:textAlignment="viewStart"
+        android:textColor="@color/cardview_shadow_start_color"
+        app:icon="@drawable/search_icon"
+        app:iconGravity="end"
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.None" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/clickedPlaceView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical"
+        app:behavior_hideable="true"
+        app:behavior_peekHeight="100dp"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+        <TextView
+            android:id="@+id/clickedPlaceName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
-            android:backgroundTint="@color/white"
-            android:text="@string/search_hint"
-            android:textAlignment="viewStart"
-            android:textColor="@color/cardview_shadow_start_color"
-            app:icon="@drawable/search_icon"
-            app:iconGravity="end"
-            app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.None" />
-    </com.kakao.vectormap.MapView>
+            android:text="@string/click_place_name"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
+        <TextView
+            android:id="@+id/clickedPlaceAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:text="@string/click_place_address"
+            android:textSize="15sp" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <campus.tech.kakao.map.view.ErrorView
+        android:id="@+id/errorView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
