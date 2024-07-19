@@ -1,20 +1,14 @@
 package campus.tech.kakao.map
 
 import android.content.Context
-import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import campus.tech.kakao.map.data.repository.HistoryRepositoryImpl
 import campus.tech.kakao.map.data.source.MapDbHelper
 import campus.tech.kakao.map.domain.model.Location
-import campus.tech.kakao.map.domain.repository.HistoryRepository
-import campus.tech.kakao.map.presentation.MapActivity
-import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.junit.runners.JUnit4
-import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)

@@ -58,6 +58,7 @@ dependencies {
     implementation("androidx.activity:activity:1.8.0")
     implementation("androidx.test:core-ktx:1.5.0")
     implementation("androidx.activity:activity-ktx:1.9.0")
+    implementation("androidx.test.espresso:espresso-contrib:3.6.1")
     testImplementation("junit:junit:4.13.2")
     testImplementation("io.mockk:mockk-android:1.13.11")
     testImplementation("io.mockk:mockk-agent:1.13.11")
