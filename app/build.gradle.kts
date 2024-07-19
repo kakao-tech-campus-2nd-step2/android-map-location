@@ -63,10 +63,10 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
     implementation("com.squareup.retrofit2:converter-gson:2.11.0")
 
+
     implementation ("com.kakao.sdk:v2-all:2.20.3")
     implementation ("com.kakao.maps.open:android:2.9.5")
 
     implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0")
     implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.4.0")
-
 }

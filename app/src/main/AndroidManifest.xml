@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -15,6 +16,7 @@
         android:soundEffectsEnabled="true"
         android:supportsRtl="true"
         android:theme="@style/Theme.Map"
+        android:soundEffectsEnabled="true"
         tools:targetApi="31">
         <activity
             android:name=".MapErrorActivity"
@@ -34,3 +36,4 @@
     </application>
 
 </manifest>
+

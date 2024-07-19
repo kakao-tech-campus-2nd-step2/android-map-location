@@ -24,6 +24,7 @@ class SavedSearchAdapter(private var items : List<SavedSearch> , private val vie
             }
             name.setOnClickListener {
                 viewModel.nameClick.value = item
+
             }
             id.text = item.id.toString()
             name.text = item.name
@@ -34,6 +35,7 @@ class SavedSearchAdapter(private var items : List<SavedSearch> , private val vie
         val view: View = LayoutInflater.from(parent.context).inflate(R.layout.item_saved_search, parent, false)
 
         return SavedSearchAdapter.ViewHolder(view, viewModel)
+
     }
 
     override fun onBindViewHolder(holder: SavedSearchAdapter.ViewHolder, position: Int) {

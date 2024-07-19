@@ -27,6 +27,7 @@ class MyViewModel : ViewModel() {
     }
 
     fun clickCloseIcon(){
+
         //햅틱 진동 기능 추가하고 싶다..
         searchText.value =" " //editText빈칸으로 만들기
     }
