@@ -32,6 +32,7 @@ class MapActivity : AppCompatActivity() {
     private lateinit var tvErrorMessage: TextView
     private lateinit var kakaoMap: KakaoMap
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
@@ -141,6 +142,7 @@ class MapActivity : AppCompatActivity() {
         editor.apply()
     }
 
+
     override fun onResume() {
         super.onResume()
         mapView.resume()
@@ -151,3 +153,4 @@ class MapActivity : AppCompatActivity() {
         mapView.pause()
     }
 }
+
