@@ -12,3 +12,4 @@ data class Place(
     @SerializedName("x") var xPos: String,
     @SerializedName("y") var yPos: String
 ): Serializable
+

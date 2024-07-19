@@ -14,6 +14,7 @@ import campus.tech.kakao.map.view.MapActivity
 import campus.tech.kakao.map.view.ViewActivity
 
 
+
 class SearchedPlaceAdapter(
     private var onItemClicked: (Place) -> Unit
 ): ListAdapter<Place, SearchedPlaceAdapter.LocationViewHolder>(DiffUtilCallback()) {

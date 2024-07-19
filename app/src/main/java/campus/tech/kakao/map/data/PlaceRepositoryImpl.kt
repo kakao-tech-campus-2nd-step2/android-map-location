@@ -37,6 +37,7 @@ class PlaceRepositoryImpl(context: Context):
                 val xPos = it.getString(it.getColumnIndexOrThrow(PlaceContract.COLUMN_X_POS))
                 val yPos = it.getString(it.getColumnIndexOrThrow(PlaceContract.COLUMN_Y_POS))
                 places.add(Place(id, name, place, type, xPos,yPos))
+
             }
         }
         return places
@@ -57,6 +58,7 @@ class PlaceRepositoryImpl(context: Context):
                 val xPos = it.getString(it.getColumnIndexOrThrow(PlaceContract.COLUMN_X_POS))
                 val yPos = it.getString(it.getColumnIndexOrThrow(PlaceContract.COLUMN_Y_POS))
                 places.add(Place(id, name, place, type, xPos,yPos))
+
             }
         }
         return places
@@ -74,6 +76,7 @@ class PlaceRepositoryImpl(context: Context):
                 put(PlaceContract.COLUMN_TYPE, it.category)
                 put(PlaceContract.COLUMN_X_POS, it.xPos)
                 put(PlaceContract.COLUMN_Y_POS, it.yPos)
+
             }
             db.insert(PlaceContract.TABLE_NAME, null, values)
         }
@@ -107,6 +110,7 @@ class PlaceRepositoryImpl(context: Context):
                 val name = it.getString(it.getColumnIndexOrThrow(PlaceContract.COLUMN_LOG_NAME))
                 val id = it.getString(it.getColumnIndexOrThrow(PlaceContract.COLUMN_LOG_ID))
                 logs.add(Place(id,name, "", "", "",""))
+
             }
         }
         return logs

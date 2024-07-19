@@ -68,6 +68,7 @@ class ViewActivity : AppCompatActivity() {
             handlePlaceClick(place)
         }
 
+
         searchedPlaceRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@ViewActivity)
             adapter = searchedPlaceAdapter
