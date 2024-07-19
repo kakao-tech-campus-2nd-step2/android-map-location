@@ -1,19 +1,17 @@
 package campus.tech.kakao.map.view
 
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.lifecycle.ViewModelProvider
 import campus.tech.kakao.map.BuildConfig
 import campus.tech.kakao.map.R
 import campus.tech.kakao.map.model.PlaceInfo
+import campus.tech.kakao.map.viewmodel.MapViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.kakao.vectormap.KakaoMap
@@ -30,27 +28,23 @@ import com.kakao.vectormap.label.LabelStyles
 
 class MapActivity : AppCompatActivity() {
     private lateinit var mapView: MapView
+    private lateinit var mapViewModel: MapViewModel
     private lateinit var searchFloatingBtn: ExtendedFloatingActionButton
     private lateinit var clickedPlaceNameView: TextView
     private lateinit var clickedPlaceAddressView: TextView
     private lateinit var clickedPlaceView: LinearLayoutCompat
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
-    private lateinit var KAKAO_APP_KEY: String
-    private lateinit var kakaoMap: KakaoMap
-    private lateinit var pos: LatLng
-    private lateinit var spf: SharedPreferences
-    private lateinit var errorView: LinearLayout
-    private lateinit var errorDetail: TextView
-    private lateinit var retryButton: Button
+    private lateinit var errorView: ErrorView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
-        KAKAO_APP_KEY = BuildConfig.KAKAO_APP_KEY
-        KakaoMapSdk.init(this, KAKAO_APP_KEY)
+        KakaoMapSdk.init(this, BuildConfig.KAKAO_APP_KEY)
+        mapViewModel = ViewModelProvider(this)[MapViewModel::class.java]
 
         initView()
         setListeners()
+        observeViewModel()
         initializeMap()
     }
 
@@ -62,7 +56,7 @@ class MapActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         mapView.pause()
-        saveLastPosition()
+        mapViewModel.saveLastPosition()
     }
 
     private fun initView() {
@@ -73,10 +67,7 @@ class MapActivity : AppCompatActivity() {
         clickedPlaceView = findViewById(R.id.clickedPlaceView)
         bottomSheetBehavior = BottomSheetBehavior.from(clickedPlaceView)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        spf = getPreferences(Context.MODE_PRIVATE)
         errorView = findViewById(R.id.errorView)
-        errorDetail = findViewById(R.id.errorDetail)
-        retryButton = findViewById(R.id.retryButton)
     }
 
     private fun setListeners() {
@@ -84,10 +75,20 @@ class MapActivity : AppCompatActivity() {
             val intent = Intent(this, SearchActivity::class.java)
             startActivity(intent)
         }
-        retryButton.setOnClickListener {
-            errorView.visibility = View.GONE
-            mapView.visibility = View.VISIBLE
-            initializeMap()
+    }
+
+    private fun observeViewModel() {
+        mapViewModel.pos.observe(this) { pos ->
+            pos?.let {
+                moveClickedPlace(it.latitude, it.longitude)
+            }
+        }
+
+        mapViewModel.clickedPlaceInfo.observe(this) { placeInfo ->
+            placeInfo?.let {
+                showClickedPlaceInfo(it.place_name, it.road_address_name)
+                showLabel(it.y.toDouble(), it.x.toDouble())
+            }
         }
     }
 
@@ -103,10 +104,9 @@ class MapActivity : AppCompatActivity() {
             }
         }, object : KakaoMapReadyCallback() {
             override fun onMapReady(map: KakaoMap) {
-                kakaoMap = map
-                getLastPosition()
+                mapViewModel.setKakaoMap(map)
+                mapViewModel.getLastPosition()
                 handleIntent()
-                moveClickedPlace(pos.latitude, pos.longitude)
             }
         })
     }
@@ -114,9 +114,7 @@ class MapActivity : AppCompatActivity() {
     private fun handleIntent() {
         val clickedPlaceInfo = intent.getParcelableExtra<PlaceInfo>("placeInfo")
         clickedPlaceInfo?.let {
-            pos = LatLng.from(it.y.toDouble(), it.x.toDouble())
-            showClickedPlaceInfo(it.place_name, it.road_address_name)
-            showLabel(pos.latitude, pos.longitude)
+            mapViewModel.setClickedPlaceInfo(it)
         }
     }
 
@@ -127,6 +125,7 @@ class MapActivity : AppCompatActivity() {
     }
 
     private fun showLabel(latitude: Double, longitude: Double) {
+        val kakaoMap = mapViewModel.kakaoMap.value ?: return
         val styles: LabelStyles? = kakaoMap.labelManager
             ?.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.pink_marker)))
         val options: LabelOptions =
@@ -136,27 +135,14 @@ class MapActivity : AppCompatActivity() {
     }
 
     private fun moveClickedPlace(latitude: Double, longitude: Double) {
+        val kakaoMap = mapViewModel.kakaoMap.value ?: return
         kakaoMap.moveCamera(CameraUpdateFactory.newCenterPosition(LatLng.from(latitude, longitude)))
     }
 
-    private fun saveLastPosition() {
-        kakaoMap.cameraPosition?.let { camera ->
-            val editor = spf.edit()
-            editor.putString("latitude", camera.position.latitude.toString())
-            editor.putString("longitude", camera.position.longitude.toString())
-            editor.apply()
-        }
-    }
-
-    private fun getLastPosition() {
-        val latitude = spf.getString("latitude", "37.394660")?.toDouble() ?: 37.394660
-        val longitude = spf.getString("longitude", "127.111182")?.toDouble() ?: 127.111182
-        pos = LatLng.from(latitude, longitude)
-    }
-
     private fun showErrorView(error: String) {
-        errorDetail.text = error
-        errorView.visibility = View.VISIBLE
+        errorView.showError(error)
         mapView.visibility = View.GONE
     }
+
+
 }
