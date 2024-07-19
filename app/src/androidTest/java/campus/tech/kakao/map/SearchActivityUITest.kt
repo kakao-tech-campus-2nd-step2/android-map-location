@@ -25,6 +25,12 @@ class SearchActivityUITest {
 		val search = onView(withId(R.id.search))
 		search.check(matches(isDisplayed()))
 	}
+
+	@Test
+	fun X_버튼_확인(){
+		val clear = onView(withId(R.id.search_clear))
+		clear.check(matches(isDisplayed()))
+	}
 	@Test
 	fun 입력한_검색어_X_눌러_삭제() {
 		val query = "박물관"
