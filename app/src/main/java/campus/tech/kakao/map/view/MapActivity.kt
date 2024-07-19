@@ -25,8 +25,8 @@ import com.kakao.vectormap.label.LabelStyle
 import com.kakao.vectormap.label.LabelStyles
 
 class MapActivity : AppCompatActivity() {
-    private lateinit var mapView: MapView
-    private lateinit var searchView: SearchView
+    private val mapView by lazy<MapView> { findViewById(R.id.mapView) }
+    private val searchView by lazy<SearchView> { findViewById(R.id.searchView) }
     private lateinit var resultLauncher: ActivityResultLauncher<Intent>
     private lateinit var bottomSheetFragment: BottomSheetFragment
     private lateinit var tvErrorMessage: TextView
@@ -35,9 +35,6 @@ class MapActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
-
-        mapView = findViewById(R.id.mapView)
-        searchView = findViewById(R.id.searchView)
 
         initializeMapView()
         initializeSearchView()
