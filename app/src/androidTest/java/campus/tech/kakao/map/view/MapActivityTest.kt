@@ -44,7 +44,7 @@ class MapActivityTest{
     fun testInit() {
         onView(withId(R.id.input_search_field)).check(
             matches(isDisplayed()))
-        onView(withId(campus.tech.kakao.map.R.id.search_icon)).check(
+        onView(withId(R.id.search_icon)).check(
             matches(isDisplayed()))
         onView(withId(campus.tech.kakao.map.R.id.error_text)).check(
             matches(withEffectiveVisibility(Visibility.GONE)))
