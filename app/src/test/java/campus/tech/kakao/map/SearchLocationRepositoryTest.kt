@@ -51,7 +51,7 @@ class SearchLocationRepositoryTest {
     }
 
     @Test
-    fun testAddHistoryWhenItemExist() {
+    fun testAddHistory_ItemExist() {
         // given
         every { mockCursor.count } returns 1
         every { mockSQLiteDB.execSQL(any()) } just Runs
@@ -68,7 +68,7 @@ class SearchLocationRepositoryTest {
     }
 
     @Test
-    fun testAddHistoryWhenItemNotExist() {
+    fun testAddHistory_ItemNotExist() {
         // given
         every { mockCursor.count } returns 0
         every { mockSQLiteDB.execSQL(any()) } just Runs
