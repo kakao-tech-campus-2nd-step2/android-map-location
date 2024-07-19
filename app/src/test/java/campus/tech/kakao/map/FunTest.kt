@@ -9,6 +9,7 @@ import campus.tech.kakao.map.dto.Document
 import campus.tech.kakao.map.dto.SearchWord
 import io.mockk.every
 import io.mockk.mockk
+import org.junit.Assert.assertFalse
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -44,7 +45,7 @@ class FunTest {
 	}
 
 	@Test
-	fun 검색어_저장_되는지_확인(){
+	fun 검색어_저장_되고_삭제도_되는지_확인(){
 		val query = Document(
 			"이안아파트", "아파트",
 			"남양주", "10",
@@ -54,5 +55,11 @@ class FunTest {
 		model.addWord(query)
 		val result = model.wordList.value?.contains(expectedResult)
 		if (result != null) assert(result) else assert(false)
+
+		val query2 = SearchWord(
+			"이안아파트", "남양주", "아파트")
+		model.deleteWord(query2)
+		val result2 = model.wordList.value?.contains(query2)
+		if (result2 != null) assertFalse(result2) else assert(false)
 	}
 }
