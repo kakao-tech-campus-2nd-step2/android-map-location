@@ -37,7 +37,7 @@ class MapActivity : AppCompatActivity() {
     private lateinit var mapView: MapView
     private lateinit var searchBox: CardView
     private lateinit var kakaoMap: KakaoMap
-    lateinit var mapViewModel: MapViewModel
+    private lateinit var mapViewModel: MapViewModel
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
     private var hasInitializedMap = false
 
