@@ -65,7 +65,6 @@ class MapActivity : AppCompatActivity() {
     }
 
 
-
     private fun initVar() {
         inputField = findViewById<EditText>(R.id.input_search_field)
         searchIcon = findViewById<ImageView>(R.id.search_icon)

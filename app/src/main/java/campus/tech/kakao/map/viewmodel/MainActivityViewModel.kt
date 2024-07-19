@@ -21,7 +21,6 @@ class MainActivityViewModel(
 
     init {
         getSavedPlace()
-        getPlaceWithCategory("")
     }
 
     fun getPlace() {
@@ -48,10 +47,8 @@ class MainActivityViewModel(
 
 
     suspend fun getKakaoLocalData(text: String) {
-        Log.d("coroutineTest", "getKakaoLocalData")
         if (text.isNotEmpty()) {
             val placeList = placeRepository.getKakaoLocalPlaceData(text)
-            Log.d("coroutineTest", "getKakaoLocalDataReturn")
             _place.value = (placeList)
         } else _place.value = listOf<Place>()
     }
