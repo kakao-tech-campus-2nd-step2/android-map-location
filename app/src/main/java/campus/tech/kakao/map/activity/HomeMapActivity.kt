@@ -59,6 +59,7 @@ class HomeMapActivity : AppCompatActivity() {
 
         }, object : KakaoMapReadyCallback() {
             override fun onMapReady(p0: KakaoMap) {
+
                 // 라벨 생성
                 if (latitude != null && longitude != null) {
                     p0.labelManager
