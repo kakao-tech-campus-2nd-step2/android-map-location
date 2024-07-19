@@ -100,6 +100,7 @@ class MapActivity : AppCompatActivity() {
 		}
 		val cameraUpdate: CameraUpdate = CameraUpdateFactory.newCenterPosition(LatLng.from(latitude, longitude))
 		map?.moveCamera(cameraUpdate)
+
 	}
 
 	override fun onPause() {
