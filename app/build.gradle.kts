@@ -60,6 +60,7 @@ dependencies {
     implementation("com.kakao.sdk:v2-all:2.20.3")
     implementation("androidx.activity:activity:1.8.0")
     implementation("androidx.test:core-ktx:1.5.0")
+    implementation("androidx.coordinatorlayout:coordinatorlayout:1.1.0")
     testImplementation("junit:junit:4.13.2")
     testImplementation("io.mockk:mockk-android:1.13.11")
     testImplementation("io.mockk:mockk-agent:1.13.11")

@@ -12,10 +12,10 @@ interface RetrofitService {
     fun requsetKakaoMap(
         @Header("Authorization") authorization: String = "KakaoAK ${BuildConfig.KAKAO_REST_API_KEY}",
         @Query("query", encoded = true) query: String = "",
-        @Query("x") x: String = "127.06283102249932",
-        @Query("y") y: String = "37.514322572335935",
-        @Query("radius") radius: Int = 20000,
-        @Query("page") page: Int = 3
+        //@Query("x") x: String = "127.06283102249932",
+        //@Query("y") y: String = "37.514322572335935",
+        //@Query("radius") radius: Int = 20000,
+        @Query("page") page: Int = 1
     ): Call<KakaoMapResponse>
 }
 

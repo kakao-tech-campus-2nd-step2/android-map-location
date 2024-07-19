@@ -1,31 +1,42 @@
 package campus.tech.kakao.map
 
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class NetworkService {
+    var page: Int = 1
+    var isEnd: Boolean? = false
+
     suspend fun searchKakaoMapItem(category: String): MutableList<KakaoMapItem> {
         val mapItemList = mutableListOf<KakaoMapItem>()
+        page = 1
+        isEnd = false
 
-        val response = withContext(Dispatchers.IO) {
-            retrofitService.requsetKakaoMap(query = category).execute()
-        }
-        if(response.isSuccessful) {
-            val body = response.body()
-            //val maxPage = body?.meta?.pageable_count ?: 1
-            val maxPage = 3
-            for(i in 1..maxPage) {
-                val responseEachPage = withContext(Dispatchers.IO) {
-                    retrofitService.requsetKakaoMap(query = category, page = i).execute()
-                }
-                responseEachPage.body()?.documents?.forEach {
-                    mapItemList.add(
-                        KakaoMapItem(it.id, it.place_name, it.address_name, it.category_group_name)
-                    )
-                }
-
+        do {
+            val documents = searchKakaoMapItemByPage(category)
+            documents?.forEach {
+                mapItemList.add(
+                    KakaoMapItem(it.id, it.place_name, it.address_name, it.category_group_name, it.x, it.y)
+                )
             }
-        }
+        } while (documents != null)
+
         return mapItemList
+    }
+
+    private suspend fun searchKakaoMapItemByPage(category: String): List<Document>? {
+        val responseEachPage = withContext(Dispatchers.IO) {
+            retrofitService.requsetKakaoMap(query = category, page = page).execute()
+        }
+        if (responseEachPage.isSuccessful && isEnd == false) {
+            //Log.d("uin", "" + page)
+            isEnd = responseEachPage.body()?.meta?.is_end
+            if (isEnd == false) {
+                page++
+            }
+            return responseEachPage.body()?.documents
+        }
+        return null
     }
 }
