@@ -2,9 +2,13 @@ package campus.tech.kakao.map
 
 import android.app.Application
 import android.content.Context
-import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelStore
-import org.junit.Assert.assertTrue
+import campus.tech.kakao.map.dbHelper.SearchWordDbHelper
+import campus.tech.kakao.map.dto.Document
+import campus.tech.kakao.map.dto.SearchWord
+import io.mockk.every
+import io.mockk.mockk
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -37,7 +41,18 @@ class FunTest {
 		actualQueryResult?.forEach { document ->
 			assert(expectedQueryResultName.contains(document.placeName))
 		}
+	}
 
-
+	@Test
+	fun 검색어_저장_되는지_확인(){
+		val query = Document(
+			"이안아파트", "아파트",
+			"남양주", "10",
+			"10")
+		val expectedResult = SearchWord(
+			"이안아파트", "남양주", "아파트")
+		model.addWord(query)
+		val result = model.wordList.value?.contains(expectedResult)
+		if (result != null) assert(result) else assert(false)
 	}
 }
