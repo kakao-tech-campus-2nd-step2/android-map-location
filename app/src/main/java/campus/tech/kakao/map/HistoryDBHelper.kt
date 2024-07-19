@@ -14,7 +14,11 @@ class HistoryDBHelper(
 
     override fun onCreate(db: SQLiteDatabase?) {
         val CREATE_TABLE = "CREATE TABLE ${HistoryEntry.TABLE_NAME} (" +
-                "${HistoryEntry.COLUMN_NAME} TEXT)"
+                "${HistoryEntry.COLUMN_NAME} TEXT," +
+                "${HistoryEntry.COLUMN_X} TEXT," +
+                "${HistoryEntry.COLUMN_Y} TEXT," +
+                "${HistoryEntry.COLUMN_ADDRESS} TEXT" +
+                ")"
         db?.execSQL(CREATE_TABLE)
     }
 
