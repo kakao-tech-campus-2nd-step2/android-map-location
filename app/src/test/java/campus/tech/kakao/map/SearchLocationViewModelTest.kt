@@ -68,4 +68,20 @@ class SearchLocationViewModelTest {
         assertEquals("Location2", viewModel.location.value?.get(1)?.name)
         Dispatchers.resetMain()
     }
+
+    @Test
+    fun testAddHistory() {
+        // given
+        every { mockRepository.addHistory(any()) } returns Unit
+        every { mockRepository.getHistory() } returns listOf("History1", "History2")
+        viewModel.history.observeForever(mockk<Observer<List<String>>>(relaxed = true))
+
+        // when
+        viewModel.addHistory("testCategory")
+
+        // then
+        verify { mockRepository.addHistory("testCategory") }
+        verify { mockRepository.getHistory() }
+        assertEquals(listOf("History1", "History2"), viewModel.history.value)
+    }
 }
