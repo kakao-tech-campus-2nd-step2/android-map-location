@@ -1,7 +1,6 @@
 package campus.tech.kakao.map.view
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -26,7 +25,7 @@ import campus.tech.kakao.map.model.Place
 import campus.tech.kakao.map.model.SavedPlace
 import campus.tech.kakao.map.repository.PlaceRepository
 import campus.tech.kakao.map.repository.SavedPlaceRepository
-import campus.tech.kakao.map.viewmodel.MainActivityViewModel
+import campus.tech.kakao.map.viewmodel.SearchActivityViewModel
 import campus.tech.kakao.map.viewmodel.ViewModelFactory
 import kotlinx.coroutines.launch
 
@@ -34,7 +33,7 @@ import kotlinx.coroutines.launch
 class SearchActivity : AppCompatActivity(), OnClickPlaceListener, OnClickSavedPlaceListener {
     lateinit var noResultText: TextView
     lateinit var inputSearchField: EditText
-    lateinit var viewModel: MainActivityViewModel
+    lateinit var viewModel: SearchActivityViewModel
     lateinit var savedPlaceRecyclerView: RecyclerView
     lateinit var searchRecyclerView: RecyclerView
     lateinit var dbHelper: PlaceDBHelper
@@ -85,7 +84,7 @@ class SearchActivity : AppCompatActivity(), OnClickPlaceListener, OnClickSavedPl
             ViewModelProvider(
                 this,
                 ViewModelFactory(placeRepository, savedPlaceRepository)
-            )[MainActivityViewModel::class.java]
+            )[SearchActivityViewModel::class.java]
     }
 
     fun initListeners() {

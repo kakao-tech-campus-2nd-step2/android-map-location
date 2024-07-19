@@ -13,19 +13,16 @@ import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import org.junit.After
-import org.junit.AfterClass
-import org.junit.Assert.*
 import org.junit.Before
-import org.junit.BeforeClass
 import org.junit.Rule
 
 import org.junit.Test
 
-class MainActivityViewModelTest{
+class SearchActivityViewModelTest{
 
     private lateinit var placeRepository: PlaceRepository
     private lateinit var savedPlaceRepository : SavedPlaceRepository
-    private lateinit var viewModel : MainActivityViewModel
+    private lateinit var viewModel : SearchActivityViewModel
     private lateinit var observerPlace: Observer<List<Place>>
     private lateinit var observerSavedPlace : Observer<List<SavedPlace>>
 
@@ -38,7 +35,7 @@ class MainActivityViewModelTest{
         savedPlaceRepository = mockk(relaxed = true)
         every { savedPlaceRepository.getAllSavedPlace() } returns emptyList()
         every { placeRepository.getAllPlace() } returns emptyList()
-        viewModel = MainActivityViewModel(placeRepository, savedPlaceRepository)
+        viewModel = SearchActivityViewModel(placeRepository, savedPlaceRepository)
 
         observerPlace = mockk(relaxed = true)
         observerSavedPlace = mockk(relaxed = true)
