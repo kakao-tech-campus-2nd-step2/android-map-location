@@ -8,6 +8,7 @@ import campus.tech.kakao.map.domain.usecase.GetLastPlaceUseCase
 import campus.tech.kakao.map.domain.usecase.SaveLastPlaceUseCase
 import java.io.Serializable
 
+
 class MapViewModel(
     private val saveLastPlaceUseCase: SaveLastPlaceUseCase,
     private val getLastPlaceUseCase: GetLastPlaceUseCase

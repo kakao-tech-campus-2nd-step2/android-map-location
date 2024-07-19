@@ -37,7 +37,7 @@ class MapActivity : AppCompatActivity() {
     private lateinit var mapView: MapView
     private lateinit var searchBox: CardView
     private lateinit var kakaoMap: KakaoMap
-    private lateinit var mapViewModel: MapViewModel
+    lateinit var mapViewModel: MapViewModel
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
     private var hasInitializedMap = false
 
@@ -146,7 +146,7 @@ class MapActivity : AppCompatActivity() {
         )
     }
 
-    private fun addMarker(place: PlaceVO) {
+    fun addMarker(place: PlaceVO) {
         var styles = LabelStyles.from(
             "marker",
             LabelStyle.from(R.drawable.marker).setZoomLevel(8)
