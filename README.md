@@ -14,10 +14,13 @@
   
 
 ## 📱 실행화면
+0. 검색 결과
+
+![검색결과](https://github.com/arieum/android-map-location/blob/arieum_step1/%EA%B2%80%EC%83%89%EA%B2%B0%EA%B3%BC.jpg)
 1. 지도 표시(라벨)
 
 
-![라벨1](https://github.com/arieum/android-map-location/blob/arieum_step1/%EB%9D%BC%EB%B2%A81.jpg)
+![라벨1](https://github.com/arieum/android-map-location/blob/arieum_step1/%EB%9D%BC%EB%B2%A83.jpg)
 
 ![라벨2](https://github.com/arieum/android-map-location/blob/arieum_step1/%EB%9D%BC%EB%B2%A82.jpg)
 
