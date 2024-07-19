@@ -5,9 +5,11 @@ import androidx.lifecycle.Observer
 import campus.tech.kakao.map.model.Location
 import campus.tech.kakao.map.model.SearchLocationRepository
 import campus.tech.kakao.map.viewmodel.SearchLocationViewModel
+import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
@@ -72,16 +74,32 @@ class SearchLocationViewModelTest {
     @Test
     fun testAddHistory() {
         // given
-        every { mockRepository.addHistory(any()) } returns Unit
+        every { mockRepository.addHistory(any()) } just Runs
         every { mockRepository.getHistory() } returns listOf("History1", "History2")
         viewModel.history.observeForever(mockk<Observer<List<String>>>(relaxed = true))
 
         // when
-        viewModel.addHistory("testCategory")
+        viewModel.addHistory("History2")
 
         // then
-        verify { mockRepository.addHistory("testCategory") }
+        verify { mockRepository.addHistory("History2") }
         verify { mockRepository.getHistory() }
         assertEquals(listOf("History1", "History2"), viewModel.history.value)
+    }
+
+    @Test
+    fun testRemoveHistory() {
+        // given
+        every { mockRepository.removeHistory(any()) } just Runs
+        every { mockRepository.getHistory() } returns listOf("History1")
+        viewModel.history.observeForever(mockk<Observer<List<String>>>(relaxed = true))
+
+        // when
+        viewModel.removeHistory("History2")
+
+        // then
+        verify { mockRepository.removeHistory("History2") }
+        verify { mockRepository.getHistory() }
+        assertEquals(listOf("History1"), viewModel.history.value)
     }
 }
