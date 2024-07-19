@@ -17,10 +17,9 @@ import ksc.campus.tech.kakao.map.models.repositories.SearchResult
 import ksc.campus.tech.kakao.map.view_models.SearchActivityViewModel
 import ksc.campus.tech.kakao.map.views.adapters.SearchResultAdapter
 
-class SearchResultFragment : Fragment() {
+class SearchResultFragment(val viewModel: SearchActivityViewModel) : Fragment() {
     private lateinit var searchResultRecyclerView: RecyclerView
     private lateinit var noResultHelpText: View
-    private val viewModel by activityViewModels<SearchActivityViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

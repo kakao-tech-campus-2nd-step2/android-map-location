@@ -28,14 +28,13 @@ import ksc.campus.tech.kakao.map.models.MapViewRepository
 import ksc.campus.tech.kakao.map.view_models.SearchActivityViewModel
 import java.lang.Exception
 
-class KakaoMapFragment : Fragment() {
+class KakaoMapFragment(val viewModel: SearchActivityViewModel) : Fragment() {
     private lateinit var errorTextView: TextView
     private lateinit var retryButton: ImageButton
     private lateinit var errorMessageGroup: Group
 
     private lateinit var kakaoMapView: MapView
     private var kakaoMap: KakaoMap? = null
-    private val viewModel by activityViewModels<SearchActivityViewModel>()
 
     private fun startKakaoMapView(){
         kakaoMapView.start(object : MapLifeCycleCallback() {

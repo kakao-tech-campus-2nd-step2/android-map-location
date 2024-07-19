@@ -117,8 +117,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initiateFragments() {
-        mapFragment = KakaoMapFragment()
-        searchFragment = SearchResultFragment()
+        mapFragment = KakaoMapFragment(searchViewModel)
+        searchFragment = SearchResultFragment(searchViewModel)
     }
 
     private fun initiateViews() {
