@@ -31,7 +31,7 @@ class SearchActivity : AppCompatActivity() {
                 PlaceAdapter.OnItemClickListener {
                 override fun onItemClick(position: Int) {
                     val item = placeAdapter.getItem(position)
-                    val searchHistory = SearchHistory(item.placeName)
+                    val searchHistory = SearchHistory(item.placeName, item)
                     viewModel.saveSearchHistory(searchHistory)
                 }
             }

@@ -46,7 +46,9 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onMapError(error: Exception) {
-
+                val intent = Intent(this@MainActivity, ErrorActivity::class.java)
+                intent.putExtra("Error", error)
+                startActivity(intent)
             }
         }, object : KakaoMapReadyCallback() {
             override fun onMapReady(kakaoMap: KakaoMap) {
@@ -56,6 +58,7 @@ class MainActivity : AppCompatActivity() {
             override fun isVisible(): Boolean {
                 return true
             }
+
         })
     }
 }

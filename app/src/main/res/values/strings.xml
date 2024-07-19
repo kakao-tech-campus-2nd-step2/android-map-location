@@ -2,4 +2,5 @@
     <string name="app_name">Map</string>
     <string name="QUERY_HINT">검색어를 입력해주세요.</string>
     <string name="EMPTY_TEXT">검색 결과가 없습니다.</string>
+    <string name="ERROR_TEXT">오류가 발생했습니다 \n 다시 시도해 주세요.</string>
 </resources>
