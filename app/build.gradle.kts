@@ -60,6 +60,8 @@ dependencies {
     implementation("com.android.identity:identity-credential-android:20231002")
     implementation("androidx.activity:activity:1.8.0")
     implementation("androidx.test:core-ktx:1.5.0")
+    implementation("androidx.test.espresso:espresso-contrib:3.6.1")
+    androidTestImplementation("androidx.test:core:1.5.0")
     testImplementation("junit:junit:4.13.2")
     testImplementation("io.mockk:mockk-android:1.13.11")
     testImplementation("io.mockk:mockk-agent:1.13.11")
