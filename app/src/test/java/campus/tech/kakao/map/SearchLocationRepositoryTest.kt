@@ -4,17 +4,24 @@ import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import campus.tech.kakao.map.model.HistoryDbHelper
+import campus.tech.kakao.map.model.LocalSearchDocument
+import campus.tech.kakao.map.model.LocalSearchMeta
+import campus.tech.kakao.map.model.LocalSearchResponse
+import campus.tech.kakao.map.model.LocalSearchSameName
 import campus.tech.kakao.map.model.LocalSearchService
 import campus.tech.kakao.map.model.SearchLocationRepository
 import io.mockk.Runs
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkConstructor
 import io.mockk.verify
+import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import org.junit.Assert.*
 import org.junit.Before
+import retrofit2.Response
 
 class SearchLocationRepositoryTest {
     // HistoryDbHelper Mock 객체
@@ -94,5 +101,45 @@ class SearchLocationRepositoryTest {
 
         // then
         verify { mockSQLiteDB.execSQL(match { it.startsWith("DELETE") }) }
+    }
+
+    @Test
+    fun testSearchLocation() = runBlocking {
+        // given
+        val testDocuments = listOf(
+            LocalSearchDocument(
+                "address_name1", "category_group_code1", "category_group_name1",
+                "category_name1", "distance1", "id1", "phone1", "place_name1",
+                "place_url1", "road_address_name1", "1.0", "1.0"
+            ),
+            LocalSearchDocument(
+                "address_name2", "category_group_code2", "category_group_name2",
+                "category_name2", "distance2", "id2", "phone2", "place_name2",
+                "place_url2", "road_address_name2", "2.0", "2.0"
+            )
+        )
+        val testMeta = LocalSearchMeta(
+            true, 1, LocalSearchSameName(
+                "keyword", listOf("region"), "selected_region"
+            ), 2
+        )
+        val mockResponse = Response.success(LocalSearchResponse(testDocuments, testMeta))
+        coEvery { mockLocalSearchService.requestLocalSearch(query = any()) } returns mockResponse
+
+        // when
+        val result = repository.searchLocation("testCategory")
+
+        // then
+        assertEquals(result.size, 2)
+        assertEquals(result[0].name, "place_name1")
+        assertEquals(result[0].address, "address_name1")
+        assertEquals(result[0].category, "category_group_name1")
+        assertEquals(result[0].latitude, 1.0, 0.0)
+        assertEquals(result[0].longitude, 1.0, 0.0)
+        assertEquals(result[1].name, "place_name2")
+        assertEquals(result[1].address, "address_name2")
+        assertEquals(result[1].category, "category_group_name2")
+        assertEquals(result[1].latitude, 2.0, 0.0)
+        assertEquals(result[1].longitude, 2.0, 0.0)
     }
 }
