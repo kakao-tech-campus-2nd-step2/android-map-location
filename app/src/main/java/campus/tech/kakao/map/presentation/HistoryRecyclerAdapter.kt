@@ -1,19 +1,18 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.presentation
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import campus.tech.kakao.map.DatabaseListener
+import campus.tech.kakao.map.domain.model.Location
+import campus.tech.kakao.map.R
 
 class HistoryRecyclerAdapter(
-    var history: List<String>,
+    var history: List<Location>,
     val layoutInflater: LayoutInflater,
     val databaseListener: DatabaseListener
 ) : RecyclerView.Adapter<HistoryRecyclerAdapter.HistoryViewHolder>() {
@@ -24,8 +23,13 @@ class HistoryRecyclerAdapter(
         init {
             clear.setOnClickListener {
                 if (bindingAdapterPosition != RecyclerView.NO_POSITION) {
-                    databaseListener.deleteHistory(name.text.toString())
+                    databaseListener.deleteHistory(history[bindingAdapterPosition])
                 }
+            }
+
+            itemView.setOnClickListener {
+                databaseListener.searchHistory(name.text.toString(), false)
+                databaseListener.insertHistory(history[bindingAdapterPosition])
             }
         }
     }
@@ -36,7 +40,7 @@ class HistoryRecyclerAdapter(
     }
 
     override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
-        holder.name.text = history[position]
+        holder.name.text = history[position].name
     }
 
     override fun getItemCount(): Int {
