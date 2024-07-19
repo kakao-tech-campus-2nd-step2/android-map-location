@@ -9,6 +9,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Test
 import org.junit.Assert.*
+import org.junit.Before
 import org.junit.Rule
 
 class SearchLocationViewModelTest {
@@ -18,17 +19,24 @@ class SearchLocationViewModelTest {
     private val mockRepository = mockk<SearchLocationRepository>()
     private lateinit var viewModel: SearchLocationViewModel
 
+    @Before
+    fun setUp() {
+        every { mockRepository.getHistory() } returns emptyList()
+        viewModel = SearchLocationViewModel(mockRepository)
+    }
+
     @Test
     fun testInitViewModel() {
         // given
-        every { mockRepository.getHistory() } returns listOf("Place1", "Place2")
+        val tempMockRepository = mockk<SearchLocationRepository>()
+        every { tempMockRepository.getHistory() } returns listOf("History1", "History2")
 
         // when
-        viewModel = SearchLocationViewModel(mockRepository)
+        val tempViewModel = SearchLocationViewModel(tempMockRepository)
 
         // then
-        verify { mockRepository.getHistory() }
-        viewModel.history.observeForever(mockk<Observer<List<String>>>(relaxed = true))
-        assertEquals(listOf("Place1", "Place2"), viewModel.history.value)
+        verify { tempMockRepository.getHistory() }
+        tempViewModel.history.observeForever(mockk<Observer<List<String>>>(relaxed = true))
+        assertEquals(listOf("History1", "History2"), tempViewModel.history.value)
     }
 }
