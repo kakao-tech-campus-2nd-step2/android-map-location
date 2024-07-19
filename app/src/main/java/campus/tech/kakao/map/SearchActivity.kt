@@ -28,7 +28,7 @@ class SearchActivity : AppCompatActivity() {
         val selectList = findViewById<RecyclerView>(R.id.selectList)
         val inputSpace = findViewById<EditText>(R.id.inputSpace)
         val mainText = findViewById<TextView>(R.id.main_text)
-        val cancelBtn = findViewById<ImageView>(R.id.cancelBtn)
+        val cancelBtn = findViewById<ImageView>(R.id.cancelBtnInputSpace)
 
         //어댑터 설정
         val mapListAdapter = MapListAdapter(listOf(), LayoutInflater.from(this))
@@ -86,7 +86,7 @@ class SearchActivity : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                CoroutineScope(Dispatchers.IO).launch {
+                CoroutineScope(Dispatchers.Default).launch {
                     mapItemViewModel.searchKakaoMapItem(s.toString())
                 }
             }
