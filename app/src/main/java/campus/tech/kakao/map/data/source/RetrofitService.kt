@@ -1,6 +1,8 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.data.source
 
+import campus.tech.kakao.map.data.ServerResult
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Query
@@ -15,9 +17,9 @@ interface RetrofitService {
     ) : Call<ServerResult>
 
     @GET("v2/local/search/keyword")
-    fun requestLocationByKeyword(
+    suspend fun requestLocationByKeyword(
         @Header("Authorization") authorization: String,
         @Query("query") keyword: String,
         @Query("page") page: Int = 1
-    ) : Call<ServerResult>
+    ) : Response<ServerResult>
 }

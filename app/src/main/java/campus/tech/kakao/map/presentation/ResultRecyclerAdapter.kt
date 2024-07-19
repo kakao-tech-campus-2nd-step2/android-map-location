@@ -1,12 +1,14 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.presentation
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import campus.tech.kakao.map.DatabaseListener
+import campus.tech.kakao.map.domain.model.Location
+import campus.tech.kakao.map.R
 
 class ResultRecyclerAdapter(
     var searchResult: List<Location>,
@@ -21,7 +23,10 @@ class ResultRecyclerAdapter(
         init {
             itemView.setOnClickListener {
                 if (bindingAdapterPosition != RecyclerView.NO_POSITION) {
-                    databaseListener.insertHistory(name.text.toString())
+                    val clickedResult = searchResult[bindingAdapterPosition]
+                    databaseListener.insertHistory(clickedResult)
+                    databaseListener.insertLastLocation(clickedResult)
+                    databaseListener.showMap(clickedResult)
                 }
             }
         }
