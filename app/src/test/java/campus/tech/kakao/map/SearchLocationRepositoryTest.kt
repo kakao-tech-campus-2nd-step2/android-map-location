@@ -1,5 +1,6 @@
 package campus.tech.kakao.map
 
+import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import campus.tech.kakao.map.model.HistoryDbHelper
@@ -9,8 +10,11 @@ import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
+import io.mockk.mockkConstructor
+import io.mockk.verify
 import org.junit.Test
 import org.junit.Assert.*
+import org.junit.Before
 
 class SearchLocationRepositoryTest {
     // HistoryDbHelper Mock 객체
@@ -24,21 +28,59 @@ class SearchLocationRepositoryTest {
     // SearchLocationRepository 객체
     private val repository = SearchLocationRepository(mockHistoryDbHelper, mockLocalSearchService)
 
+    @Before
+    fun setUp() {
+        every { mockHistoryDbHelper.readableDatabase } returns mockSQLiteDB
+        every { mockHistoryDbHelper.writableDatabase } returns mockSQLiteDB
+        every { mockSQLiteDB.rawQuery(any(), any()) } returns mockCursor
+        every { mockSQLiteDB.close() } just Runs
+        every { mockCursor.close() } just Runs
+    }
+
     @Test
     fun testGetHistory() {
         // given
-        every { mockHistoryDbHelper.readableDatabase } returns mockSQLiteDB
-        every { mockSQLiteDB.rawQuery(any(), any()) } returns mockCursor
         every { mockCursor.moveToNext() } returnsMany listOf(true, true, true, false)
         every { mockCursor.getString(any()) } returnsMany listOf("test1", "test2", "test3")
         every { mockCursor.getColumnIndexOrThrow(any()) } returns 0
-        every { mockCursor.close() } just Runs
-        every { mockSQLiteDB.close() } just Runs
-
         // when
         val result = repository.getHistory()
 
         // then
         assertArrayEquals(result.toTypedArray(), arrayOf("test1", "test2", "test3"))
+    }
+
+    @Test
+    fun testAddHistoryWhenItemExist() {
+        // given
+        every { mockCursor.count } returns 1
+        every { mockSQLiteDB.execSQL(any()) } just Runs
+        every { mockSQLiteDB.insert(any(), any(), any()) } returns 1
+        mockkConstructor(ContentValues::class)
+        every { anyConstructed<ContentValues>().put(any(), any<String>()) } just Runs
+
+        // when
+        repository.addHistory("testCategory")
+
+        // then
+        verify { mockSQLiteDB.execSQL(any()) }
+        verify { mockSQLiteDB.insert(any(), any(), any()) }
+    }
+
+    @Test
+    fun testAddHistoryWhenItemNotExist() {
+        // given
+        every { mockCursor.count } returns 0
+        every { mockSQLiteDB.execSQL(any()) } just Runs
+        every { mockSQLiteDB.insert(any(), any(), any()) } returns 1
+        mockkConstructor(ContentValues::class)
+        every { anyConstructed<ContentValues>().put(any(), any<String>()) } just Runs
+
+        // when
+        repository.addHistory("testCategory")
+
+        // then
+        verify(exactly = 0) { mockSQLiteDB.execSQL(any()) }
+        verify { mockSQLiteDB.insert(any(), any(), any()) }
     }
 }
