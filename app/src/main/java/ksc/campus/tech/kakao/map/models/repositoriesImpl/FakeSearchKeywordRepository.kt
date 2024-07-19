@@ -11,7 +11,7 @@ class FakeSearchKeywordRepository: SearchKeywordRepository {
     override val keywords: LiveData<List<String>>
         get() = _keywords
 
-    override fun addKeyword(keyword: String) {
+    override suspend fun addKeyword(keyword: String) {
         if(_keywords.value == null)
             return
         Log.d("KSC", "adding $keyword")
@@ -34,7 +34,7 @@ class FakeSearchKeywordRepository: SearchKeywordRepository {
         return (result + listOf(elem))
     }
 
-    override fun deleteKeyword(keyword: String) {
+    override suspend fun deleteKeyword(keyword: String) {
         if(_keywords.value == null)
             return
 
@@ -45,7 +45,7 @@ class FakeSearchKeywordRepository: SearchKeywordRepository {
         "1", "2", "hello", "world"
     )
 
-    override fun getKeywords() {
+    override suspend fun getKeywords() {
         _keywords.postValue(dummyData)
     }
 

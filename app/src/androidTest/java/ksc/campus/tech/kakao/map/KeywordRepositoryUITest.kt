@@ -8,6 +8,7 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.BoundedMatcher
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
+import kotlinx.coroutines.runBlocking
 import ksc.campus.tech.kakao.map.models.repositories.SearchKeywordRepository
 import ksc.campus.tech.kakao.map.views.MainActivity
 import org.hamcrest.Matcher
@@ -18,7 +19,7 @@ import org.junit.Test
 
 
 
-class KeywordRepositoryTest {
+class KeywordRepositoryUITest {
     /**
      * UI 테스트를 위한 더미 레포지토리 클래스로 FakeKeywordRepository 사용
      * keywords 기본값으로 "1", "2", "hello", "world" 포함
@@ -32,31 +33,41 @@ class KeywordRepositoryTest {
 
     @Test
     fun keywordAddOnMethodCalled(){
-        val checkingKeyword = "AAFFCC"
 
+        // given
+        val checkingKeyword = "AAFFCC"
         checkNoTextExists(checkingKeyword)
 
+        // when
         activityScenarioRule.scenario.onActivity {
             val repository = (it.application as MyApplication).appContainer.getSingleton<SearchKeywordRepository>()
 
-            repository.addKeyword(checkingKeyword)
+            runBlocking {
+                repository.addKeyword(checkingKeyword)
+            }
         }
 
+        // then
         checkTextExists(checkingKeyword)
     }
 
     @Test
     fun keywordRemovedOnMethodCalled(){
-        val checkingKeyword = "hello"
 
+        // given
+        val checkingKeyword = "hello"
         checkTextExists(checkingKeyword)
 
+        // when
         activityScenarioRule.scenario.onActivity {
             val repository = (it.application as MyApplication).appContainer.getSingleton<SearchKeywordRepository>()
 
-            repository.deleteKeyword(checkingKeyword)
+            runBlocking {
+                repository.deleteKeyword(checkingKeyword)
+            }
         }
 
+        // then
         checkNoTextExists(checkingKeyword)
     }
 

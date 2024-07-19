@@ -25,24 +25,18 @@ class SearchKeywordRepositoryImpl(context: Context): SearchKeywordRepository {
         _keywords.postValue(newData)
     }
 
-    override fun addKeyword(keyword: String) {
-        CoroutineScope(Dispatchers.IO).launch {
-            searchDb.insertOrReplaceKeyword(keyword)
-            queryKeyWordAndPostValue()
-        }
+    override suspend fun addKeyword(keyword: String) {
+        searchDb.insertOrReplaceKeyword(keyword)
+        queryKeyWordAndPostValue()
     }
 
-    override fun deleteKeyword(keyword: String) {
-        CoroutineScope(Dispatchers.IO).launch {
-            searchDb.deleteKeyword(keyword)
-            queryKeyWordAndPostValue()
-        }
+    override suspend fun deleteKeyword(keyword: String) {
+        searchDb.deleteKeyword(keyword)
+        queryKeyWordAndPostValue()
     }
 
-    override fun getKeywords() {
-        CoroutineScope(Dispatchers.IO).launch {
-            val newData = searchDb.queryAllSearchKeywords()
-            _keywords.postValue(newData)
-        }
+    override suspend fun getKeywords() {
+        val newData = searchDb.queryAllSearchKeywords()
+        _keywords.postValue(newData)
     }
 }

@@ -6,6 +6,10 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.kakao.vectormap.camera.CameraPosition
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import ksc.campus.tech.kakao.map.BuildConfig
 import ksc.campus.tech.kakao.map.MyApplication
 import ksc.campus.tech.kakao.map.models.repositories.LocationInfo
@@ -48,7 +52,9 @@ class SearchActivityViewModel(application: Application) : AndroidViewModel(appli
 
 
     init {
-        keywordRepository.getKeywords()
+        CoroutineScope(Dispatchers.IO).launch {
+            keywordRepository.getKeywords()
+        }
         mapViewRepository.loadFromSharedPreference(application)
     }
 
@@ -58,11 +64,15 @@ class SearchActivityViewModel(application: Application) : AndroidViewModel(appli
     }
 
     private fun addKeyword(keyword: String) {
-        keywordRepository.addKeyword(keyword)
+        CoroutineScope(Dispatchers.IO).launch {
+            keywordRepository.addKeyword(keyword)
+        }
     }
 
     private fun deleteKeyword(keyword: String) {
-        keywordRepository.deleteKeyword(keyword)
+        CoroutineScope(Dispatchers.IO).launch {
+            keywordRepository.deleteKeyword(keyword)
+        }
     }
 
     private fun updateLocation(address:String, name:String, latitude:Double, longitude:Double){
