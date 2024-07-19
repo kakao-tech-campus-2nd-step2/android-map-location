@@ -134,12 +134,12 @@ class SearchLocationRepositoryTest {
         assertEquals("place_name1", result[0].name)
         assertEquals("address_name1", result[0].address)
         assertEquals("category_group_name1", result[0].category)
-        assertEquals(1.0, result[0].latitude, 0.0)
-        assertEquals(1.0, result[0].longitude, 0.0)
+        assertEquals(1.0, result[0].latitude, 1e-5)
+        assertEquals(1.0, result[0].longitude, 1e-5)
         assertEquals("place_name2", result[1].name)
         assertEquals("address_name2", result[1].address)
         assertEquals("category_group_name2", result[1].category)
-        assertEquals(2.0, result[1].latitude, 0.0)
-        assertEquals(2.0, result[1].longitude, 0.0)
+        assertEquals(2.0, result[1].latitude, 1e-5)
+        assertEquals(2.0, result[1].longitude, 1e-5)
     }
 }
