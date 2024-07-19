@@ -1,9 +1,12 @@
 package campus.tech.kakao.map.view
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.os.Bundle
-import android.util.Log
+import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -25,8 +28,9 @@ class MapActivity : AppCompatActivity() {
     private lateinit var mapView: MapView
     private lateinit var searchView: SearchView
     private lateinit var resultLauncher: ActivityResultLauncher<Intent>
-    private lateinit var kakaoMap: KakaoMap
     private lateinit var bottomSheetFragment: BottomSheetFragment
+    private lateinit var tvErrorMessage: TextView
+    private lateinit var kakaoMap: KakaoMap
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,21 +39,32 @@ class MapActivity : AppCompatActivity() {
         mapView = findViewById(R.id.mapView)
         searchView = findViewById(R.id.searchView)
 
-        setResultLauncher()
         initializeMapView()
         initializeSearchView()
+        setResultLauncher()
     }
 
     private fun initializeMapView() {
         mapView.start(object : MapLifeCycleCallback() {
             override fun onMapDestroy() {}
-            override fun onMapError(p0: Exception?) {}
+            override fun onMapError(error: Exception) {
+                showErrorPage(error)
+            }
         }, object : KakaoMapReadyCallback() {
             override fun onMapReady(map: KakaoMap) {
+                if(!isNetworkAvailable()){
+                    showErrorPage(java.lang.Exception("네트워크 연결 오류"))
+                }
                 kakaoMap = map
                 initMap()
             }
         })
+    }
+
+    private fun isNetworkAvailable(): Boolean {
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork: NetworkInfo? = connectivityManager.activeNetworkInfo
+        return activeNetwork?.isConnected == true
     }
 
     private fun initializeSearchView() {
@@ -57,6 +72,12 @@ class MapActivity : AppCompatActivity() {
             val intent = Intent(this, ViewActivity::class.java)
             resultLauncher.launch(intent)
         }
+    }
+
+    private fun showErrorPage(error: Exception){
+        setContentView(R.layout.error_page)
+        tvErrorMessage = findViewById(R.id.tvErrorMessage)
+        tvErrorMessage.text = "지도 인증에 실패했습니다.\n다시 시도해주세요.\n"+ error.message
     }
 
     private fun setResultLauncher() {
