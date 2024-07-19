@@ -13,3 +13,4 @@ data class LocationData(
         return LatLng.from(latitude, longitude)
     }
 }
+
