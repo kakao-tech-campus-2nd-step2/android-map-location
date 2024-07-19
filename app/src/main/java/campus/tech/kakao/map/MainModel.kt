@@ -26,13 +26,7 @@ class MainModel(private val application: MyApplication) {
 
     fun callKakao(query: String, callback: (List<Place>) -> Unit){
         val apiKey = "KakaoAK " + BuildConfig.KAKAO_REST_API_KEY
-        val categoryGroupCode: String = when (query) {
-            "카페" -> "CE7"
-            "약국" -> "PM9"
-            else -> null
-        } ?: return
-
-        RetrofitObject.retrofitService.getPlace(apiKey, categoryGroupCode)
+        RetrofitObject.retrofitService.getPlace(apiKey, query)
             .enqueue(object : Callback<KakaoResponse> {
                 override fun onResponse(
                     call: Call<KakaoResponse>,
