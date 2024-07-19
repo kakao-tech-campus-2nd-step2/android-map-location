@@ -83,4 +83,16 @@ class SearchLocationRepositoryTest {
         verify(exactly = 0) { mockSQLiteDB.execSQL(any()) }
         verify { mockSQLiteDB.insert(any(), any(), any()) }
     }
+
+    @Test
+    fun testRemoveHistory() {
+        // given
+        every { mockSQLiteDB.execSQL(any()) } just Runs
+
+        // when
+        repository.removeHistory("testCategory")
+
+        // then
+        verify { mockSQLiteDB.execSQL(match { it.startsWith("DELETE") }) }
+    }
 }
