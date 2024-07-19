@@ -81,5 +81,7 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     testImplementation ("org.robolectric:robolectric:4.9")
+    androidTestImplementation ("androidx.test.espresso:espresso-contrib:3.5.1")
+
 }
 fun getApiKey(key: String): String = gradleLocalProperties(rootDir, providers).getProperty(key)
