@@ -1,5 +1,6 @@
 package campus.tech.kakao.map
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -33,6 +34,13 @@ class SearchActivity : AppCompatActivity() {
                     val item = placeAdapter.getItem(position)
                     val searchHistory = SearchHistory(item.placeName, item)
                     viewModel.saveSearchHistory(searchHistory)
+
+                    val intent = Intent(this@SearchActivity, MainActivity::class.java)
+                    intent.putExtra("longitude", item.x)
+                    intent.putExtra("longitude", item.y)
+                    intent.putExtra("name", item.placeName)
+                    intent.putExtra("address", item.addressName)
+                    startActivity(intent)
                 }
             }
         )

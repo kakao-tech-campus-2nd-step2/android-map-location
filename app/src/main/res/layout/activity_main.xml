@@ -55,7 +55,9 @@
         android:layout_height="wrap_content"
         android:background="#FFFFFF"
         app:behavior_hideable="false"
-        app:behavior_peekHeight="150dp"
+        app:behavior_peekHeight="170dp"
+        android:visibility="gone"
+        android:padding="10dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
         >
 
@@ -65,6 +67,7 @@
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:text="Place"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
