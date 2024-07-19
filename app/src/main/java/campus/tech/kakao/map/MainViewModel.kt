@@ -3,9 +3,11 @@ package campus.tech.kakao.map
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import campus.tech.kakao.map.DBHelper.SearchWordDbHelper
-import campus.tech.kakao.map.DTO.Document
-import campus.tech.kakao.map.DTO.SearchWord
+import campus.tech.kakao.map.dbHelper.SearchWordDbHelper
+import campus.tech.kakao.map.dto.Document
+import campus.tech.kakao.map.dto.MapPositionContract
+import campus.tech.kakao.map.dto.SearchWord
+import campus.tech.kakao.map.MyApplication.Companion.mapPosition
 import campus.tech.kakao.map.RetrofitData.Companion.getInstance
 
 class MainViewModel(application: Application): AndroidViewModel(application) {
@@ -21,7 +23,7 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
 	}
 
 	private fun wordfromDocument(document: Document): SearchWord {
-		return SearchWord(document.placeName, document.categoryGroupName, document.addressName)
+		return SearchWord(document.placeName, document.addressName, document.categoryGroupName)
 	}
 	fun deleteWord(word: SearchWord){
 		wordDbHelper.deleteWord(word)
@@ -38,5 +40,12 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
 	override fun onCleared() {
 		super.onCleared()
 		wordDbHelper.close()
+	}
+
+	fun getMapInfo(document: Document){
+		mapPosition.setPreferences(MapPositionContract.PREFERENCE_KEY_LATITUDE, document.latitude)
+		mapPosition.setPreferences(MapPositionContract.PREFERENCE_KEY_LONGITUDE, document.longitude)
+		mapPosition.setPreferences(MapPositionContract.PREFERENCE_KEY_PLACENAME, document.placeName)
+		mapPosition.setPreferences(MapPositionContract.PREFERENCE_KEY_ADDRESSNAME, document.addressName)
 	}
 }

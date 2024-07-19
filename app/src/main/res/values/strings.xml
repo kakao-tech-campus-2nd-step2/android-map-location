@@ -3,4 +3,8 @@
     <string name="search_hint">검색어를 입력해 주세요.</string>
     <string name="no_search_result">검색 결과가 없습니다.</string>
     <string name="word_item_default_text">word</string>
+    <string name="bottom_sheet_default_name">카카오</string>
+    <string name="bottom_sheet_default_address">경기 성남시 분당구 백현동 532</string>
+    <string name="map_error_message">오류가 발생했습니다.\n다시 시도해 주세요.</string>
+
 </resources>

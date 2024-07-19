@@ -10,8 +10,10 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import campus.tech.kakao.map.Adapter.DocumentAdapter
-import campus.tech.kakao.map.Adapter.WordAdapter
+
+import campus.tech.kakao.map.adapter.DocumentAdapter
+import campus.tech.kakao.map.adapter.WordAdapter
+
 
 class SearchActivity : AppCompatActivity() {
 
@@ -29,13 +31,22 @@ class SearchActivity : AppCompatActivity() {
         setupUI()
         searchResult.layoutManager = LinearLayoutManager(this)
         searchWordResult.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        documentAdapter = DocumentAdapter(){ Document ->
-            model.addWord(Document)
-        }
-        wordAdapter = WordAdapter() { SearchWord ->
-            model.deleteWord(SearchWord)
-        }
-        search.doOnTextChanged { text, start, before, count ->
+
+        documentAdapter = DocumentAdapter({ document ->
+            model.addWord(document)
+        },{document ->
+            model.getMapInfo(document)
+            finish()
+        })
+        wordAdapter = WordAdapter(
+            { searchWord ->
+                model.deleteWord(searchWord)
+            },{ searchWord ->
+                model.searchLocalAPI(searchWord.name)
+            }
+        )
+        search.doOnTextChanged { text, _, _, _ ->
+
             val query = text.toString()
             if (query.isEmpty()){
                 noResult.visibility = View.VISIBLE
@@ -71,7 +82,9 @@ class SearchActivity : AppCompatActivity() {
         })
     }
 
-    fun setupUI(){
+
+    private fun setupUI(){
+
         search = findViewById(R.id.search)
         clear = findViewById(R.id.search_clear)
         noResult = findViewById(R.id.no_search_result)
