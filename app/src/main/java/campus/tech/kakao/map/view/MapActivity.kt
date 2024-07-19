@@ -46,6 +46,8 @@ class MapActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this)[MapViewModel::class.java]
+        viewModel.setDataStoreRepository(this)
         binding = ActivityMapBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
