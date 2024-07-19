@@ -23,7 +23,7 @@ class FakeSearchKeywordRepository: SearchKeywordRepository {
         if(index == -1) {
             return list
         }
-        return list.subList(0, index).dropLast(1) + list.subList(index, list.size - 1)
+        return list.subList(0, index) + list.subList(index, list.size).drop(1)
     }
 
     private fun <T>addElementWithoutDuplicates(list:List<T>, elem:T):List<T>{
