@@ -23,12 +23,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mainModel: MainModel
     private lateinit var mainViewModel: MainViewModel
 
-    private lateinit var input: EditText
-    private lateinit var researchCloseButton: ImageView
-    private lateinit var noResultTextView: TextView
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var tabRecyclerView: RecyclerView
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d("mytest", "MainAcitivty_onCreate")
@@ -42,26 +36,22 @@ class MainActivity : AppCompatActivity() {
         binding.viewModel = mainViewModel
         binding.lifecycleOwner = this
 
-        input = binding.input
-        researchCloseButton = binding.closeButton
-        noResultTextView = binding.noResultTextview
-        recyclerView = binding.recyclerView
-        tabRecyclerView = binding.tabRecyclerview
-
         val resultAdapter = RecyclerViewAdapter {
             mainViewModel.resultItemClickListener(it)
             moveMapView(it)
         }
-        recyclerView.adapter = resultAdapter
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.recyclerView.apply {
+            adapter = resultAdapter
+            layoutManager = LinearLayoutManager(this@MainActivity)
+        }
 
         mainViewModel.placeList.observe(this) { list ->
             if (list.isEmpty()) {
-                noResultTextView.isVisible = true
-                recyclerView.isGone = true
+                binding.noResultTextview.isVisible = true
+                binding.recyclerView.isGone = true
             } else {
-                noResultTextView.isGone = true
-                recyclerView.isVisible = true
+                binding.noResultTextview.isGone = true
+                binding.recyclerView.isVisible = true
                 resultAdapter.submitList(list)
             }
         }
@@ -70,17 +60,20 @@ class MainActivity : AppCompatActivity() {
         val tapAdapter = TapViewAdapter {
             mainViewModel.deleteLogClickListner(it)
         }
-        tabRecyclerView.adapter = tapAdapter
-        tabRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        binding.tabRecyclerview.apply {
+            adapter = tapAdapter
+            layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.HORIZONTAL, false)
+        }
+
         mainViewModel.logList.observe(this) {
             tapAdapter.submitList(it)
             tapAdapter.notifyDataSetChanged()
         }
         mainViewModel.tabViewVisible.observe(this) {
-            tabRecyclerView.isVisible = it
+            binding.tabRecyclerview.isVisible = it
         }
 
-        input.addTextChangedListener(object : TextWatcher {
+        binding.input.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 // 미사용
             }
@@ -94,8 +87,8 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        researchCloseButton.setOnClickListener {
-            input.setText("")
+        binding.closeButton.setOnClickListener {
+            binding.input.setText("")
             mainViewModel.inputCloseButtonClickListener()
         }
     }

@@ -28,12 +28,6 @@ class MapViewActivity : AppCompatActivity() {
     private lateinit var mapModel: MapModel
     private lateinit var mapViewModel: MapViewModel
 
-    private lateinit var mapView: MapView
-    private lateinit var searchTextview: TextView
-
-    private lateinit var bottomSheetLayout: LinearLayout
-    private lateinit var bottomSheetPlaceName: TextView
-    private lateinit var bottomSheetPlaceAddr: TextView
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,12 +42,7 @@ class MapViewActivity : AppCompatActivity() {
         binding.viewModel = mapViewModel
         binding.lifecycleOwner = this
 
-        mapView = binding.map
-        searchTextview = binding.search
-        bottomSheetLayout = binding.bottomView.bottomSheetLayout
-        bottomSheetPlaceName = binding.bottomView.placeName
-        bottomSheetPlaceAddr = binding.bottomView.placeAddress
-        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout)
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomView.bottomSheetLayout)
 
         val lastLocation = getLastLocation(this)
 
@@ -65,7 +54,7 @@ class MapViewActivity : AppCompatActivity() {
         processBottomSheet(placeName, placeAddr)
 
         try {
-            mapView.start(object : MapLifeCycleCallback() {
+            binding.map.start(object : MapLifeCycleCallback() {
                 override fun onMapDestroy() {
                     Log.d("KakaoMap", "카카오맵 정상종료")
                 }
@@ -105,7 +94,7 @@ class MapViewActivity : AppCompatActivity() {
             Log.e("MapViewActivity", "Exception during mapView.start", e)
         }
 
-        searchTextview.setOnClickListener { onSearchTextViewClick() }
+        binding.search.setOnClickListener { onSearchTextViewClick() }
     }
 
     private fun onSearchTextViewClick() {
@@ -123,9 +112,8 @@ class MapViewActivity : AppCompatActivity() {
     }
 
     private fun showBottomSheet(placeName: String, placeAddr: String){
-        Log.d("mytest", "call showBottomSheet")
-        bottomSheetPlaceName.text = placeName
-        bottomSheetPlaceAddr.text = placeAddr
+        binding.bottomView.placeName.text = placeName
+        binding.bottomView.placeAddress.text = placeAddr
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
     }
 
@@ -152,11 +140,11 @@ class MapViewActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        mapView.resume()
+        binding.map.resume()
     }
 
     override fun onPause() {
         super.onPause()
-        mapView.pause()
+        binding.map.pause()
     }
 }
