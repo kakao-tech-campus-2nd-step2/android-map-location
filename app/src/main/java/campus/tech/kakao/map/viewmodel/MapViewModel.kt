@@ -8,4 +8,9 @@ class MapViewModel(
     private val application: Application,
     private val mapRepository: MapRepository
 ): AndroidViewModel(application) {
+
+    fun getLastLocation(): Pair<Double, Double>? {
+        return mapRepository.getLastLocation()
+    }
+
 }

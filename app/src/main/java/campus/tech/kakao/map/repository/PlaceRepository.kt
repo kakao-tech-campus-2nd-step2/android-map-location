@@ -1,6 +1,7 @@
 package campus.tech.kakao.map.repository
 
 import android.content.ContentValues
+import android.content.Context
 import android.util.Log
 import androidx.core.database.getIntOrNull
 import campus.tech.kakao.map.BuildConfig
@@ -17,6 +18,7 @@ import retrofit2.Response
 
 class PlaceRepository(private val application: MyApplication) {
     private val dbHelper = PlaceDbHelper(application)
+    private val sharedPreferences = application.getSharedPreferences("LastLocation", Context.MODE_PRIVATE)
     private var logList = mutableListOf<Place>()
 
     fun searchPlaces(query: String, callback: (List<Place>) -> Unit){
@@ -132,6 +134,15 @@ class PlaceRepository(private val application: MyApplication) {
             }
         }
         return logList
+    }
+
+    fun saveLastLocation() {
+        val lastLocation = logList.lastOrNull()
+        with(sharedPreferences.edit()) {
+            putString("PLACE_X", lastLocation?.x)
+            putString("PLACE_Y", lastLocation?.y)
+            apply()
+        }
     }
 
     // viewModel에 데이터 알려주기

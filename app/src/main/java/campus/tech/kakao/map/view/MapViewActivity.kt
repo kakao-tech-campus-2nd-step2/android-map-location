@@ -53,7 +53,7 @@ class MapViewActivity : AppCompatActivity() {
 
         bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomView.bottomSheetLayout)
 
-        val lastLocation = getLastLocation(this)
+        val lastLocation = mapViewModel.getLastLocation()
 
         val placeName = intent.getStringExtra(MainActivity.EXTRA_PLACE_NAME)
         val placeAddr = intent.getStringExtra(MainActivity.EXTRA_PLACE_ADDR)
@@ -134,18 +134,6 @@ class MapViewActivity : AppCompatActivity() {
     private fun extractErrorMsg(fullMsg: String): String {
         val parts = fullMsg.split(": ", limit = 2)
         return if (parts.size > 1) parts[1] else ""
-    }
-
-    private fun getLastLocation(context: Context): Pair<Double, Double>? {
-        val sharedPreferences = context.getSharedPreferences("LastLocation", Context.MODE_PRIVATE)
-
-        val x = sharedPreferences.getString("PLACE_X", null)
-        val y = sharedPreferences.getString("PLACE_Y", null)
-        return if (x != null && y != null) {
-            Pair(x.toDouble(), y.toDouble())
-        } else {
-            null
-        }
     }
 
     override fun onResume() {

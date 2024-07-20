@@ -109,19 +109,9 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun saveLastLocation(context: Context) {
-        val lastLocation = mainViewModel.callLogList().lastOrNull()
-
-        val sharedPreferences = context.getSharedPreferences("LastLocation", Context.MODE_PRIVATE)
-        with(sharedPreferences.edit()) {
-            putString("PLACE_X", lastLocation?.x.toString())
-            putString("PLACE_Y", lastLocation?.y.toString())
-            apply()
-        }
-    }
     override fun onStop() {
         super.onStop()
-        saveLastLocation(this)
+        mainViewModel.saveLastLocation()
     }
 
     override fun onDestroy() {

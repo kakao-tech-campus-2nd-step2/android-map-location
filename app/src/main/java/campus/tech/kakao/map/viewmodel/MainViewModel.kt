@@ -80,4 +80,8 @@ class MainViewModel(
 
         updateTabViewVisible()
     }
+
+    fun saveLastLocation() {
+        placeRepository.saveLastLocation()
+    }
 }
