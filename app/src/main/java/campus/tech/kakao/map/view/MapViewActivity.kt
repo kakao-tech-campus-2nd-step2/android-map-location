@@ -1,4 +1,4 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.view
 
 import android.content.Context
 import android.content.Intent
@@ -9,6 +9,11 @@ import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import campus.tech.kakao.map.repository.MapRepository
+import campus.tech.kakao.map.viewmodel.MapViewModel
+import campus.tech.kakao.map.viewmodel.MapViewModelFactory
+import campus.tech.kakao.map.base.MyApplication
+import campus.tech.kakao.map.R
 import campus.tech.kakao.map.databinding.ActivityMapViewBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kakao.vectormap.KakaoMap
@@ -75,7 +80,9 @@ class MapViewActivity : AppCompatActivity() {
                     if (!placeName.isNullOrEmpty() && !placeAddr.isNullOrEmpty()) { // 아이템 클릭으로 인해 Intent를 전달받았을 경우
                         position = LatLng.from(placeY!!.toDouble(), placeX!!.toDouble())
                         // 라벨표시
-                        val style = map.labelManager?.addLabelStyles(LabelStyles.from(LabelStyle.from(R.drawable.flag).setTextStyles(40, Color.BLACK)))
+                        val style = map.labelManager?.addLabelStyles(LabelStyles.from(LabelStyle.from(
+                            R.drawable.flag
+                        ).setTextStyles(40, Color.BLACK)))
                         val options: LabelOptions = LabelOptions.from(position)
                             .setStyles(style)
                         val layer = map.labelManager?.layer

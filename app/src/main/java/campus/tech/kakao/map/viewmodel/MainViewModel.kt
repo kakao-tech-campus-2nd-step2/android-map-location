@@ -1,9 +1,11 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import campus.tech.kakao.map.data.db.entity.Place
+import campus.tech.kakao.map.repository.PlaceRepository
 
 class MainViewModel(
     private val application: Application,

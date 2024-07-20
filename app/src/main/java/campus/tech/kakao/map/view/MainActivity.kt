@@ -1,27 +1,24 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.view
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import campus.tech.kakao.map.viewmodel.MainViewModel
+import campus.tech.kakao.map.viewmodel.MainViewModelFactory
+import campus.tech.kakao.map.base.MyApplication
+import campus.tech.kakao.map.data.db.entity.Place
+import campus.tech.kakao.map.repository.PlaceRepository
+import campus.tech.kakao.map.R
 import campus.tech.kakao.map.databinding.ActivityMainBinding
 import com.jakewharton.rxbinding4.widget.textChanges
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
-import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
     companion object {

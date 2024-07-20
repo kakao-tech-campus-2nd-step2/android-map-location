@@ -1,7 +1,8 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import campus.tech.kakao.map.repository.MapRepository
 
 class MapViewModel(
     private val application: Application,

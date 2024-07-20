@@ -2,11 +2,11 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".MapViewActivity">
+    tools:context=".view.MapViewActivity">
     <data>
         <variable
             name="viewModel"
-            type="campus.tech.kakao.map.MapViewModel" />
+            type="campus.tech.kakao.map.viewmodel.MapViewModel" />
     </data>
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
