@@ -110,6 +110,13 @@ class MapViewRepository() {
         private const val SELECTED_LOCATION_KEY_LATITUDE = "latitude"
         private const val SELECTED_LOCATION_KEY_LONGITUDE = "longitude"
 
+        private const val INITIAL_CAMERA_LATITUDE = 35.8905341232321
+        private const val INITIAL_CAMERA_LONGITUDE = 128.61213266480294
+        private const val INITIAL_CAMERA_ZOOM_LEVEL = 15
+        private const val INITIAL_CAMERA_TILT_ANGLE = 0.0
+        private const val INITIAL_CAMERA_ROTATION_ANGLE = 0.0
+        private const val INITIAL_CAMERA_HEIGHT = -1.0
+
         private var _instance: MapViewRepository? = null
         fun getInstance(): MapViewRepository {
             if (_instance == null) {
@@ -118,6 +125,13 @@ class MapViewRepository() {
             return _instance as MapViewRepository
         }
 
-        val initialCameraPosition: CameraPosition = CameraPosition.from(35.8905341232321, 128.61213266480294, 15, 0.0,0.0, -1.0)
+        val initialCameraPosition: CameraPosition = CameraPosition.from(
+            INITIAL_CAMERA_LATITUDE,
+            INITIAL_CAMERA_LONGITUDE,
+            INITIAL_CAMERA_ZOOM_LEVEL,
+            INITIAL_CAMERA_TILT_ANGLE,
+            INITIAL_CAMERA_ROTATION_ANGLE,
+            INITIAL_CAMERA_HEIGHT
+        )
     }
 }
