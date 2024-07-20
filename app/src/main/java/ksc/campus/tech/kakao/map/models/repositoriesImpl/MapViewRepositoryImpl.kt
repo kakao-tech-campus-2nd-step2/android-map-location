@@ -1,4 +1,4 @@
-package ksc.campus.tech.kakao.map.models
+package ksc.campus.tech.kakao.map.models.repositoriesImpl
 
 import android.content.Context
 import androidx.lifecycle.LiveData
@@ -6,10 +6,9 @@ import androidx.lifecycle.MutableLiveData
 import com.kakao.vectormap.camera.CameraPosition
 import kotlinx.serialization.Serializable
 import ksc.campus.tech.kakao.map.models.datasources.MapPreferenceLocalDataSource
+import ksc.campus.tech.kakao.map.models.repositories.LocationInfo
+import ksc.campus.tech.kakao.map.models.repositories.MapViewRepository
 
-
-@Serializable
-data class LocationInfo(val address:String, val name:String, val latitude:Double, val longitude:Double)
 
 class MapViewRepositoryImpl(): MapViewRepository {
     private val _selectedLocation: MutableLiveData<LocationInfo?> = MutableLiveData<LocationInfo?>(null)
@@ -22,7 +21,12 @@ class MapViewRepositoryImpl(): MapViewRepository {
     override val cameraPosition: LiveData<CameraPosition>
         get() = _cameraPosition
 
-    private fun getZoomCameraPosition(latitude: Double, longitude: Double) = CameraPosition.from(latitude, longitude, 18, 0.0,0.0, -1.0)
+    private fun getZoomCameraPosition(latitude: Double, longitude: Double) = CameraPosition.from(
+        latitude,
+        longitude,
+        ZOOMED_CAMERA_ZOOM_LEVEL,
+        ZOOMED_CAMERA_TILT_ANGLE, ZOOMED_CAMERA_ROTATION_ANGLE,
+        ZOOMED_CAMERA_HEIGHT)
 
     private fun saveCurrentPositionToSharedPreference(context:Context, position: CameraPosition){
         mapPreferenceDataSource.saveCameraPosition(context, position)
@@ -69,20 +73,18 @@ class MapViewRepositoryImpl(): MapViewRepository {
     }
 
     companion object {
-        private const val INITIAL_CAMERA_LATITUDE = 35.8905341232321
-        private const val INITIAL_CAMERA_LONGITUDE = 128.61213266480294
-        private const val INITIAL_CAMERA_ZOOM_LEVEL = 15
-        private const val INITIAL_CAMERA_TILT_ANGLE = 0.0
-        private const val INITIAL_CAMERA_ROTATION_ANGLE = 0.0
-        private const val INITIAL_CAMERA_HEIGHT = -1.0
+        private const val ZOOMED_CAMERA_ZOOM_LEVEL = 18
+        private const val ZOOMED_CAMERA_TILT_ANGLE = 0.0
+        private const val ZOOMED_CAMERA_ROTATION_ANGLE = 0.0
+        private const val ZOOMED_CAMERA_HEIGHT = -1.0
 
         val initialCameraPosition: CameraPosition = CameraPosition.from(
-            INITIAL_CAMERA_LATITUDE,
-            INITIAL_CAMERA_LONGITUDE,
-            INITIAL_CAMERA_ZOOM_LEVEL,
-            INITIAL_CAMERA_TILT_ANGLE,
-            INITIAL_CAMERA_ROTATION_ANGLE,
-            INITIAL_CAMERA_HEIGHT
+            35.8905341232321,
+            128.61213266480294,
+            15,
+            0.0,
+            0.0,
+            -1.0
         )
     }
 }

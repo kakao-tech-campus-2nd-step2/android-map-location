@@ -4,12 +4,16 @@ import androidx.fragment.app.Fragment
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.assertion.ViewAssertions.*
 import androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isRoot
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import junit.framework.TestCase.assertEquals
+import ksc.campus.tech.kakao.map.models.repositories.LocationInfo
+import ksc.campus.tech.kakao.map.models.repositories.MapViewRepository
 import ksc.campus.tech.kakao.map.views.fragments.KakaoMapFragment
 import ksc.campus.tech.kakao.map.views.MainActivity
 import ksc.campus.tech.kakao.map.views.fragments.SearchResultFragment
@@ -108,6 +112,31 @@ class MainActivityTest {
         // then
         checkContainerHasKakaoMapFragment()
 
+    }
+
+    @Test
+    fun bottomSheetHiddenWhenNoLocationSelected(){
+        onView(allOf(withId(R.id.text_location_name), isDisplayed()))
+            .check(doesNotExist())
+    }
+
+    @Test
+    fun nameAndAddressDisplayedWhenLocationSelected(){
+
+        // given
+        val location = LocationInfo("Loc Addr", "Loc Name", 12.12, 12.56)
+
+        // when
+        activityRule.scenario.onActivity {
+            (it.application as MyApplication).appContainer.getSingleton<MapViewRepository>()
+                .updateSelectedLocation(it, location)
+        }
+
+        // then
+        onView(withId(R.id.text_location_name))
+            .check(matches(withText(location.name)))
+        onView(withId(R.id.text_location_address))
+            .check(matches(withText(location.address)))
     }
 
     private inline fun <reified F:Fragment> checkHasFragmentOfType(list:List<Fragment>):Boolean{

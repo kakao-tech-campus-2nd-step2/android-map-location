@@ -12,7 +12,7 @@ import com.google.gson.JsonSerializationContext
 import com.google.gson.JsonSerializer
 import com.google.gson.JsonSyntaxException
 import com.kakao.vectormap.camera.CameraPosition
-import ksc.campus.tech.kakao.map.models.LocationInfo
+import ksc.campus.tech.kakao.map.models.repositories.LocationInfo
 import java.lang.reflect.Type
 
 class CameraPositionSerializer: JsonSerializer<CameraPosition> {
