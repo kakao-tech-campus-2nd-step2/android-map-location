@@ -32,12 +32,8 @@ class MapActivity : AppCompatActivity() {
 	private lateinit var model: MainViewModel
 	private lateinit var placeName:String
 	private lateinit var addressName:String
-	private var styles: LabelStyles? = null
-	private lateinit var options:LabelOptions
 	private var layer: LabelLayer? = null
 	private var label: Label? = null
-	private lateinit var bitmapImage: Bitmap
-	private lateinit var markerImage: Bitmap
 	private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
 	private lateinit var bottomSheet :LinearLayout
 	private lateinit var bottomSheetName:TextView
@@ -117,11 +113,11 @@ class MapActivity : AppCompatActivity() {
 	}
 
 	private fun makeMarker(){
-		bitmapImage = BitmapFactory.decodeResource(resources, R.drawable.marker)
-		markerImage = Bitmap.createScaledBitmap(bitmapImage, 100, 100, true)
-		styles = map?.labelManager?.addLabelStyles(LabelStyles.from(LabelStyle.from(markerImage).setTextStyles(40, Color.BLACK)))
+		val bitmapImage = BitmapFactory.decodeResource(resources, R.drawable.marker)
+		val markerImage = Bitmap.createScaledBitmap(bitmapImage, 100, 100, true)
+		val styles = map?.labelManager?.addLabelStyles(LabelStyles.from(LabelStyle.from(markerImage).setTextStyles(40, Color.BLACK)))
 		if(styles != null){
-			options = LabelOptions.from(LatLng.from(latitude, longitude)).setStyles(styles).setTexts(placeName)
+			val options = LabelOptions.from(LatLng.from(latitude, longitude)).setStyles(styles).setTexts(placeName)
 			layer = map?.labelManager?.layer
 			if(label != null){
 				layer?.remove(label)
