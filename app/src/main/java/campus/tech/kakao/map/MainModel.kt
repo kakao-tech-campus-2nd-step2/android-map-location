@@ -6,8 +6,6 @@ import androidx.core.database.getIntOrNull
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class MainModel(private val application: MyApplication) {
     private val dbHelper = PlaceDbHelper(application)

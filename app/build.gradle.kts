@@ -96,6 +96,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version")
     kapt("androidx.lifecycle:lifecycle-compiler:$lifecycle_version")
     implementation("androidx.fragment:fragment-ktx:1.8.1")
+    implementation("com.jakewharton.rxbinding4:rxbinding:4.0.0")
 }
 
 fun getApiKey(key: String): String {

@@ -17,11 +17,17 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.map.databinding.ActivityMainBinding
+import com.jakewharton.rxbinding4.widget.textChanges
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.schedulers.Schedulers
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var mainModel: MainModel
     private lateinit var mainViewModel: MainViewModel
+    private val disposables = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +41,8 @@ class MainActivity : AppCompatActivity() {
         binding.viewModel = mainViewModel
         binding.lifecycleOwner = this
 
+        observeInputTextChanges()
+
         val resultAdapter = RecyclerViewAdapter {
             mainViewModel.resultItemClickListener(it)
             moveMapView(it)
@@ -46,6 +54,7 @@ class MainActivity : AppCompatActivity() {
 
         mainViewModel.placeList.observe(this) { list ->
             resultAdapter.submitList(list)
+            resultAdapter.notifyDataSetChanged()
         }
 
         mainViewModel.placeListVisible.observe(this) {
@@ -63,26 +72,11 @@ class MainActivity : AppCompatActivity() {
 
         mainViewModel.logList.observe(this) {
             tapAdapter.submitList(it)
-            tapAdapter.notifyDataSetChanged()
         }
+
         mainViewModel.tabViewVisible.observe(this) {
             binding.tabRecyclerview.isVisible = it
         }
-
-        binding.input.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // 미사용
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                mainViewModel.callResultList(s.toString())
-                mainViewModel.showPlaceList()
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                // 미사용
-            }
-        })
 
         binding.closeButton.setOnClickListener {
             binding.input.text.clear()
@@ -90,6 +84,17 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun observeInputTextChanges(){
+        val inputChangeObservable = binding.input.textChanges()
+        val disposable = inputChangeObservable
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { text ->
+                mainViewModel.callResultList(text.toString())
+                mainViewModel.showPlaceList()
+            }
+        disposables.add(disposable)
+    }
     private fun moveMapView(place: Place) {
         val intent = Intent(this, MapViewActivity::class.java)
         intent.putExtra("PLACE_NAME", place.name)
@@ -112,6 +117,11 @@ class MainActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         saveLastLocation(this)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposables.clear()
     }
 }
 
