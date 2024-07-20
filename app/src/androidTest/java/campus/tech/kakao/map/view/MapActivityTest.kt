@@ -27,7 +27,6 @@ class MapActivityTest{
     @get:Rule
     val activityRule = ActivityScenarioRule(MapActivity::class.java)
 
-    private val idlingResource = CountingIdlingResource("Load")
 
     @Before
     fun setUp() {
@@ -46,7 +45,7 @@ class MapActivityTest{
             matches(isDisplayed()))
         onView(withId(R.id.search_icon)).check(
             matches(isDisplayed()))
-        onView(withId(campus.tech.kakao.map.R.id.error_text)).check(
+        onView(withId(R.id.error_text)).check(
             matches(withEffectiveVisibility(Visibility.GONE)))
         onView(withId(R.id.map_view)).check(
             matches(isDisplayed()))
@@ -57,7 +56,6 @@ class MapActivityTest{
     fun testError(){
         activityRule.scenario.onActivity { activity ->
             activity.showErrorMessageView("인증 과정 중 원인을 알 수 없는 에러가 발생했습니다")
-
         }
         onView(withId(R.id.error_text)).check(matches(isDisplayed()))
     }

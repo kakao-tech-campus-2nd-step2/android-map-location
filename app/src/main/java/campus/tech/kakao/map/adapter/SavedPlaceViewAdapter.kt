@@ -31,6 +31,12 @@ class SavedPlaceViewAdapter(
         val currentSavedPlace = getItem(position)
         holder.bind(currentSavedPlace)
     }
+
+    fun existPlace(savedPlace: SavedPlace) : Boolean = currentList.contains(savedPlace)
+
+    fun getSavedPlaceAtPosition(position : Int) : SavedPlace{
+        return getItem(position)
+    }
 }
 
 class SavedPlaceDiffCallBack : DiffUtil.ItemCallback<SavedPlace>() {

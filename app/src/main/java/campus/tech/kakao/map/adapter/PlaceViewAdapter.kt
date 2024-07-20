@@ -29,6 +29,10 @@ class PlaceViewAdapter(
         val currentPlace = getItem(position)
         holder.bind(currentPlace)
     }
+
+    fun getPlaceAtPosition(position : Int) : Place{
+        return getItem(position)
+    }
 }
 
 class PlaceDiffCallBack : DiffUtil.ItemCallback<Place>() {
