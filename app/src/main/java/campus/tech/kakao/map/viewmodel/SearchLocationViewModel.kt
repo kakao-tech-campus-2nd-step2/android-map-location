@@ -25,30 +25,30 @@ class SearchLocationViewModel(
     val markerLocation: LiveData<Location> = _markerLocation
 
     init {
-        _history.value = repository.getHistory()
+        _history.postValue(repository.getHistory())
     }
 
     fun searchLocationByHistory(locationName: String) {
-        _searchInput.value = locationName
+        _searchInput.postValue(locationName)
     }
 
     fun searchLocation(category: String) {
         viewModelScope.launch {
-            _location.value = repository.searchLocation(category)
+            _location.postValue(repository.searchLocation(category))
         }
     }
 
     fun addHistory(locationName: String) {
         repository.addHistory(locationName)
-        _history.value = repository.getHistory()
+        _history.postValue(repository.getHistory())
     }
 
     fun removeHistory(locationName: String) {
         repository.removeHistory(locationName)
-        _history.value = repository.getHistory()
+        _history.postValue(repository.getHistory())
     }
 
     fun addMarker(location: Location) {
-        _markerLocation.value = location
+        _markerLocation.postValue(location)
     }
 }
