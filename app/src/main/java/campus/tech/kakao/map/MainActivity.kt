@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         val tapAdapter = TapViewAdapter {
-            mainViewModel.deleteLogClickListner(it)
+            mainViewModel.deleteLog(it)
         }
         binding.tabRecyclerview.apply {
             adapter = tapAdapter

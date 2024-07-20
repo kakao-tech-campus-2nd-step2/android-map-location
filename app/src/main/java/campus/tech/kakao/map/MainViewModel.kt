@@ -70,7 +70,7 @@ class MainViewModel(
         _placeList.postValue(emptyList())
     }
 
-    fun deleteLogClickListner(item: Place){
+    fun deleteLog(item: Place){
         placeRepository.deleteResearchEntry(item)
 
         val removeLog = placeRepository.getLogList()
