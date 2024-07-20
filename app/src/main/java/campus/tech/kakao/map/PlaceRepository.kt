@@ -7,7 +7,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MainModel(private val application: MyApplication) {
+class PlaceRepository(private val application: MyApplication) {
     private val dbHelper = PlaceDbHelper(application)
     private var logList = mutableListOf<Place>()
 

@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var mainModel: MainModel
+    private lateinit var placeRepository: PlaceRepository
     private lateinit var mainViewModel: MainViewModel
     private val disposables = CompositeDisposable()
 
@@ -33,9 +33,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        mainModel = MainModel(application as MyApplication)
+        placeRepository = PlaceRepository(application as MyApplication)
 
-        val viewModelFactory = MainViewModelFactory(application as MyApplication, mainModel)
+        val viewModelFactory = MainViewModelFactory(application as MyApplication, placeRepository)
         mainViewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
 
         binding.viewModel = mainViewModel

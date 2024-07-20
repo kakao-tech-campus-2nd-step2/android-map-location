@@ -5,6 +5,6 @@ import androidx.lifecycle.AndroidViewModel
 
 class MapViewModel(
     private val application: Application,
-    private val mapModel: MapModel
+    private val mapRepository: MapRepository
 ): AndroidViewModel(application) {
 }

@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData
 
 class MainViewModel(
     private val application: Application,
-    private val mainModel: MainModel
+    private val placeRepository: PlaceRepository
 ): AndroidViewModel(application) {
 
     private val _placeList = MutableLiveData<List<Place>>()
@@ -33,20 +33,20 @@ class MainViewModel(
     }
 
     private fun updateTabViewVisible() {
-        val isVisible = mainModel.hasAnyClick()
+        val isVisible = placeRepository.hasAnyClick()
         _tabViewVisible.postValue(isVisible)
     }
 
     private fun initSearchList() {
-        mainModel.getResearchLogs()
-        _logList.postValue(mainModel.getLogList())
+        placeRepository.getResearchLogs()
+        _logList.postValue(placeRepository.getLogList())
     }
 
     fun callResultList(userInput: String){
         if (userInput == ""){
             _placeList.value = emptyList()
         } else{
-            mainModel.searchPlaces(userInput) {
+            placeRepository.searchPlaces(userInput) {
                 _placeList.value = it
             }
         }
@@ -56,12 +56,12 @@ class MainViewModel(
         _placeListVisible.value = !_placeList.value.isNullOrEmpty()
     }
 
-    fun callLogList() = mainModel.getLogList()
+    fun callLogList() = placeRepository.getLogList()
 
     fun resultItemClickListener(item: Place) {
-        mainModel.insertLog(item)
+        placeRepository.insertLog(item)
 
-        val updateTabItem = mainModel.getLogList()
+        val updateTabItem = placeRepository.getLogList()
         _logList.value = updateTabItem
 
         updateTabViewVisible()
@@ -72,9 +72,9 @@ class MainViewModel(
     }
 
     fun deleteLogClickListner(item: Place){
-        mainModel.deleteResearchEntry(item)
+        placeRepository.deleteResearchEntry(item)
 
-        val removeLog = mainModel.getLogList()
+        val removeLog = placeRepository.getLogList()
         _logList.value = removeLog
 
         updateTabViewVisible()

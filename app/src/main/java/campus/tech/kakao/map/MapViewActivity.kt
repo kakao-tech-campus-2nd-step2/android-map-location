@@ -6,7 +6,6 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -16,7 +15,6 @@ import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapLifeCycleCallback
-import com.kakao.vectormap.MapView
 import com.kakao.vectormap.camera.CameraAnimation
 import com.kakao.vectormap.camera.CameraUpdateFactory
 import com.kakao.vectormap.label.LabelOptions
@@ -25,7 +23,8 @@ import com.kakao.vectormap.label.LabelStyles
 
 class MapViewActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMapViewBinding
-    private lateinit var mapModel: MapModel
+    private lateinit var mapRepository: MapRep
+    ository
     private lateinit var mapViewModel: MapViewModel
 
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
@@ -34,9 +33,9 @@ class MapViewActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_map_view)
 
-        mapModel = MapModel(application as MyApplication)
+        mapRepository = MapRepository(application as MyApplication)
 
-        val viewModelFactory = MapViewModelFactory(application as MyApplication, mapModel)
+        val viewModelFactory = MapViewModelFactory(application as MyApplication, mapRepository)
         mapViewModel = ViewModelProvider(this, viewModelFactory)[MapViewModel::class.java]
 
         binding.viewModel = mapViewModel
