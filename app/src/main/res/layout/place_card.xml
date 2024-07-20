@@ -8,7 +8,7 @@
         android:id="@+id/place_img"
         android:layout_width="50dp"
         android:layout_height="match_parent"
-        android:src="@drawable/cafe"    />
+        android:src="@drawable/location"    />
     
     <LinearLayout
         android:orientation="vertical"

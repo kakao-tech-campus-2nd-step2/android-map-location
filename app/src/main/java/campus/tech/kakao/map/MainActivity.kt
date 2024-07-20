@@ -47,9 +47,9 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.placeList.observe(this) { list ->
             if (list.isEmpty()) {
                 binding.noResultTextview.isVisible = true
-                binding.recyclerView.isGone = true
+                binding.recyclerView.isVisible = false
             } else {
-                binding.noResultTextview.isGone = true
+                binding.noResultTextview.isVisible = false
                 binding.recyclerView.isVisible = true
                 resultAdapter.submitList(list)
             }

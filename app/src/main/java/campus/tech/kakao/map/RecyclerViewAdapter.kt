@@ -28,10 +28,10 @@ class RecyclerViewAdapter(
         private val category: TextView = itemView.findViewById(R.id.place_category)
 
         fun bind(place: Place) {
-            img.setImageResource(place.category.imgId)
+            img.setImageResource(place.img)
             name.text = place.name
             location.text = place.location
-            category.text = place.category.category
+            category.text = place.category
 
             itemView.setOnClickListener { onItemClicked(place) }
         }

@@ -7,7 +7,7 @@ data class Place (
     @DrawableRes val img: Int,
     val name: String,
     val location: String,
-    val category: PlaceCategory,
+    val category: String,
     val x: String,
     val y: String
 )
