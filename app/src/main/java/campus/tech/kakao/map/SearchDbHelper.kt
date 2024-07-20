@@ -21,7 +21,9 @@ class SearchDbHelper(context: Context) : SQLiteOpenHelper(context, "searchDb", n
             "CREATE TABLE ${SearchData.TABLE_NAME} (" +
                     "   ${SearchData.TABLE_COLUMN_NAME} varchar(255)," +
                     "   ${SearchData.TABLE_COLUMN_ADDRESS} varchar(255)," +
-                    "   ${SearchData.TABLE_COLUMN_CATEGORY} varchar(255)" +
+                    "   ${SearchData.TABLE_COLUMN_CATEGORY} varchar(255)," +
+                    "   ${SearchData.TABLE_COLUMN_XCOORDINATE} double," +
+                    "   ${SearchData.TABLE_COLUMN_YCOORDINATE} double" +
                     ");"
         )
 
@@ -75,6 +77,8 @@ class SearchDbHelper(context: Context) : SQLiteOpenHelper(context, "searchDb", n
             val radius = 20000
             val format = "json"
 
+            clearTable()
+
             for (categoryGroupCode in categoryGroupCodes) {
                 try {
                     val response = retrofitService.requestProducts(
@@ -92,11 +96,22 @@ class SearchDbHelper(context: Context) : SQLiteOpenHelper(context, "searchDb", n
                             val placeName = document.placeName
                             val addressName = document.addressName
                             val categoryGroupName = document.categoryGroupName
+                            val xCoordinate = document.x.toDouble()
+                            val yCoordinate = document.y.toDouble()
 
-                            saveDb(placeName, addressName, categoryGroupName)
+                            saveDb(
+                                placeName,
+                                addressName,
+                                categoryGroupName,
+                                xCoordinate,
+                                yCoordinate
+                            )
                         }
                     } else {
-                        Log.e("Retrofit", "API 요청 실패, 응답 코드: ${response.code()}, 메시지: ${response.message()}")
+                        Log.e(
+                            "Retrofit",
+                            "API 요청 실패, 응답 코드: ${response.code()}, 메시지: ${response.message()}"
+                        )
                     }
                 } catch (e: Exception) {
                     Log.e("Retrofit", "API 요청 실패, 네트워크 에러: ${e.message}")
@@ -105,15 +120,24 @@ class SearchDbHelper(context: Context) : SQLiteOpenHelper(context, "searchDb", n
         }
     }
 
-    fun saveDb(placeName: String, addressName: String, categoryGroupName: String) {
+    fun saveDb(
+        placeName: String,
+        addressName: String,
+        categoryGroupName: String,
+        xCoordinate: Double,
+        yCoordinate: Double
+    ) {
         val wDb = writableDatabase
         val values = ContentValues()
 
         values.put(SearchData.TABLE_COLUMN_NAME, placeName)
         values.put(SearchData.TABLE_COLUMN_ADDRESS, addressName)
         values.put(SearchData.TABLE_COLUMN_CATEGORY, categoryGroupName)
+        values.put(SearchData.TABLE_COLUMN_XCOORDINATE, xCoordinate)
+        values.put(SearchData.TABLE_COLUMN_YCOORDINATE, yCoordinate)
         wDb.insert(SearchData.TABLE_NAME, null, values)
         values.clear()
+
     }
 
     fun loadDb(): List<SearchData> {
@@ -123,7 +147,9 @@ class SearchDbHelper(context: Context) : SQLiteOpenHelper(context, "searchDb", n
             arrayOf(
                 SearchData.TABLE_COLUMN_NAME,
                 SearchData.TABLE_COLUMN_ADDRESS,
-                SearchData.TABLE_COLUMN_CATEGORY
+                SearchData.TABLE_COLUMN_CATEGORY,
+                SearchData.TABLE_COLUMN_XCOORDINATE,
+                SearchData.TABLE_COLUMN_YCOORDINATE
             ),
             null,
             null,
@@ -139,11 +165,18 @@ class SearchDbHelper(context: Context) : SQLiteOpenHelper(context, "searchDb", n
                 val name = getString(getColumnIndexOrThrow(SearchData.TABLE_COLUMN_NAME))
                 val address = getString(getColumnIndexOrThrow(SearchData.TABLE_COLUMN_ADDRESS))
                 val category = getString(getColumnIndexOrThrow(SearchData.TABLE_COLUMN_CATEGORY))
-                searchDataList.add(SearchData(name, address, category))
+                val x = getDouble(getColumnIndexOrThrow(SearchData.TABLE_COLUMN_XCOORDINATE))
+                val y = getDouble(getColumnIndexOrThrow(SearchData.TABLE_COLUMN_YCOORDINATE))
+                searchDataList.add(SearchData(name, address, category, x, y))
                 Log.e("Retrofit", "SearchDataList 찾기: $searchDataList")
             }
         }
         cursor.close()
         return searchDataList
+    }
+
+    private fun clearTable() {
+        val wDb = writableDatabase
+        wDb.delete(SearchData.TABLE_NAME, null, null)
     }
 }

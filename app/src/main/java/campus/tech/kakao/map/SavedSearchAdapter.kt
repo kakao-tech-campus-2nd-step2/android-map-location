@@ -3,30 +3,35 @@ package campus.tech.kakao.map
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class SavedSearchAdapter() : RecyclerView.Adapter<SavedSearchAdapter.ViewHolder>() {
 
-    private lateinit var itemClickListener: OnDeleteClickListener
+    private lateinit var savedWordClickListener: OnSavedWordClickListener
     var savedSearchList: MutableList<String> = mutableListOf()
 
-    interface OnDeleteClickListener {
+    interface OnSavedWordClickListener {
         fun onDeleteClick(position: Int)
+        fun onSavedWordClick(savedWord: String)
     }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private val savedWord: TextView = view.findViewById(R.id.savedWord)
+        private val savedWordTextView: TextView = view.findViewById(R.id.savedWord)
         private val deleteSavedWord: Button = view.findViewById(R.id.deleteSavedWord)
 
         fun bind(savedWord: String) {
-            this.savedWord.text = savedWord
+            this.savedWordTextView.text = savedWord
             deleteSavedWord.setOnClickListener {
                 val position = bindingAdapterPosition
                 if (position != RecyclerView.NO_POSITION) {
-                    itemClickListener.onDeleteClick(position)
+                    savedWordClickListener.onDeleteClick(position)
                 }
+            }
+            savedWordTextView.setOnClickListener {
+                savedWordClickListener.onSavedWordClick(savedWord)
             }
         }
 
@@ -46,7 +51,7 @@ class SavedSearchAdapter() : RecyclerView.Adapter<SavedSearchAdapter.ViewHolder>
         holder.bind(savedSearchList[position])
     }
 
-    fun setOnDeleteClickListener(listener: OnDeleteClickListener) {
-        this.itemClickListener = listener
+    fun setOnSavedWordClickListener(listener: OnSavedWordClickListener) {
+        this.savedWordClickListener = listener
     }
 }
