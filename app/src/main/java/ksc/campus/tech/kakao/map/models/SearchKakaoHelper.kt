@@ -128,7 +128,11 @@ object SearchKakaoHelper {
             return
 
         val retrofitService = getRetrofitService(KAKAO_LOCAL_URL)
-        retrofitService?.requestSearchResultByKeyword("KakaoAK $apiKey", query, page)?.enqueue(
+        if(retrofitService == null){
+            Log.e("KSC", "failed to load retrofit service")
+            return
+        }
+        retrofitService.requestSearchResultByKeyword("KakaoAK $apiKey", query, page).enqueue(
             object : Callback<KeywordSearchResponse> {
                 override fun onResponse(
                     call: Call<KeywordSearchResponse>,
@@ -164,8 +168,6 @@ object SearchKakaoHelper {
                     Log.e("KSC", "Message: ${p1.message}")
                 }
             }
-        )?:let {
-            Log.e("KSC", "failed to load retrofit service")
-        }
+        )
     }
 }
