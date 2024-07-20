@@ -34,6 +34,10 @@ class SearchLocationActivity : AppCompatActivity() {
             }
         })
 
+        applyObserver()
+    }
+
+    fun applyObserver() {
         viewModel.searchInput.observe(this) {
             it?.let { searchInput ->
                 binding.searchInputEditText.setText(searchInput)
