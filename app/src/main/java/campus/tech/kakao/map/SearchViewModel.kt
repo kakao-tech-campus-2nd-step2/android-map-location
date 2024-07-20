@@ -16,7 +16,6 @@ class SearchViewModel(context: Context) : ViewModel() {
     private val preferenceManager = MapApplication.prefs
     var repository = RetrofitRepository()
 
-
     private var _placeList = MutableLiveData<List<Place>>()
     private val _searchHistoryList = MutableLiveData<List<SearchHistory>>()
     private var _locationList = MutableLiveData<List<Document>>()

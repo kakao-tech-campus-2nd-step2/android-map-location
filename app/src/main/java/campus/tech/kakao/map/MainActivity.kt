@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
     private val mainViewModel: MainViewModel by viewModels {
         ViewModelFactory(applicationContext)
     }
-
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mainViewBinding = ActivityMainBinding.inflate(layoutInflater)
