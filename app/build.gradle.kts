@@ -49,7 +49,7 @@ android {
 }
 
 dependencies {
-// viewmodels 추가
+    // viewmodels 추가
     implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0")
     implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.4.0")
     implementation ("androidx.activity:activity-ktx:1.4.0")
