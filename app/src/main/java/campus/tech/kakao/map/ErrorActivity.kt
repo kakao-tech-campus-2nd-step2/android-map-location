@@ -12,7 +12,7 @@ class ErrorActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_error)
 
-        msg = intent.getStringExtra("ERROR").toString()
+        msg = intent.getStringExtra(MapViewActivity.EXTRA_ERROR_MSG).toString()
         errorMsgTextView.text = msg
     }
 }

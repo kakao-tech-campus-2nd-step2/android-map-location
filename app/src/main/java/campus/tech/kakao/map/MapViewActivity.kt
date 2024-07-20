@@ -22,6 +22,10 @@ import com.kakao.vectormap.label.LabelStyle
 import com.kakao.vectormap.label.LabelStyles
 
 class MapViewActivity : AppCompatActivity() {
+    companion object {
+        const val EXTRA_ERROR_MSG = "ERROR"
+    }
+
     private lateinit var binding: ActivityMapViewBinding
     private lateinit var mapRepository: MapRepository
     private lateinit var mapViewModel: MapViewModel
@@ -44,10 +48,10 @@ class MapViewActivity : AppCompatActivity() {
 
         val lastLocation = getLastLocation(this)
 
-        val placeName = intent.getStringExtra("PLACE_NAME")
-        val placeAddr = intent.getStringExtra("PLACE_LOCATION")
-        val placeX = intent.getStringExtra("PLACE_X")
-        val placeY = intent.getStringExtra("PLACE_Y")
+        val placeName = intent.getStringExtra(MainActivity.EXTRA_PLACE_NAME)
+        val placeAddr = intent.getStringExtra(MainActivity.EXTRA_PLACE_ADDR)
+        val placeX = intent.getStringExtra(MainActivity.EXTRA_PLACE_X)
+        val placeY = intent.getStringExtra(MainActivity.EXTRA_PLACE_Y)
 
         processBottomSheet(placeName, placeAddr)
 
@@ -60,7 +64,7 @@ class MapViewActivity : AppCompatActivity() {
                 override fun onMapError(exception: Exception?) {
                     val errorMsg = extractErrorMsg(exception.toString())
                     val intent = Intent(this@MapViewActivity, ErrorActivity::class.java)
-                    intent.putExtra("ERROR", errorMsg)
+                    intent.putExtra(EXTRA_ERROR_MSG, errorMsg)
                     startActivity(intent)
                     Log.d("KakaoMap", errorMsg.toString())
                 }
@@ -102,9 +106,7 @@ class MapViewActivity : AppCompatActivity() {
     private fun processBottomSheet(placeName: String?, placeAddr: String?) {
         if (!placeName.isNullOrEmpty() && !placeAddr.isNullOrEmpty()) {
             showBottomSheet(placeName, placeAddr)
-            Log.d("mytest", "Intent exist")
         } else {
-            Log.d("mytest", "No Intent")
             hideBottomSheet()
         }
     }

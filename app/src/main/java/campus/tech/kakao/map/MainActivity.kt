@@ -24,6 +24,13 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
+    companion object {
+        const val EXTRA_PLACE_NAME = "PLACE_NAME"
+        const val EXTRA_PLACE_ADDR = "PLACE_LOCATION"
+        const val EXTRA_PLACE_X = "PLACE_X"
+        const val EXTRA_PLACE_Y = "PLACE_Y"
+    }
+
     private lateinit var binding: ActivityMainBinding
     private lateinit var placeRepository: PlaceRepository
     private lateinit var mainViewModel: MainViewModel
@@ -98,10 +105,10 @@ class MainActivity : AppCompatActivity() {
     }
     private fun moveMapView(place: Place) {
         val intent = Intent(this, MapViewActivity::class.java)
-        intent.putExtra("PLACE_NAME", place.name)
-        intent.putExtra("PLACE_LOCATION", place.location)
-        intent.putExtra("PLACE_X", place.x)
-        intent.putExtra("PLACE_Y", place.y)
+        intent.putExtra(EXTRA_PLACE_NAME, place.name)
+        intent.putExtra(EXTRA_PLACE_ADDR, place.location)
+        intent.putExtra(EXTRA_PLACE_X, place.x)
+        intent.putExtra(EXTRA_PLACE_Y, place.y)
         startActivity(intent)
     }
 
