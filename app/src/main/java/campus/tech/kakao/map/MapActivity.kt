@@ -10,7 +10,6 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import campus.tech.kakao.map.MyApplication.Companion.mapPosition
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
@@ -110,10 +109,11 @@ class MapActivity : AppCompatActivity() {
 	}
 
 	private fun getMapInfo(){
-		latitude = mapPosition.getPreferences("latitude",model.getInitLatitude().toString()).toDouble()
-		longitude = mapPosition.getPreferences("longitude",model.getInitLongitude().toString()).toDouble()
-		placeName = mapPosition.getPreferences("placeName","")
-		addressName = mapPosition.getPreferences("addressName","")
+		val mapInfoList = model.getMapInfo()
+		latitude = mapInfoList[0].toDouble()
+		longitude = mapInfoList[1].toDouble()
+		placeName = mapInfoList[2]
+		addressName = mapInfoList[3]
 	}
 
 	private fun makeMarker(){

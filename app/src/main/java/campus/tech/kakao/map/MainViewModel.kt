@@ -14,8 +14,8 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
 	private val retrofitData = getInstance()
 	val documentList: LiveData<List<Document>> get() = retrofitData.getDocuments()
 
-	private val initLatitude = 37.402005
-	private val initLongitude = 127.108621
+	private val initLatitude = "37.402005"
+	private val initLongitude = "127.108621"
 
 	fun getInitLatitude() = initLatitude
 	fun getInitLongitude() = initLongitude
@@ -46,5 +46,13 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
 
 	fun setMapInfo(document: Document){
 		mapPosition.setMapInfo(document)
+	}
+
+	fun getMapInfo():List<String>{
+		val latitude = mapPosition.getPreferences("latitude",initLatitude)
+		val longitude = mapPosition.getPreferences("longitude",initLongitude)
+		val placeName = mapPosition.getPreferences("placeName","")
+		val addressName = mapPosition.getPreferences("addressName","")
+		return listOf(latitude, longitude, placeName, addressName)
 	}
 }
