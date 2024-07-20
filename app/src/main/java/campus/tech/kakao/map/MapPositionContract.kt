@@ -1,4 +1,4 @@
-package campus.tech.kakao.map.dto
+package campus.tech.kakao.map
 
 object MapPositionContract {
 	const val PREFERENCE_NAME = "MapPosition"

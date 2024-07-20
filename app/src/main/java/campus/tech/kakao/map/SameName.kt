@@ -1,4 +1,4 @@
-package campus.tech.kakao.map.dto
+package campus.tech.kakao.map
 
 data class SameName(
 	val region: List<String>,

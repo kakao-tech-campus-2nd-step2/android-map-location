@@ -10,8 +10,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import campus.tech.kakao.map.adapter.DocumentAdapter
-import campus.tech.kakao.map.adapter.WordAdapter
 
 class SearchActivity : AppCompatActivity() {
 
@@ -32,7 +30,7 @@ class SearchActivity : AppCompatActivity() {
         documentAdapter = DocumentAdapter({ document ->
             model.addWord(document)
         },{document ->
-            model.getMapInfo(document)
+            model.setMapInfo(document)
             finish()
         })
         wordAdapter = WordAdapter(

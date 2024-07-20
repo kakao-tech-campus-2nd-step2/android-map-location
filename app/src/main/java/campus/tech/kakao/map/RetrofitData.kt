@@ -1,10 +1,7 @@
 package campus.tech.kakao.map
 
 import androidx.lifecycle.MutableLiveData
-import campus.tech.kakao.map.dto.Document
-import campus.tech.kakao.map.dto.PlaceResponse
-import campus.tech.kakao.map.dto.UrlContract
-import campus.tech.kakao.map.dto.UrlContract.AUTHORIZATION
+import campus.tech.kakao.map.UrlContract.AUTHORIZATION
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -29,12 +26,14 @@ class RetrofitData private constructor() {
 					val documentList = mutableListOf<Document>()
 					val body = response.body()
 					body?.documents?.forEach {document ->
-						documentList.add(Document(
+						documentList.add(
+							Document(
 							document.placeName,
 							document.categoryGroupName,
 							document.addressName,
 							document.longitude,
-							document.latitude))
+							document.latitude)
+						)
 					}
 					_documents.value = documentList
 				}

@@ -1,4 +1,4 @@
-package campus.tech.kakao.map.dto
+package campus.tech.kakao.map
 
 import android.content.Context
 
@@ -12,6 +12,13 @@ class MapPositionPreferences(context: Context) {
 
 	fun getPreferences(key: String, defaultValue: String): String {
 		return mapPosition.getString(key, defaultValue).toString()
+	}
+
+	fun setMapInfo(document: Document){
+		setPreferences(MapPositionContract.PREFERENCE_KEY_LATITUDE, document.latitude)
+		setPreferences(MapPositionContract.PREFERENCE_KEY_LONGITUDE, document.longitude)
+		setPreferences(MapPositionContract.PREFERENCE_KEY_PLACENAME, document.placeName)
+		setPreferences(MapPositionContract.PREFERENCE_KEY_ADDRESSNAME, document.addressName)
 	}
 
 }

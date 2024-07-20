@@ -1,4 +1,4 @@
-package campus.tech.kakao.map.dto
+package campus.tech.kakao.map
 
 import campus.tech.kakao.map.BuildConfig
 

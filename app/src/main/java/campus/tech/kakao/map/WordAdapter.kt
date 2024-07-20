@@ -1,4 +1,4 @@
-package campus.tech.kakao.map.adapter
+package campus.tech.kakao.map
 
 import android.view.LayoutInflater
 import android.view.View
@@ -8,8 +8,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import campus.tech.kakao.map.R
-import campus.tech.kakao.map.dto.SearchWord
 
 class WordAdapter(
 	val deleteWord: (SearchWord) -> Unit,

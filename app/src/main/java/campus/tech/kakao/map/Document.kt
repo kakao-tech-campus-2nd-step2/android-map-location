@@ -1,4 +1,4 @@
-package campus.tech.kakao.map.DTO
+package campus.tech.kakao.map
 
 import com.google.gson.annotations.SerializedName
 
@@ -15,8 +15,10 @@ data class Document(
 	@SerializedName("address_name")
 	val addressName: String,
 	//val road_address_name: String,
-	//val x: String,
-	//val y: String,
+	@SerializedName("x")
+	val longitude : String,
+	@SerializedName("y")
+	val latitude: String,
 	//val place_url: String,
 	//val distance: String,
 )
