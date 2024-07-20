@@ -16,11 +16,11 @@ class MainViewModel(
     private var _logList = MutableLiveData<List<Place>>()
     val logList: LiveData<List<Place>> = _logList
 
-    private var _showTabView = MutableLiveData<Boolean>()
-    val showTabView: LiveData<Boolean> = _showTabView
+    private var _tabViewVisible = MutableLiveData<Boolean>()
+    val tabViewVisible: LiveData<Boolean> = _tabViewVisible
 
-    private var _showPlaceList = MutableLiveData<Boolean>()
-    val showPlaceList: LiveData<Boolean> = _showPlaceList
+    private var _placeListVisible = MutableLiveData<Boolean>()
+    val placeListVisible: LiveData<Boolean> = _placeListVisible
 
     init {
         initSearchLog()
@@ -34,7 +34,7 @@ class MainViewModel(
 
     private fun updateTabViewVisible() {
         val isVisible = mainModel.hasAnyClick()
-        _showTabView.postValue(isVisible)
+        _tabViewVisible.postValue(isVisible)
     }
 
     private fun initSearchList() {
@@ -50,6 +50,10 @@ class MainViewModel(
                 _placeList.value = it
             }
         }
+    }
+
+    fun showPlaceList(){
+        _placeListVisible.value = !_placeList.value.isNullOrEmpty()
     }
 
     fun callLogList() = mainModel.getLogList()

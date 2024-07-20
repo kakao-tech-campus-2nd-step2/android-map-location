@@ -45,16 +45,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         mainViewModel.placeList.observe(this) { list ->
-            if (list.isEmpty()) {
-                binding.noResultTextview.isVisible = true
-                binding.recyclerView.isVisible = false
-            } else {
-                binding.noResultTextview.isVisible = false
-                binding.recyclerView.isVisible = true
-                resultAdapter.submitList(list)
-            }
+            resultAdapter.submitList(list)
         }
 
+        mainViewModel.placeListVisible.observe(this) {
+            binding.recyclerView.isVisible = it
+            binding.noResultTextview.isVisible = !it
+        }
 
         val tapAdapter = TapViewAdapter {
             mainViewModel.deleteLogClickListner(it)
@@ -68,7 +65,7 @@ class MainActivity : AppCompatActivity() {
             tapAdapter.submitList(it)
             tapAdapter.notifyDataSetChanged()
         }
-        mainViewModel.showTabView.observe(this) {
+        mainViewModel.tabViewVisible.observe(this) {
             binding.tabRecyclerview.isVisible = it
         }
 
@@ -78,11 +75,12 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                // 미사용
+                mainViewModel.callResultList(s.toString())
+                mainViewModel.showPlaceList()
             }
 
             override fun afterTextChanged(s: Editable?) {
-                mainViewModel.callResultList(s.toString())
+                // 미사용
             }
         })
 
