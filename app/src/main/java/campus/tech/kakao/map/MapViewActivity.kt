@@ -23,8 +23,7 @@ import com.kakao.vectormap.label.LabelStyles
 
 class MapViewActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMapViewBinding
-    private lateinit var mapRepository: MapRep
-    ository
+    private lateinit var mapRepository: MapRepository
     private lateinit var mapViewModel: MapViewModel
 
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>

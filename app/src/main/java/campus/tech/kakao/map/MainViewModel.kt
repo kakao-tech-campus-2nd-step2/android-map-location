@@ -38,8 +38,7 @@ class MainViewModel(
     }
 
     private fun initSearchList() {
-        placeRepository.getResearchLogs()
-        _logList.postValue(placeRepository.getLogList())
+        _logList.postValue(placeRepository.getResearchLogs())
     }
 
     fun callResultList(userInput: String){

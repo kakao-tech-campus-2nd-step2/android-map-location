@@ -46,7 +46,6 @@ class PlaceRepository(private val application: MyApplication) {
             })
     }
 
-    // Click_DB에 클릭한 Place1 객체 넣기 (이미 클릭해서 진입한 거면 필요없음)
     fun insertLog(place: Place) {
         dbHelper.writableDatabase.use { db ->
             db.rawQuery(
@@ -98,7 +97,7 @@ class PlaceRepository(private val application: MyApplication) {
     }
 
     // 처음 시작시 이전에 저장된 Click_DB 값들을 가져옴 -> 초기 researchList 업데이트
-    fun getResearchLogs() {
+    fun getResearchLogs(): List<Place> {
         dbHelper.readableDatabase.use { db ->
             db.query(
                 MyPlaceContract.Research.TABLE_NAME,
@@ -124,6 +123,7 @@ class PlaceRepository(private val application: MyApplication) {
                 }
             }
         }
+        return logList
     }
 
     // viewModel에 데이터 알려주기
