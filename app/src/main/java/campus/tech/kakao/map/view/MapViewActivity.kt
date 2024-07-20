@@ -136,10 +136,10 @@ class MapViewActivity : AppCompatActivity() {
     private fun getLastLocation(context: Context): Pair<Double, Double>? {
         val sharedPreferences = context.getSharedPreferences("LastLocation", Context.MODE_PRIVATE)
 
-        val x = sharedPreferences.getString("PLACE_X", "NULL")
-        val y = sharedPreferences.getString("PLACE_Y", "NULL")
-        return if (x != "NULL" && y != "NULL") {
-            Pair(x!!.toDouble(), y!!.toDouble())
+        val x = sharedPreferences.getString("PLACE_X", null)
+        val y = sharedPreferences.getString("PLACE_Y", null)
+        return if (x != null && y != null) {
+            Pair(x.toDouble(), y.toDouble())
         } else {
             null
         }
