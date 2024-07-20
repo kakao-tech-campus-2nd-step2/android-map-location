@@ -48,7 +48,8 @@ class DatabaseManager(context: Context) {
 //        return result
 //    }
 
-    fun insertSavedPlace(id : Int, name: String) {
+
+    fun insertSavedsearch(id : Int, name: String) {
         val values = ContentValues().apply {
             put("id", id)
             put("name", name)
@@ -80,6 +81,7 @@ class DatabaseManager(context: Context) {
         cursor.close()
         return result
     }
+
 
     fun deleteSavedSearch(id: Int) {
         db.delete("SavedSearch", "id = ?", arrayOf(id.toString()))

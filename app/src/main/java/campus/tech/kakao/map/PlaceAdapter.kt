@@ -7,9 +7,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
+
 class PlaceAdapter(private var items : List<Place>, private val viewModel: MyViewModel) : RecyclerView.Adapter<PlaceAdapter.ViewHolder>() {
 
     class ViewHolder(view: View, private val viewModel: MyViewModel) : RecyclerView.ViewHolder(view){
+
 
         val id : TextView = view.findViewById(R.id.id)
         val name: TextView = view.findViewById(R.id.name)
@@ -17,6 +19,7 @@ class PlaceAdapter(private var items : List<Place>, private val viewModel: MyVie
         val kind: TextView = view.findViewById(R.id.kind)
         var longitude : Double? = null
         var latitude : Double? = null
+
 
         fun bind(item: Place) {
             itemView.setOnClickListener {
@@ -34,12 +37,20 @@ class PlaceAdapter(private var items : List<Place>, private val viewModel: MyVie
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view: View =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_recyclerview, parent, false)
+            LayoutInflater.from(parent?.context).inflate(R.layout.item_recyclerview, parent, false)
         return ViewHolder(view, viewModel)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(items[position])
+        val item = items[position]
+        with(holder) {
+            id.text = item.id.toString()
+            name.text = item.name
+            address.text = item.address
+            kind.text = item.kind
+            bind(items[position])
+            Log.d("Testt",holder.name.text.toString())
+        }
     }
 
     override fun getItemCount(): Int {

@@ -51,6 +51,7 @@ class MainActivity : AppCompatActivity() {
             if (it) {
                 val intent = Intent(this@MainActivity, SearchPlaceActivity::class.java)
                 startActivity(intent)
+                finish()
             }
         })
 
