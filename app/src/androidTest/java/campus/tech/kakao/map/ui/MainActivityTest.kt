@@ -63,11 +63,17 @@ class MainActivityTest {
                     0, click()
                 )
             )
+    }
 
-        idlingResource.decrement()
-
+    @Test
+    fun testBottomSheetIsDisplayedWithCorrectInfo() {
+        onView(withId(R.id.search_bar)).perform(click())
+        onView(withId(R.id.edit_search)).perform(replaceText("바다정원"))
+        Thread.sleep(3000)
+        onView(withId(R.id.recyclerView))
+            .perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()))
+        onView(withId(R.id.bottom_sheet)).check(matches(withText("바다정원")))
+        onView(withId(R.id.place_name)).check(matches(withText("강원 고성군 토성면 버리깨길 23")))
         onView(withId(R.id.bottom_sheet)).check(matches(isDisplayed()))
-        onView(withId(R.id.place_name)).check(matches(withText("바다정원")))
-        onView(withId(R.id.place_address)).check(matches(withText("강원 고성군 토성면 버리깨길 23")))
     }
 }
