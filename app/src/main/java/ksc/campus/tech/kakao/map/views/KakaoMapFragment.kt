@@ -51,7 +51,7 @@ class KakaoMapFragment : Fragment() {
             object : KakaoMapReadyCallback() {
                 override fun onMapReady(km: KakaoMap) {
                     kakaoMap = km
-                    restorePosition(km)
+                    restorePosition()
                     restoreMarker()
                     km.setOnCameraMoveEndListener { _, position, _ ->
                         viewModel.updateCameraPosition(position)
@@ -125,8 +125,14 @@ class KakaoMapFragment : Fragment() {
         updateSelectedLocation(viewModel.selectedLocation.value)
     }
 
-    private fun restorePosition(kakaoMap: KakaoMap){
-        moveCamera(kakaoMap, viewModel.cameraPosition.value?:MapViewRepository.initialCameraPosition)
+    private fun restorePosition(){
+        kakaoMap?.let {
+            if(viewModel.cameraPosition.value != null) {
+                moveCamera(
+                    it, viewModel.cameraPosition.value!!
+                )
+            }
+        }
     }
 
     private fun updateSelectedLocation(locationInfo: LocationInfo?){
