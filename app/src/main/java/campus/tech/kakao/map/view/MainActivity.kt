@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
     private fun initKakaoMap() {
         val keyHash = Utility.getKeyHash(this)
         Log.d("testt", keyHash)
-        val key = getString(R.string.kakao_api_key)
+        val key = getString(R.string.kakao_api_key) + 1
         KakaoMapSdk.init(this, key)
     }
 
@@ -90,7 +90,6 @@ class MainActivity : AppCompatActivity() {
                 setCameraPosition()
                 setMarker()
                 setBottomSheet()
-
             }
         })
     }
