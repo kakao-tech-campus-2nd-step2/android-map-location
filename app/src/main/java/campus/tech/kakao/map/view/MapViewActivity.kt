@@ -29,6 +29,8 @@ import com.kakao.vectormap.label.LabelStyles
 class MapViewActivity : AppCompatActivity() {
     companion object {
         const val EXTRA_ERROR_MSG = "ERROR"
+        const val DEFAULT_LONGITUDE = "127.0016985"
+        const val DEFAULT_LATITUDE = "37.5642135"
     }
 
     private lateinit var binding: ActivityMapViewBinding
@@ -55,8 +57,8 @@ class MapViewActivity : AppCompatActivity() {
 
         val placeName = intent.getStringExtra(MainActivity.EXTRA_PLACE_NAME)
         val placeAddr = intent.getStringExtra(MainActivity.EXTRA_PLACE_ADDR)
-        val placeX = intent.getStringExtra(MainActivity.EXTRA_PLACE_X)
-        val placeY = intent.getStringExtra(MainActivity.EXTRA_PLACE_Y)
+        val placeX = intent.getStringExtra(MainActivity.EXTRA_PLACE_X) ?: DEFAULT_LONGITUDE
+        val placeY = intent.getStringExtra(MainActivity.EXTRA_PLACE_Y) ?: DEFAULT_LATITUDE
 
         processBottomSheet(placeName, placeAddr)
 
@@ -78,7 +80,8 @@ class MapViewActivity : AppCompatActivity() {
                     Log.d("KakaoMap", "카카오맵 정상실행")
                     val position: LatLng
                     if (!placeName.isNullOrEmpty() && !placeAddr.isNullOrEmpty()) { // 아이템 클릭으로 인해 Intent를 전달받았을 경우
-                        position = LatLng.from(placeY!!.toDouble(), placeX!!.toDouble())
+                        position = LatLng.from(placeY.toDouble(), placeX.toDouble())
+
                         // 라벨표시
                         val style = map.labelManager?.addLabelStyles(LabelStyles.from(LabelStyle.from(
                             R.drawable.flag
@@ -89,7 +92,7 @@ class MapViewActivity : AppCompatActivity() {
                         val label = layer?.addLabel(options)
                         label?.changeText(placeName)
                     } else { // 앱 첫 실행일 경우 -> 인텐트를 받지 못하는 대신 sharedPreference를 전달받음
-                        val (x, y) =  lastLocation!!
+                        val (x, y) = lastLocation ?: Pair(DEFAULT_LONGITUDE.toDouble(), DEFAULT_LATITUDE.toDouble())
                         position = LatLng.from(y, x)
                     }
                     //카메라 이동
