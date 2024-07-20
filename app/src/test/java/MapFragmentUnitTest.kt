@@ -3,11 +3,17 @@ import android.content.SharedPreferences
 import androidx.fragment.app.testing.FragmentScenario
 import androidx.test.core.app.ApplicationProvider
 import campus.tech.kakao.View.MapFragment
-import junit.framework.TestCase.assertEquals
 import org.junit.After
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
+
+@Config(manifest = Config.NONE)
+@RunWith(RobolectricTestRunner::class)
 class MapFragmentUnitTest {
         private lateinit var fragmentScenario: FragmentScenario<MapFragment>
 

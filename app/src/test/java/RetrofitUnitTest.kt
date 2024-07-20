@@ -4,9 +4,13 @@ import okhttp3.HttpUrl
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-
+@Config(manifest = Config.NONE)
+@RunWith(RobolectricTestRunner::class)
 class RetrofitClientTest {
 
     @Test
