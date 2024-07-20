@@ -25,6 +25,10 @@ import com.kakao.vectormap.label.LabelStyle
 import com.kakao.vectormap.label.LabelStyles
 import java.lang.Exception
 
+const val MARKER_WIDTH = 100
+const val MARKER_HEIGHT = 100
+const val MARKER_TEXT_SIZE = 40
+const val ZOOM_LEVEL = 17
 class MapActivity : AppCompatActivity() {
 	private lateinit var mapView: MapView
 	private var map: KakaoMap? = null
@@ -71,7 +75,7 @@ class MapActivity : AppCompatActivity() {
 			}
 
 			override fun getZoomLevel(): Int {
-				return 17
+				return ZOOM_LEVEL
 			}
 		})
 		searchBar = findViewById(R.id.search_bar)
@@ -114,8 +118,9 @@ class MapActivity : AppCompatActivity() {
 
 	private fun makeMarker(){
 		val bitmapImage = BitmapFactory.decodeResource(resources, R.drawable.marker)
-		val markerImage = Bitmap.createScaledBitmap(bitmapImage, 100, 100, true)
-		val styles = map?.labelManager?.addLabelStyles(LabelStyles.from(LabelStyle.from(markerImage).setTextStyles(40, Color.BLACK)))
+		val markerImage = Bitmap.createScaledBitmap(bitmapImage, MARKER_WIDTH, MARKER_HEIGHT, true)
+		val styles = map?.labelManager?.addLabelStyles(LabelStyles.from(LabelStyle.from(markerImage).setTextStyles(
+			MARKER_TEXT_SIZE, Color.BLACK)))
 		if(styles != null){
 			val options = LabelOptions.from(LatLng.from(latitude, longitude)).setStyles(styles).setTexts(placeName)
 			layer = map?.labelManager?.layer
