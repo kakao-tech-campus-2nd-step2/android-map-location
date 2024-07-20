@@ -19,6 +19,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "KAKAO_REST_API_KEY", "\"1cc77fe7fb4a4c7747a562f762962ce9\"")
+
     }
 
     buildTypes {
@@ -56,8 +57,12 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.11.0")
     implementation("com.kakao.maps.open:android:2.11.1")
     implementation("androidx.activity:activity:1.8.0")
+    testImplementation ("org.mockito:mockito-core:3.11.2")
     testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    implementation ("androidx.datastore:datastore-preferences:1.0.0")
+    androidTestImplementation ("androidx.test.espresso:espresso-intents:3.5.1")
+    androidTestImplementation ("androidx.test:rules:1.5.0")
+    androidTestImplementation ("androidx.test.ext:junit:1.1.2")
+    androidTestImplementation ("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation ("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation ("androidx.test:runner:1.5.2")
 }
