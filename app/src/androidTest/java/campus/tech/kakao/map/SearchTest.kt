@@ -32,6 +32,7 @@ class SearchTest {
         val scenario = ActivityScenario.launch(SearchActivity::class.java)
         performSearch("카페")
         checkRecyclerView(0)
+        isBottomSheetVisible()
         scenario.close()
     }
 
@@ -63,6 +64,15 @@ class SearchTest {
         val scenario = ActivityScenario.launch(SearchActivity::class.java)
         performSearch("카페")
         deleteSearchWord()
+        scenario.close()
+    }
+
+    @Test
+    fun kakaoMapSearchButton() {
+        val scenario = ActivityScenario.launch(KakaoMapView::class.java)
+        onView(withId(R.id.searchButton))
+            .perform(click())
+        Thread.sleep(2000)
         scenario.close()
     }
 
@@ -114,6 +124,12 @@ class SearchTest {
         onView(withId(R.id.searchWord))
             .check(matches(withText("")))
 
+        Thread.sleep(2000)
+    }
+
+    private fun isBottomSheetVisible() {
+        onView(withId(R.id.persistent_bottom_sheet))
+            .check(matches(isDisplayed()))
         Thread.sleep(2000)
     }
 }
