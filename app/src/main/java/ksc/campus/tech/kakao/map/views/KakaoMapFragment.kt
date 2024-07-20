@@ -139,11 +139,11 @@ class KakaoMapFragment : Fragment() {
         if (locationInfo == null) {
             clearLabels()
         } else {
-            changedSelectedPosition(LatLng.from(locationInfo.latitude, locationInfo.longitude))
+            changeSelectedPosition(LatLng.from(locationInfo.latitude, locationInfo.longitude))
         }
     }
 
-    private fun changedSelectedPosition(coordinate: LatLng){
+    private fun changeSelectedPosition(coordinate: LatLng){
         clearLabels()
         addLabel(coordinate)
     }
