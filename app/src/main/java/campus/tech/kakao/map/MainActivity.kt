@@ -72,6 +72,7 @@ class MainActivity : AppCompatActivity() {
 
         mainViewModel.logList.observe(this) {
             tapAdapter.submitList(it)
+            tapAdapter.notifyDataSetChanged()
         }
 
         mainViewModel.tabViewVisible.observe(this) {

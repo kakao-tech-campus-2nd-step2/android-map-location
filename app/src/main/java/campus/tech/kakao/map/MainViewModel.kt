@@ -33,7 +33,7 @@ class MainViewModel(
     }
 
     private fun updateTabViewVisible() {
-        val isVisible = placeRepository.hasAnyClick()
+        val isVisible = placeRepository.hasStoredLogs()
         _tabViewVisible.postValue(isVisible)
     }
 

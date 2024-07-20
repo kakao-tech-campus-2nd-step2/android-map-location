@@ -71,7 +71,7 @@ class PlaceRepository(private val application: MyApplication) {
     }
 
     // tabRecyclerView를 표시할지 여부를 정하기 위해 <- Click_DB에 클릭한 기록이 있는지 확인
-    fun hasAnyClick() : Boolean {
+    fun hasStoredLogs() : Boolean {
         dbHelper.readableDatabase.use {
             it.rawQuery("SELECT COUNT(*) FROM ${MyPlaceContract.Research.TABLE_NAME}", null).use { cursor ->
                 return if (cursor.moveToFirst()) {
