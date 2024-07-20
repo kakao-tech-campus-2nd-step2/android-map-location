@@ -119,18 +119,9 @@ class MainActivity : AppCompatActivity() {
             apply()
         }
     }
-
-    override fun onPause() {
-        super.onPause()
-    }
-
     override fun onStop() {
         super.onStop()
         saveLastLocation(this)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
     }
 }
 

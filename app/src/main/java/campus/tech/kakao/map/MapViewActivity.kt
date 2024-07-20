@@ -159,14 +159,4 @@ class MapViewActivity : AppCompatActivity() {
         super.onPause()
         mapView.pause()
     }
-
-    override fun onStop() {
-        super.onStop()
-        Log.d("mytest", "onStop called")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d("mytest", "onDestroy called")
-    }
 }

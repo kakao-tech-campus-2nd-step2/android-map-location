@@ -14,19 +14,10 @@ class MainModel(private val application: MyApplication) {
     private var placeList = mutableListOf<Place>()
     private var logList = mutableListOf<Place>()
 
-    //local API에 필요한 Retrofit_클라이언트 생성
-    object RetrofitObject {
-        val retrofitService: KakaoApiService by lazy { Retrofit.Builder()
-            .baseUrl("https://dapi.kakao.com/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(KakaoApiService::class.java)
-        }
-    }
-
-    fun callKakao(query: String, callback: (List<Place>) -> Unit){
+    fun searchPlaces(query: String, callback: (List<Place>) -> Unit){
         val apiKey = "KakaoAK " + BuildConfig.KAKAO_REST_API_KEY
-        RetrofitObject.retrofitService.getPlace(apiKey, query)
+        val retrofitService = RetrofitClient.retrofitService
+        retrofitService.getPlace(apiKey, query)
             .enqueue(object : Callback<KakaoResponse> {
                 override fun onResponse(
                     call: Call<KakaoResponse>,

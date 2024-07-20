@@ -42,7 +42,7 @@ class MainViewModel(
         if (userInput == ""){
             _placeList.value = emptyList()
         } else{
-            mainModel.callKakao(userInput) {
+            mainModel.searchPlaces(userInput) {
                 _placeList.value = it
             }
         }
