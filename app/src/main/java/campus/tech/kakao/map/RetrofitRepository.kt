@@ -6,8 +6,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class RetrofitRepository {
-    suspend fun getPlace(query: String): List<Document> {
+open class RetrofitRepository {
+    open suspend fun getPlace(query: String): List<Document> {
         if (query.isEmpty()) {
             return emptyList()
         }

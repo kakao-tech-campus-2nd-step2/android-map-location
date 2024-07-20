@@ -14,7 +14,7 @@ class SearchViewModel(context: Context) : ViewModel() {
     private val dbHelper: DBHelper = DBHelper(context)
     private val db = dbHelper.writableDatabase
     private val preferenceManager = MapApplication.prefs
-    private val repository = RetrofitRepository()
+    var repository = RetrofitRepository()
 
 
     private var _placeList = MutableLiveData<List<Place>>()

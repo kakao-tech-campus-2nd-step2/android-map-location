@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 
-class PreferenceManager(context: Context) {
+open class PreferenceManager(context: Context) {
     private val prefs: SharedPreferences
             = context.getSharedPreferences(Constants.PREFERENCE_NAME, Context.MODE_PRIVATE)
 
@@ -13,7 +13,7 @@ class PreferenceManager(context: Context) {
         prefs.edit().remove(key).apply()
     }
 
-    fun getArrayList(key: String): ArrayList<SearchHistory> {
+    open fun getArrayList(key: String): ArrayList<SearchHistory> {
         val stringPrefs = prefs.getString(key, null)
         return if (stringPrefs != null && stringPrefs != "[]") {
             GsonBuilder().create().fromJson(
@@ -29,7 +29,7 @@ class PreferenceManager(context: Context) {
         prefs.edit().putString(key, jsonString).apply()
     }
 
-    fun deleteArrayListItem(key: String, index: Int) {
+    open fun deleteArrayListItem(key: String, index: Int) {
         val list = getArrayList(key)
         if (index >= 0 && index < list.size) {
             list.removeAt(index)
@@ -37,7 +37,7 @@ class PreferenceManager(context: Context) {
         }
     }
 
-    fun savePreference(key: String, history: SearchHistory, list: ArrayList<SearchHistory>) {
+    open fun savePreference(key: String, history: SearchHistory, list: ArrayList<SearchHistory>) {
         list.add(0, history)
         setArrayList(key, list)
     }
