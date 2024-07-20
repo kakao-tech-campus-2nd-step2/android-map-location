@@ -41,9 +41,9 @@ class MapActivity : AppCompatActivity() {
 	private lateinit var bitmapImage: Bitmap
 	private lateinit var markerImage: Bitmap
 	private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
-	private val bottomSheet by lazy { findViewById<LinearLayout>(R.id.bottom_sheet) }
-	private val bottomSheetName by lazy { findViewById<TextView>(R.id.name) }
-	private val bottomSheetAddress by lazy { findViewById<TextView>(R.id.address) }
+	private lateinit var bottomSheet :LinearLayout
+	private lateinit var bottomSheetName:TextView
+	private lateinit var bottomSheetAddress :TextView
 	companion object{
 		var documentClicked = false
 	}
@@ -132,6 +132,9 @@ class MapActivity : AppCompatActivity() {
 	}
 
 	private fun initBottomSheet(){
+		bottomSheet = findViewById(R.id.bottom_sheet)
+		bottomSheetName = findViewById(R.id.name)
+		bottomSheetAddress = findViewById(R.id.address)
 		bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
 		bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback(){
 			override fun onStateChanged(bottomSheet: View, newState: Int) {
