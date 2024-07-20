@@ -17,8 +17,6 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
 	private val initLatitude = "37.402005"
 	private val initLongitude = "127.108621"
 
-	fun getInitLatitude() = initLatitude
-	fun getInitLongitude() = initLongitude
 
 	fun addWord(document: Document){
 		wordDbHelper.addWord(wordfromDocument(document))
