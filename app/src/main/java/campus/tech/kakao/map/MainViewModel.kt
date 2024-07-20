@@ -14,6 +14,12 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
 	private val retrofitData = getInstance()
 	val documentList: LiveData<List<Document>> get() = retrofitData.getDocuments()
 
+	private val initLatitude = 37.402005
+	private val initLongitude = 127.108621
+
+	fun getInitLatitude() = initLatitude
+	fun getInitLongitude() = initLongitude
+
 	fun addWord(document: Document){
 		wordDbHelper.addWord(wordfromDocument(document))
 	}

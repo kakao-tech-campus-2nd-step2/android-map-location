@@ -30,8 +30,7 @@ class MapActivity : AppCompatActivity() {
 	private lateinit var mapView: MapView
 	private var map: KakaoMap? = null
 	private lateinit var searchBar: LinearLayout
-	private var latitude = 37.402005
-	private var longitude = 127.108621
+	private lateinit var model: MainViewModel
 	private lateinit var placeName:String
 	private lateinit var addressName:String
 	private var styles: LabelStyles? = null
@@ -44,6 +43,8 @@ class MapActivity : AppCompatActivity() {
 	private lateinit var bottomSheet :LinearLayout
 	private lateinit var bottomSheetName:TextView
 	private lateinit var bottomSheetAddress :TextView
+	private var longitude:Double = 0.0
+	private var latitude:Double = 0.0
 	companion object{
 		var documentClicked = false
 	}
@@ -52,7 +53,8 @@ class MapActivity : AppCompatActivity() {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_map)
 		mapView = findViewById(R.id.map_view)
-		setMapInfo()
+		model = MainViewModel(application)
+		getMapInfo()
 		mapView.start(object : MapLifeCycleCallback() {
 			override fun onMapDestroy() {
 
@@ -87,7 +89,7 @@ class MapActivity : AppCompatActivity() {
 
 	override fun onResume() {
 		super.onResume()
-		setMapInfo()
+		getMapInfo()
 		mapView.resume()
 		if(documentClicked){
 			makeMarker()
@@ -107,9 +109,9 @@ class MapActivity : AppCompatActivity() {
 		mapView.pause()
 	}
 
-	private fun setMapInfo(){
-		latitude = mapPosition.getPreferences("latitude","37.406960").toDouble()
-		longitude = mapPosition.getPreferences("longitude","127.110030").toDouble()
+	private fun getMapInfo(){
+		latitude = mapPosition.getPreferences("latitude",model.getInitLatitude().toString()).toDouble()
+		longitude = mapPosition.getPreferences("longitude",model.getInitLongitude().toString()).toDouble()
 		placeName = mapPosition.getPreferences("placeName","")
 		addressName = mapPosition.getPreferences("addressName","")
 	}
