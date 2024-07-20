@@ -25,7 +25,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("mytest", "MainAcitivty_onCreate")
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         mainModel = MainModel(application as MyApplication)

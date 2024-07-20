@@ -11,12 +11,14 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class MainModel(private val application: MyApplication) {
     private val dbHelper = PlaceDbHelper(application)
-    private var placeList = mutableListOf<Place>()
     private var logList = mutableListOf<Place>()
 
     fun searchPlaces(query: String, callback: (List<Place>) -> Unit){
+        var placeList = mutableListOf<Place>()
+
         val apiKey = "KakaoAK " + BuildConfig.KAKAO_REST_API_KEY
         val retrofitService = RetrofitClient.retrofitService
+
         retrofitService.getPlace(apiKey, query)
             .enqueue(object : Callback<KakaoResponse> {
                 override fun onResponse(
@@ -31,10 +33,9 @@ class MainModel(private val application: MyApplication) {
                         }.toMutableList()
                         callback(placeList)
                     } else {
-                        val errorBody = response.errorBody()?.string()
-                        Log.d("KakaoAPI", errorBody.toString())
-                        callback(emptyList())
+                        Log.d("KakaoAPI", response.errorBody()?.string().toString())
                         placeList = emptyList<Place>().toMutableList()
+                        callback(emptyList())
                     }
                 }
 
