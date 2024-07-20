@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity() {
             tapAdapter.submitList(it)
             tapAdapter.notifyDataSetChanged()
         }
-        mainViewModel.tabViewVisible.observe(this) {
+        mainViewModel.showTabView.observe(this) {
             binding.tabRecyclerview.isVisible = it
         }
 
@@ -87,8 +87,8 @@ class MainActivity : AppCompatActivity() {
         })
 
         binding.closeButton.setOnClickListener {
-            binding.input.setText("")
-            mainViewModel.inputCloseButtonClickListener()
+            binding.input.text.clear()
+            mainViewModel.closeButtonClickListener()
         }
     }
 

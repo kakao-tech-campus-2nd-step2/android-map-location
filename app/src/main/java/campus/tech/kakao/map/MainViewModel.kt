@@ -16,24 +16,28 @@ class MainViewModel(
     private var _logList = MutableLiveData<List<Place>>()
     val logList: LiveData<List<Place>> = _logList
 
-    private var _tabViewVisible = MutableLiveData<Boolean>()
-    val tabViewVisible: LiveData<Boolean> = _tabViewVisible
+    private var _showTabView = MutableLiveData<Boolean>()
+    val showTabView: LiveData<Boolean> = _showTabView
+
+    private var _showPlaceList = MutableLiveData<Boolean>()
+    val showPlaceList: LiveData<Boolean> = _showPlaceList
 
     init {
-        initClickLog()
+        initSearchLog()
     }
 
     // 앱 키면 가장 먼저 할 것 : ⓐ db 비우기 ⓑ 검색결과 채우기 ⓒ 클릭결과 가져오기
-    private fun initClickLog() {
-        initResearchList() // researchList를 새로 불러오고
-        updateTabRecyclerView()   // tabview를 보일지 아닐지
+    private fun initSearchLog() {
+        initSearchList() // researchList를 새로 불러오고
+        updateTabViewVisible()   // tabview를 보일지 아닐지
     }
 
-    private fun updateTabRecyclerView() {
+    private fun updateTabViewVisible() {
         val isVisible = mainModel.hasAnyClick()
-        _tabViewVisible.postValue(isVisible)
+        _showTabView.postValue(isVisible)
     }
-    private fun initResearchList() {
+
+    private fun initSearchList() {
         mainModel.getResearchLogs()
         _logList.postValue(mainModel.getLogList())
     }
@@ -50,17 +54,16 @@ class MainViewModel(
 
     fun callLogList() = mainModel.getLogList()
 
-    // recyclerVIewAdapter 인자에 들어갈 내용 -> ⓐ Click_DB에 넣고 ⓑ 로컬 ResearchList에 넣기
     fun resultItemClickListener(item: Place) {
         mainModel.insertLog(item)
 
         val updateTabItem = mainModel.getLogList()
         _logList.value = updateTabItem
 
-        updateTabRecyclerView()
+        updateTabViewVisible()
     }
 
-    fun inputCloseButtonClickListener() {
+    fun closeButtonClickListener() {
         _placeList.postValue(emptyList())
     }
 
@@ -70,6 +73,6 @@ class MainViewModel(
         val removeLog = mainModel.getLogList()
         _logList.value = removeLog
 
-        updateTabRecyclerView()
+        updateTabViewVisible()
     }
 }
