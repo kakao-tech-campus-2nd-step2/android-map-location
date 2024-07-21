@@ -8,12 +8,17 @@ object PlaceContract {
     const val COLUMN_NAME: String = "name"
     const val COLUMN_LOCATION: String = "place"
     const val COLUMN_TYPE: String = "type"
+    const val COLUMN_X_POS: String = "x_pos"
+    const val COLUMN_Y_POS: String = "y_pos"
+
 
     const val CREATE_QUERY = "CREATE TABLE $TABLE_NAME (" +
             "$COLUMN_ID TEXT NOT NULL, " +
             "$COLUMN_NAME TEXT NOT NULL, " +
             "$COLUMN_LOCATION TEXT NOT NULL, " +
-            "$COLUMN_TYPE TEXT" +
+            "$COLUMN_TYPE TEXT, " +
+            "$COLUMN_X_POS TEXT NOT NULL, " +
+            "$COLUMN_Y_POS TEXT NOT NULL " +
             ");"
 
     const val DELETE_QUERY = "DELETE FROM $TABLE_NAME"

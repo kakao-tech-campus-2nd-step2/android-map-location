@@ -63,12 +63,24 @@ class ViewActivity : AppCompatActivity() {
 
     private fun setupSearchedPlaceRecyclerView() {
         val searchedPlaceRecyclerView = binding.recyclerPlace
-        searchedPlaceAdapter = SearchedPlaceAdapter { place -> viewModel.updateLogs(place) }
+        searchedPlaceAdapter = SearchedPlaceAdapter { place ->
+            viewModel.updateLogs(place)
+            handlePlaceClick(place)
+        }
+
 
         searchedPlaceRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@ViewActivity)
             adapter = searchedPlaceAdapter
         }
+    }
+
+    private fun handlePlaceClick(place: Place) {
+        val intent = Intent(this, MapActivity::class.java).apply {
+            putExtra("placeData", place)
+        }
+        setResult(RESULT_OK,intent)
+        finish()
     }
 
     private fun setupLogRecyclerView() {
