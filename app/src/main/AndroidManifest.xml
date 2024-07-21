@@ -16,7 +16,7 @@
         android:theme="@style/Theme.Map"
         tools:targetApi="31">
         <activity
-            android:name=".view.MapActivity"
+            android:name=".presentation.MapActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,10 +25,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.PlaceViewModel"
+            android:name=".presentation.SearchViewModel"
             android:exported="false" />
         <activity
-            android:name=".view.ViewActivity"
+            android:name=".presentation.SearchActivity"
             android:exported="false"/>
 
 

@@ -1,4 +1,4 @@
-package campus.tech.kakao.map.view
+package campus.tech.kakao.map.presentation
 
 import android.content.Intent
 import android.os.Bundle
@@ -11,21 +11,19 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import campus.tech.kakao.map.PlaceApplication
 import campus.tech.kakao.map.R
-import campus.tech.kakao.map.data.PlaceRepositoryImpl
 import campus.tech.kakao.map.databinding.ActivityMainBinding
-import campus.tech.kakao.map.view.adapter.SearchedPlaceAdapter
-import campus.tech.kakao.map.view.adapter.LogAdapter
+import campus.tech.kakao.map.presentation.adapter.SearchedPlaceAdapter
+import campus.tech.kakao.map.presentation.adapter.LogAdapter
 import campus.tech.kakao.map.domain.model.Place
 import campus.tech.kakao.map.util.PlaceMapper
 import kotlinx.coroutines.launch
 
-class ViewActivity : AppCompatActivity() {
+class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var searchedPlaceAdapter: SearchedPlaceAdapter
     private lateinit var logAdapter: LogAdapter
-    private lateinit var viewModel: PlaceViewModel
+    private lateinit var viewModel: SearchViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,8 +38,8 @@ class ViewActivity : AppCompatActivity() {
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProvider(this,PlaceViewModel.Factory)
-            .get(PlaceViewModel::class.java)
+        viewModel = ViewModelProvider(this,SearchViewModel.Factory)
+            .get(SearchViewModel::class.java)
     }
 
     private fun initBinding() {
@@ -63,8 +61,8 @@ class ViewActivity : AppCompatActivity() {
         }
 
         searchedPlaceRecyclerView.apply {
-            layoutManager = LinearLayoutManager(this@ViewActivity)
-            addItemDecoration(DividerItemDecoration(this@ViewActivity, DividerItemDecoration.VERTICAL ))
+            layoutManager = LinearLayoutManager(this@SearchActivity)
+            addItemDecoration(DividerItemDecoration(this@SearchActivity, DividerItemDecoration.VERTICAL ))
             adapter = searchedPlaceAdapter
         }
     }
@@ -83,7 +81,7 @@ class ViewActivity : AppCompatActivity() {
         logAdapter.submitList(viewModel.getLogs())
 
         logRecyclerView.apply {
-            layoutManager = LinearLayoutManager(this@ViewActivity, RecyclerView.HORIZONTAL, false)
+            layoutManager = LinearLayoutManager(this@SearchActivity, RecyclerView.HORIZONTAL, false)
             adapter = logAdapter
         }
     }
@@ -91,7 +89,7 @@ class ViewActivity : AppCompatActivity() {
     private fun observeViewModel() {
 
         lifecycleScope.launch {
-            viewModel.places.collect { places ->
+            viewModel.searchedPlaces.collect { places ->
                 updateSearchedPlaceList(places)
                 binding.tvHelpMessage.visibility = if (places.isEmpty()) View.VISIBLE else View.GONE
             }

@@ -1,21 +1,16 @@
-package campus.tech.kakao.map.view
+package campus.tech.kakao.map.presentation
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
-import android.net.ConnectivityManager
-import android.net.NetworkInfo
 import android.os.Bundle
 import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SearchView
 import androidx.constraintlayout.widget.ConstraintLayout
 import campus.tech.kakao.map.PlaceApplication
 import campus.tech.kakao.map.R
 import campus.tech.kakao.map.domain.model.Place
-import campus.tech.kakao.map.ui.BottomSheetFragment
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
@@ -30,7 +25,7 @@ class MapActivity : AppCompatActivity() {
     private val mapView by lazy<MapView> { findViewById(R.id.mapView) }
     private val searchView by lazy<ConstraintLayout> { findViewById(R.id.searchView) }
     private lateinit var resultLauncher: ActivityResultLauncher<Intent>
-    private lateinit var bottomSheetFragment: BottomSheetFragment
+    private lateinit var mapBottomSheet: MapBottomSheet
     private lateinit var tvErrorMessage: TextView
     private lateinit var kakaoMap: KakaoMap
 
@@ -66,7 +61,7 @@ class MapActivity : AppCompatActivity() {
 
     private fun initializeSearchView() {
         searchView.setOnClickListener {
-            val intent = Intent(this, ViewActivity::class.java)
+            val intent = Intent(this, SearchActivity::class.java)
             resultLauncher.launch(intent)
         }
     }
@@ -108,8 +103,8 @@ class MapActivity : AppCompatActivity() {
     }
 
     private fun showBottomSheet(place: Place) {
-        bottomSheetFragment = BottomSheetFragment(place)
-        bottomSheetFragment.show(supportFragmentManager, bottomSheetFragment.tag)
+        mapBottomSheet = MapBottomSheet(place)
+        mapBottomSheet.show(supportFragmentManager, mapBottomSheet.tag)
     }
 
     private fun initMap() {

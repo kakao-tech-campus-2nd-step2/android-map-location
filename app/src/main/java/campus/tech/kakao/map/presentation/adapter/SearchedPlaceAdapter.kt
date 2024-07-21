@@ -1,17 +1,12 @@
-package campus.tech.kakao.map.view.adapter
+package campus.tech.kakao.map.presentation.adapter
 
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.map.util.DiffUtilCallback
 import campus.tech.kakao.map.domain.model.Place
 import campus.tech.kakao.map.databinding.ListItemBinding
-import campus.tech.kakao.map.view.MapActivity
-import campus.tech.kakao.map.view.ViewActivity
 
 
 class SearchedPlaceAdapter(

@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewModel"
-            type="campus.tech.kakao.map.view.PlaceViewModel" />
+            type="campus.tech.kakao.map.presentation.SearchViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -15,7 +15,7 @@
         android:layout_height="match_parent"
         android:paddingBottom="24dp"
         android:background="#FBFBFB"
-        tools:context=".view.ViewActivity">
+        tools:context=".presentation.SearchActivity">
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/navSearch"

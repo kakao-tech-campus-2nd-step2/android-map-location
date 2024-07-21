@@ -1,15 +1,11 @@
-package campus.tech.kakao.map.view
+package campus.tech.kakao.map.presentation
 
 import androidx.lifecycle.*
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import campus.tech.kakao.map.BuildConfig
 import campus.tech.kakao.map.PlaceApplication
-import campus.tech.kakao.map.PlaceApplication.Companion.isNetworkActive
-import campus.tech.kakao.map.data.net.KakaoApiClient
 import campus.tech.kakao.map.domain.model.Place
-import campus.tech.kakao.map.domain.model.ResultSearchKeyword
 import campus.tech.kakao.map.domain.repository.PlaceRepository
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,17 +18,17 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 
-class PlaceViewModel(private val repository: PlaceRepository) : ViewModel() {
+class SearchViewModel(private val repository: PlaceRepository) : ViewModel() {
 
     val searchText = MutableLiveData<String>()
 
-    private val _uiState = MutableStateFlow(UiState(true,false))
-    val uiState: StateFlow<UiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(SearchUiState(true,false))
+    val UiState: StateFlow<SearchUiState> = _uiState.asStateFlow()
 
     private val _logList = MutableLiveData<List<Place>>()
     val logList: LiveData<List<Place>> get() = _logList
 
-    private val _places = searchText.asFlow()
+    private val _searchedPlaces = searchText.asFlow()
         .debounce(500L)
         .flatMapLatest { query ->
             if (query.isNotBlank()) {
@@ -44,7 +40,7 @@ class PlaceViewModel(private val repository: PlaceRepository) : ViewModel() {
                 flowOf(emptyList())
             }
         }.stateIn(viewModelScope,SharingStarted.Lazily, emptyList())
-    val places: StateFlow<List<Place>> get() = _places
+    val searchedPlaces: StateFlow<List<Place>> get() = _searchedPlaces
 
 
     init {
@@ -87,7 +83,7 @@ class PlaceViewModel(private val repository: PlaceRepository) : ViewModel() {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val placeRepository = (this[APPLICATION_KEY] as PlaceApplication).placeRepository
-                PlaceViewModel(repository = placeRepository)
+                SearchViewModel(repository = placeRepository)
             }
         }
     }
