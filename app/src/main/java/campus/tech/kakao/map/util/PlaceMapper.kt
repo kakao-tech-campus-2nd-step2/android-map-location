@@ -12,7 +12,7 @@ class PlaceMapper {
             }
         }
         private fun setPlaceName(placeName: String): String {
-            return if (placeName.length > 8){ placeName.take(8)+"..." } else placeName
+            return if (placeName.length > 12){ placeName.take(10)+"..." } else placeName
         }
         private fun setCategoryName(categoryName: String): String {
             return categoryName.split(" ").lastOrNull() ?: ""

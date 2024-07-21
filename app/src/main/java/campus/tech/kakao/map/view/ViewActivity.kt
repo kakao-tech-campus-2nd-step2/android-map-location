@@ -2,9 +2,6 @@ package campus.tech.kakao.map.view
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -13,22 +10,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import campus.tech.kakao.map.BuildConfig
 import campus.tech.kakao.map.PlaceApplication
 import campus.tech.kakao.map.R
-import campus.tech.kakao.map.domain.model.ResultSearchKeyword
+import campus.tech.kakao.map.data.PlaceRepositoryImpl
 import campus.tech.kakao.map.databinding.ActivityMainBinding
 import campus.tech.kakao.map.view.adapter.SearchedPlaceAdapter
 import campus.tech.kakao.map.view.adapter.LogAdapter
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import campus.tech.kakao.map.data.net.RetrofitApiClient
 import campus.tech.kakao.map.domain.model.Place
-import campus.tech.kakao.map.util.PlaceMapper
-import com.kakao.sdk.common.util.Utility
-import com.kakao.vectormap.mapwidget.component.Horizontal
-import com.kakao.vectormap.mapwidget.component.Vertical
 
 class ViewActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -49,7 +37,7 @@ class ViewActivity : AppCompatActivity() {
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProvider(this, PlaceViewModel.provideFactory(application as PlaceApplication))
+        viewModel = ViewModelProvider(this,PlaceViewModel.Factory)
             .get(PlaceViewModel::class.java)
     }
 

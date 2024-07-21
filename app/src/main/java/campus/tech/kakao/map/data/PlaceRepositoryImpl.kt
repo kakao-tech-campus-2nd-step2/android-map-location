@@ -113,7 +113,6 @@ class PlaceRepositoryImpl(context: Context):
     }
 
     companion object {
-        private const val NO_LOGS_FOUND = 0
 
         @Volatile
         private var INSTANCE: PlaceRepositoryImpl? = null

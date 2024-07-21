@@ -1,40 +1,30 @@
 package campus.tech.kakao.map.view
 
-import android.app.Application
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.*
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import campus.tech.kakao.map.BuildConfig
 import campus.tech.kakao.map.PlaceApplication
-import campus.tech.kakao.map.data.net.KakaoApiLauncher
+import campus.tech.kakao.map.PlaceApplication.Companion.isNetworkActive
+import campus.tech.kakao.map.data.net.KakaoApiClient
 import campus.tech.kakao.map.domain.model.Place
-import campus.tech.kakao.map.domain.use_case.GetAllPlacesUseCase
-import campus.tech.kakao.map.domain.use_case.GetLogsUseCase
-import campus.tech.kakao.map.domain.use_case.GetPlacesUseCase
-import campus.tech.kakao.map.domain.use_case.UpdateLogsUseCase
-import campus.tech.kakao.map.domain.use_case.RemoveLogUseCase
-import campus.tech.kakao.map.domain.use_case.UpdatePlacesUseCase
-import com.kakao.sdk.common.KakaoSdk.init
+import campus.tech.kakao.map.domain.repository.PlaceRepository
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.switchMap
 
-class PlaceViewModel(
-    application: Application,
-    private val getPlacesUseCase: GetPlacesUseCase,
-    private val getAllPlacesUseCase: GetAllPlacesUseCase,
-    private val getLogsUseCase: GetLogsUseCase,
-    private val updatePlacesUseCase: UpdatePlacesUseCase,
-    private val updateLogsUseCase: UpdateLogsUseCase,
-    private val removeLogUseCase: RemoveLogUseCase
-) : AndroidViewModel(application) {
-
-    private val kakaoApiLauncher = KakaoApiLauncher()
+class PlaceViewModel(private val repository: PlaceRepository) : ViewModel() {
 
     val searchText = MutableLiveData<String>()
+
+    private val _uiState = MutableStateFlow(UiState(true,false))
+    val uiState: StateFlow<UiState> = _uiState.asStateFlow()
 
     private val _logList = MutableLiveData<List<Place>>()
     val logList: LiveData<List<Place>> get() = _logList
@@ -44,9 +34,9 @@ class PlaceViewModel(
         .flatMapLatest { query ->
             if (query.isNotBlank()) {
                 liveData {
-                    updateTempPlaces(query)
+                    fetchPlaces(query)
                     delay(300L)
-                    emit(getAllLiveDataPlaces())
+                    emit(getAllPlaces())
                 }.asFlow()
             } else {
                 flowOf(emptyList<Place>())
@@ -64,16 +54,16 @@ class PlaceViewModel(
         searchText.value = ""
     }
 
-    private fun getAllLiveDataPlaces(): List<Place>{
-        return getAllPlacesUseCase()
+    private fun getAllPlaces(): List<Place>{
+        return repository.getAllPlaces()
     }
 
     fun updatePlaces(places: List<Place>) {
-        updatePlacesUseCase.invoke(places)
+        repository.updatePlaces(places)
     }
 
     fun getLogs(): List<Place> {
-        return getLogsUseCase.invoke()
+        return repository.getLogs()
     }
 
     fun updateLogs(place: Place) {
@@ -86,53 +76,45 @@ class PlaceViewModel(
             updatedList.add(0, place)
         }
         _logList.value = updatedList
-        updateLogsUseCase.invoke(updatedList)
+        repository.updateLogs(updatedList)
     }
 
     fun removeLog(id: String) {
-        removeLogUseCase.invoke(id)
+        repository.removeLog(id)
         _logList.value = getLogs()
     }
-    private fun updateTempPlaces(keyword: String, page: Int = 1): List<Place>{
-        val tempPlaces = mutableListOf<Place>()
-        val MAX_PAGE = 3
-        val SIZE = 15
-        for (i in page..MAX_PAGE) {
-            kakaoApiLauncher.getPlacesBySearchText(
-                BuildConfig.KAKAO_REST_API_KEY, keyword,SIZE, i,
-                onSuccess = { places ->
-                    tempPlaces.addAll(places)
-                    if (i == MAX_PAGE) {
-                        updatePlaces(tempPlaces)
-                        tempPlaces.clear()
+
+    fun fetchPlaces(keyword: String){
+        Log.d("07/22", "fetchplaces start")
+        viewModelScope.launch {
+            Log.d("07/22", isNetworkActive().toString())
+            if(isNetworkActive()){
+                val resultPlaces = mutableListOf<Place>()
+
+                for (page in 1..3){
+                    val response = KakaoApiClient.api.getSearchKeyword(
+                        key = BuildConfig.KAKAO_REST_API_KEY,
+                        query = keyword,
+                        size = 15,
+                        page = page)
+                    Log.d("07/22", "fetchplaces start")
+
+                    if (response.isSuccessful) {
+                        response.body()?.documents?.let { resultPlaces.addAll(it) }
                     }
-                },
-                onError = { errorMessage ->
-                    Toast.makeText(getApplication(), errorMessage, Toast.LENGTH_SHORT).show()
                 }
-            )
+
+                updatePlaces(resultPlaces)
+                Log.d("07/22", "fetchplaces done")
+            }
         }
-        return tempPlaces
     }
 
     companion object {
-        fun provideFactory(application: PlaceApplication): ViewModelProvider.Factory {
-            return object : ViewModelProvider.Factory {
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    if (modelClass.isAssignableFrom(PlaceViewModel::class.java)) {
-                        @Suppress("UNCHECKED_CAST")
-                        return PlaceViewModel(
-                            application,
-                            application.getPlacesUseCase,
-                            application.getAllPlacesUseCase,
-                            application.getLogsUseCase,
-                            application.updatePlacesUseCase,
-                            application.updateLogsUseCase,
-                            application.removeLogUseCase
-                        ) as T
-                    }
-                    throw IllegalArgumentException("Unknown ViewModel class")
-                }
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val placeRepository = (this[APPLICATION_KEY] as PlaceApplication).placeRepository
+                PlaceViewModel(repository = placeRepository)
             }
         }
     }
