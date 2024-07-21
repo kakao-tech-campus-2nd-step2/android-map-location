@@ -3,6 +3,7 @@ package campus.tech.kakao.map.data
 import android.content.ContentValues
 import android.content.Context
 import android.util.Log
+import campus.tech.kakao.map.BuildConfig
 import campus.tech.kakao.map.domain.model.SearchData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -13,7 +14,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 class SearchRepository(context: Context) {
     private val dbHelper = SearchDbHelper(context)
 
-    suspend fun fetchApi(authorization: String) {
+    private val authorization = "KakaoAK ${BuildConfig.KAKAO_REST_API_KEY}"
+
+    suspend fun fetchApi() {
         withContext(Dispatchers.IO) {
 
             val retrofitService = Retrofit.Builder()
@@ -91,6 +94,8 @@ class SearchRepository(context: Context) {
         cursor.close()
         return savedWords
     }
+
+
     fun saveDb(
         placeName: String,
         addressName: String,
@@ -149,6 +154,22 @@ class SearchRepository(context: Context) {
     private fun clearTable() {
         val wDb = dbHelper.writableDatabase
         wDb.delete(SearchData.TABLE_NAME, null, null)
+    }
+
+    fun deleteSavedWord(savedWord: String) {
+        val db = dbHelper.writableDatabase
+        db.delete(
+            SearchData.SAVED_SEARCH_TABLE_NAME,
+            "${SearchData.SAVED_SEARCH_COLUMN_NAME} = ?",
+            arrayOf(savedWord)
+        )
+    }
+
+    fun savePlaceName(name: String) {
+        val wDb = dbHelper.writableDatabase
+        val values = ContentValues()
+        values.put(SearchData.SAVED_SEARCH_COLUMN_NAME, name)
+        wDb.insert(SearchData.SAVED_SEARCH_TABLE_NAME, null, values)
     }
 
     companion object {

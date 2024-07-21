@@ -13,6 +13,7 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,7 +23,9 @@ import campus.tech.kakao.map.presentation.adapter.SavedSearchAdapter
 import campus.tech.kakao.map.presentation.adapter.SearchAdapter
 import campus.tech.kakao.map.domain.model.SearchData
 import campus.tech.kakao.map.data.SearchDbHelper
+import campus.tech.kakao.map.data.SearchRepository
 import campus.tech.kakao.map.presentation.viewmodel.SearchViewModel
+import campus.tech.kakao.map.presentation.viewmodel.SearchViewModelFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -31,7 +34,6 @@ class SearchActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: SearchAdapter
-    private lateinit var db: SearchDbHelper
 
     private lateinit var searchWord: EditText
     private lateinit var deleteSearchWord: Button
@@ -43,13 +45,15 @@ class SearchActivity : AppCompatActivity() {
     private var searchDataList = mutableListOf<SearchData>()
     private var savedSearchList = mutableListOf<String>()
 
-    private val authorization = "KakaoAK ${BuildConfig.KAKAO_REST_API_KEY}"
+    private val viewModel: SearchViewModel by viewModels {
+        SearchViewModelFactory(this)
+    }
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
-
-        db = SearchDbHelper(context = this)
 
         recyclerView = findViewById(R.id.recyclerView)
         searchWord = findViewById(R.id.searchWord)
@@ -75,9 +79,29 @@ class SearchActivity : AppCompatActivity() {
 
         savedSearchWordRecyclerView.adapter = savedSearchAdapter
 
-        initView()
-        saveData()
+        viewModel.searchDataList.observe(this, Observer { data ->
+            data?.let {
+                searchDataList = it.toMutableList()
+                showDb()
+            }
+        })
 
+        viewModel.savedSearchList.observe(this, Observer { savedWords ->
+            savedWords?.let {
+                savedSearchList = it.toMutableList()
+                savedSearchAdapter.savedSearchList = savedSearchList
+                savedSearchAdapter.notifyDataSetChanged()
+            }
+        })
+
+        viewModel.loadSavedWords()
+
+        fetchData()
+
+        deleteSearchWord.setOnClickListener {
+            searchWord.text.clear()
+            showDb()
+        }
 
         searchWord.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -96,25 +120,20 @@ class SearchActivity : AppCompatActivity() {
 
             override fun afterTextChanged(s: Editable?) {}
         })
+        itemClickSaveWord()
+        savedWordClick()
     }
 
-    private fun saveData() {
+    private fun fetchData() {
         lifecycleScope.launch {
-            showDb()
-            db.fetchApi(authorization)
-            loadData()
-        }
-    }
-
-    private fun loadData() {
-        lifecycleScope.launch {
-            searchDataList = withContext(Dispatchers.IO) {
-                db.loadDb().toMutableList()
+            try {
+                showDb()
+                viewModel.fetchData()
+            } catch (e: Exception) {
+                Log.e("fetchDataError", "Search Activity fetchData error!")
             }
-            showDb()
         }
     }
-
     private fun showDb() {
         if (searchWord.text.isEmpty()) {
             adapter.searchDataList = emptyList()
@@ -154,25 +173,11 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadSavedWords() {
-        savedSearchList = db.getAllSavedWords().toMutableList()
-        savedSearchAdapter.savedSearchList = savedSearchList
-        savedSearchAdapter.notifyDataSetChanged()
-    }
-
     private fun itemClickSaveWord() {
         adapter.setItemClickListener(object : SearchAdapter.OnItemClickListener {
             override fun onClick(v: View, position: Int) {
                 val searchData = adapter.searchDataList[position]
-                val wDb = db.writableDatabase
-                val values = ContentValues()
-
-                values.put(SearchData.SAVED_SEARCH_COLUMN_NAME, searchData.name)
-                wDb.insert(SearchData.SAVED_SEARCH_TABLE_NAME, null, values)
-                values.clear()
-                savedSearchList = db.getAllSavedWords().toMutableList()
-                savedSearchAdapter.savedSearchList = savedSearchList
-                savedSearchAdapter.notifyDataSetChanged()
+                viewModel.saveSelectedPlaceName(searchData.name)
 
                 saveCoordinates(searchData.x, searchData.y)
                 saveToBottomSheet(searchData.name, searchData.address)
@@ -200,7 +205,6 @@ class SearchActivity : AppCompatActivity() {
             apply()
         }
     }
-
     private fun savedWordClick() {
         savedSearchAdapter.setOnSavedWordClickListener(object :
             SavedSearchAdapter.OnSavedWordClickListener {
@@ -209,7 +213,9 @@ class SearchActivity : AppCompatActivity() {
             }
 
             override fun onDeleteClick(position: Int) {
-                deleteSavedWord(position)
+                viewModel.deleteSavedWord(savedSearchAdapter.savedSearchList[position])
+                savedSearchAdapter.savedSearchList.removeAt(position)
+                savedSearchAdapter.notifyItemRemoved(position)
             }
         })
     }
@@ -228,23 +234,11 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun deleteSavedWord(position: Int) {
-        val deletedWord = savedSearchAdapter.savedSearchList[position]
-        val wDb = db.writableDatabase
-        wDb.delete(
-            SearchData.SAVED_SEARCH_TABLE_NAME,
-            "${SearchData.SAVED_SEARCH_COLUMN_NAME} = ?",
-            arrayOf(deletedWord)
-        )
 
-        savedSearchAdapter.savedSearchList.removeAt(position)
-        savedSearchAdapter.notifyItemRemoved(position)
-    }
 
     private fun initView() {
         itemClickSaveWord()
         deleteWord()
-        loadSavedWords()
         savedWordClick()
     }
 
