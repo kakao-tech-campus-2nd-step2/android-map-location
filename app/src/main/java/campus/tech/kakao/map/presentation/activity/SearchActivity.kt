@@ -1,4 +1,4 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.presentation.activity
 
 import android.content.ContentValues
 import android.content.Context
@@ -15,6 +15,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import campus.tech.kakao.map.BuildConfig
+import campus.tech.kakao.map.R
+import campus.tech.kakao.map.presentation.adapter.SavedSearchAdapter
+import campus.tech.kakao.map.presentation.adapter.SearchAdapter
+import campus.tech.kakao.map.domain.model.SearchData
+import campus.tech.kakao.map.data.SearchDbHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -169,7 +175,7 @@ class SearchActivity : AppCompatActivity() {
                 saveCoordinates(searchData.x, searchData.y)
                 saveToBottomSheet(searchData.name, searchData.address)
 
-                val intent = Intent(this@SearchActivity, KakaoMapView::class.java)
+                val intent = Intent(this@SearchActivity, KakaoMapViewActivity::class.java)
                 startActivity(intent)
             }
         })
@@ -194,7 +200,8 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun savedWordClick(){
-        savedSearchAdapter.setOnSavedWordClickListener(object : SavedSearchAdapter.OnSavedWordClickListener {
+        savedSearchAdapter.setOnSavedWordClickListener(object :
+            SavedSearchAdapter.OnSavedWordClickListener {
             override fun onSavedWordClick(savedWord: String) {
                 filterBySavedWord(savedWord)
             }

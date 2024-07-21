@@ -1,4 +1,4 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.presentation.activity
 
 import android.content.Context
 import android.content.Intent
@@ -10,14 +10,13 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.kakao.sdk.common.util.Utility
+import campus.tech.kakao.map.R
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.KakaoMapSdk
 import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.MapView
-import com.kakao.vectormap.RoadViewRequest
 import com.kakao.vectormap.camera.CameraAnimation
 import com.kakao.vectormap.camera.CameraUpdateFactory
 import com.kakao.vectormap.label.LabelOptions
@@ -25,7 +24,7 @@ import com.kakao.vectormap.label.LabelStyle
 import com.kakao.vectormap.label.LabelStyles
 
 
-class KakaoMapView : AppCompatActivity() {
+class KakaoMapViewActivity : AppCompatActivity() {
 
     private lateinit var mapView: MapView
     private lateinit var searchButton: Button
@@ -75,16 +74,16 @@ class KakaoMapView : AppCompatActivity() {
         mapView = findViewById(R.id.mapView)
         mapView.start(object : MapLifeCycleCallback() {
             override fun onMapDestroy() {
-                Log.e("KakaoMapView", "Map destroyed")
+                Log.e("KakaoMapViewActivity", "Map destroyed")
             }
 
             override fun onMapError(error: Exception) {
-                startActivity(Intent(this@KakaoMapView, MapErrorActivity::class.java))
-                Log.e("KakaoMapView", "Map error: ${error.message}")
+                startActivity(Intent(this@KakaoMapViewActivity, MapErrorActivity::class.java))
+                Log.e("KakaoMapViewActivity", "Map error: ${error.message}")
             }
         }, object : KakaoMapReadyCallback() {
             override fun onMapReady(kakaoMap: KakaoMap) {
-                this@KakaoMapView.kakaoMap = kakaoMap
+                this@KakaoMapViewActivity.kakaoMap = kakaoMap
                 mapReady()
             }
         })

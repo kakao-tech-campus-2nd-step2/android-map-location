@@ -1,10 +1,8 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.presentation.activity
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import campus.tech.kakao.map.R
 
 class MapErrorActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

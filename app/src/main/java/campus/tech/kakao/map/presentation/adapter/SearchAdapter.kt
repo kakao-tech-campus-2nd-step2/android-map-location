@@ -1,10 +1,12 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.presentation.adapter
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import campus.tech.kakao.map.R
+import campus.tech.kakao.map.domain.model.SearchData
 
 
 class SearchAdapter() : RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
@@ -37,7 +39,7 @@ class SearchAdapter() : RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
 
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_search, parent, false)
         return ViewHolder(view)
     }
@@ -46,7 +48,7 @@ class SearchAdapter() : RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
         return searchDataList.size
     }
 
-    override fun onBindViewHolder(holder: SearchAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(searchDataList[position])
     }
 

@@ -1,4 +1,4 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.domain.model
 
 data class SearchData (
     val name: String,
