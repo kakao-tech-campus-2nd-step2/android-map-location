@@ -1,4 +1,4 @@
-package campus.tech.kakao.map.presentation.activity
+package campus.tech.kakao.map.presentation.view
 
 import android.content.ContentValues
 import android.content.Context
@@ -11,6 +11,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,6 +22,7 @@ import campus.tech.kakao.map.presentation.adapter.SavedSearchAdapter
 import campus.tech.kakao.map.presentation.adapter.SearchAdapter
 import campus.tech.kakao.map.domain.model.SearchData
 import campus.tech.kakao.map.data.SearchDbHelper
+import campus.tech.kakao.map.presentation.viewmodel.SearchViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -45,7 +47,7 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_search)
 
         db = SearchDbHelper(context = this)
 
@@ -199,7 +201,7 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun savedWordClick(){
+    private fun savedWordClick() {
         savedSearchAdapter.setOnSavedWordClickListener(object :
             SavedSearchAdapter.OnSavedWordClickListener {
             override fun onSavedWordClick(savedWord: String) {

@@ -13,8 +13,8 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
-import campus.tech.kakao.map.presentation.activity.KakaoMapViewActivity
-import campus.tech.kakao.map.presentation.activity.SearchActivity
+import campus.tech.kakao.map.presentation.view.KakaoMapViewActivity
+import campus.tech.kakao.map.presentation.view.SearchActivity
 import org.junit.Test
 import org.junit.runner.RunWith
 

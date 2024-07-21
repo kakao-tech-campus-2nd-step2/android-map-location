@@ -17,13 +17,13 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".presentation.activity.MapErrorActivity"
+            android:name=".presentation.view.MapErrorActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.activity.SearchActivity"
+            android:name=".presentation.view.SearchActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.activity.KakaoMapViewActivity"
+            android:name=".presentation.view.KakaoMapViewActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

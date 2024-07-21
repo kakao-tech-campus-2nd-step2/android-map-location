@@ -1,4 +1,4 @@
-package campus.tech.kakao.map.presentation.activity
+package campus.tech.kakao.map.presentation.view
 
 import android.content.Context
 import android.content.Intent
