@@ -67,7 +67,6 @@ class MapActivity : AppCompatActivity() {
             override fun onMapReady(kakaoMap: KakaoMap) {
                 Log.d("KakaoMap", "onMapReady")
                 map = kakaoMap
-
                 camera(kakaoMap, savedLatitude, savedLongitude)
 
                 // 장소 정보 받아옴
