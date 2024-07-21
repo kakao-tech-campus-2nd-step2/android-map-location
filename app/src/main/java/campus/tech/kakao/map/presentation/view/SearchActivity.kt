@@ -24,6 +24,8 @@ import campus.tech.kakao.map.presentation.adapter.SearchAdapter
 import campus.tech.kakao.map.domain.model.SearchData
 import campus.tech.kakao.map.data.SearchDbHelper
 import campus.tech.kakao.map.data.SearchRepository
+import campus.tech.kakao.map.presentation.viewmodel.KakaoMapViewModel
+import campus.tech.kakao.map.presentation.viewmodel.KakaoMapViewModelFactory
 import campus.tech.kakao.map.presentation.viewmodel.SearchViewModel
 import campus.tech.kakao.map.presentation.viewmodel.SearchViewModelFactory
 import kotlinx.coroutines.Dispatchers
@@ -45,8 +47,12 @@ class SearchActivity : AppCompatActivity() {
     private var searchDataList = mutableListOf<SearchData>()
     private var savedSearchList = mutableListOf<String>()
 
-    private val viewModel: SearchViewModel by viewModels {
+    private val searchViewModel: SearchViewModel by viewModels {
         SearchViewModelFactory(this)
+    }
+
+    private val kakaoMapviewModel: KakaoMapViewModel by viewModels {
+        KakaoMapViewModelFactory(this)
     }
 
 
@@ -79,14 +85,14 @@ class SearchActivity : AppCompatActivity() {
 
         savedSearchWordRecyclerView.adapter = savedSearchAdapter
 
-        viewModel.searchDataList.observe(this, Observer { data ->
+        searchViewModel.searchDataList.observe(this, Observer { data ->
             data?.let {
                 searchDataList = it.toMutableList()
                 showDb()
             }
         })
 
-        viewModel.savedSearchList.observe(this, Observer { savedWords ->
+        searchViewModel.savedSearchList.observe(this, Observer { savedWords ->
             savedWords?.let {
                 savedSearchList = it.toMutableList()
                 savedSearchAdapter.savedSearchList = savedSearchList
@@ -94,7 +100,7 @@ class SearchActivity : AppCompatActivity() {
             }
         })
 
-        viewModel.loadSavedWords()
+        searchViewModel.loadSavedWords()
 
         fetchData()
 
@@ -128,7 +134,7 @@ class SearchActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 showDb()
-                viewModel.fetchData()
+                searchViewModel.fetchData()
             } catch (e: Exception) {
                 Log.e("fetchDataError", "Search Activity fetchData error!")
             }
@@ -177,10 +183,10 @@ class SearchActivity : AppCompatActivity() {
         adapter.setItemClickListener(object : SearchAdapter.OnItemClickListener {
             override fun onClick(v: View, position: Int) {
                 val searchData = adapter.searchDataList[position]
-                viewModel.saveSelectedPlaceName(searchData.name)
+                searchViewModel.saveSelectedPlaceName(searchData.name)
 
-                saveCoordinates(searchData.x, searchData.y)
-                saveToBottomSheet(searchData.name, searchData.address)
+                kakaoMapviewModel.saveCoordinates(searchData.x, searchData.y)
+                kakaoMapviewModel.saveToBottomSheet(searchData.name, searchData.address)
 
                 val intent = Intent(this@SearchActivity, KakaoMapViewActivity::class.java)
                 startActivity(intent)
@@ -188,23 +194,7 @@ class SearchActivity : AppCompatActivity() {
         })
     }
 
-    private fun saveCoordinates(x: Double, y: Double) {
-        val sharedPref = getSharedPreferences("Coordinates", Context.MODE_PRIVATE)
-        with(sharedPref.edit()) {
-            putString("xCoordinate", x.toString())
-            putString("yCoordinate", y.toString())
-            apply()
-        }
-    }
 
-    private fun saveToBottomSheet(name: String, Address: String) {
-        val sharedPref = getSharedPreferences("BottomSheet", Context.MODE_PRIVATE)
-        with(sharedPref.edit()) {
-            putString("name", name)
-            putString("address", Address)
-            apply()
-        }
-    }
     private fun savedWordClick() {
         savedSearchAdapter.setOnSavedWordClickListener(object :
             SavedSearchAdapter.OnSavedWordClickListener {
@@ -213,7 +203,7 @@ class SearchActivity : AppCompatActivity() {
             }
 
             override fun onDeleteClick(position: Int) {
-                viewModel.deleteSavedWord(savedSearchAdapter.savedSearchList[position])
+                searchViewModel.deleteSavedWord(savedSearchAdapter.savedSearchList[position])
                 savedSearchAdapter.savedSearchList.removeAt(position)
                 savedSearchAdapter.notifyItemRemoved(position)
             }

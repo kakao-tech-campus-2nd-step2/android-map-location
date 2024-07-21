@@ -172,6 +172,8 @@ class SearchRepository(context: Context) {
         wDb.insert(SearchData.SAVED_SEARCH_TABLE_NAME, null, values)
     }
 
+
+
     companion object {
         fun getInstance(context: Context): SearchRepository {
             return SearchRepository(context)
