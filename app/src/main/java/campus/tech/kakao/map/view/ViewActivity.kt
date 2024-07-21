@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,6 +18,7 @@ import campus.tech.kakao.map.databinding.ActivityMainBinding
 import campus.tech.kakao.map.view.adapter.SearchedPlaceAdapter
 import campus.tech.kakao.map.view.adapter.LogAdapter
 import campus.tech.kakao.map.domain.model.Place
+import kotlinx.coroutines.launch
 
 class ViewActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -87,12 +89,12 @@ class ViewActivity : AppCompatActivity() {
 
     private fun observeViewModel() {
 
-        viewModel.places.observe(this, Observer { places ->
-            updateSearchedPlaceList(places)
-            binding.tvHelpMessage.visibility=
-                if (places.isEmpty()) View.VISIBLE else View.GONE
-        })
-
+        lifecycleScope.launch {
+            viewModel.places.collect { places ->
+                updateSearchedPlaceList(places)
+                binding.tvHelpMessage.visibility = if (places.isEmpty()) View.VISIBLE else View.GONE
+            }
+        }
         viewModel.logList.observe(this, Observer { logList ->
             logAdapter.submitList(logList)
         })

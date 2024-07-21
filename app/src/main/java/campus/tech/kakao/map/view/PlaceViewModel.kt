@@ -1,6 +1,5 @@
 package campus.tech.kakao.map.view
 
-import android.util.Log
 import androidx.lifecycle.*
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.initializer
@@ -10,14 +9,18 @@ import campus.tech.kakao.map.PlaceApplication
 import campus.tech.kakao.map.PlaceApplication.Companion.isNetworkActive
 import campus.tech.kakao.map.data.net.KakaoApiClient
 import campus.tech.kakao.map.domain.model.Place
+import campus.tech.kakao.map.domain.model.ResultSearchKeyword
 import campus.tech.kakao.map.domain.repository.PlaceRepository
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.stateIn
 
 class PlaceViewModel(private val repository: PlaceRepository) : ViewModel() {
 
@@ -33,17 +36,15 @@ class PlaceViewModel(private val repository: PlaceRepository) : ViewModel() {
         .debounce(500L)
         .flatMapLatest { query ->
             if (query.isNotBlank()) {
-                liveData {
-                    fetchPlaces(query)
-                    delay(300L)
-                    emit(getAllPlaces())
-                }.asFlow()
+                flow {
+                    val places = getPlaces(query)
+                    emit(places)
+                }
             } else {
-                flowOf(emptyList<Place>())
+                flowOf(emptyList())
             }
-        }
-        .asLiveData()
-    val places: LiveData<List<Place>> get() = _places
+        }.stateIn(viewModelScope,SharingStarted.Lazily, emptyList())
+    val places: StateFlow<List<Place>> get() = _places
 
 
     init {
@@ -53,15 +54,9 @@ class PlaceViewModel(private val repository: PlaceRepository) : ViewModel() {
     fun clearSearch() {
         searchText.value = ""
     }
-
-    private fun getAllPlaces(): List<Place>{
-        return repository.getAllPlaces()
+    suspend fun getPlaces(keyword: String): List<Place>{
+        return withContext(Dispatchers.IO) { repository.getPlaces(keyword) }
     }
-
-    fun updatePlaces(places: List<Place>) {
-        repository.updatePlaces(places)
-    }
-
     fun getLogs(): List<Place> {
         return repository.getLogs()
     }
@@ -82,32 +77,6 @@ class PlaceViewModel(private val repository: PlaceRepository) : ViewModel() {
     fun removeLog(id: String) {
         repository.removeLog(id)
         _logList.value = getLogs()
-    }
-
-    fun fetchPlaces(keyword: String){
-        Log.d("07/22", "fetchplaces start")
-        viewModelScope.launch {
-            Log.d("07/22", isNetworkActive().toString())
-            if(isNetworkActive()){
-                val resultPlaces = mutableListOf<Place>()
-
-                for (page in 1..3){
-                    val response = KakaoApiClient.api.getSearchKeyword(
-                        key = BuildConfig.KAKAO_REST_API_KEY,
-                        query = keyword,
-                        size = 15,
-                        page = page)
-                    Log.d("07/22", "fetchplaces start")
-
-                    if (response.isSuccessful) {
-                        response.body()?.documents?.let { resultPlaces.addAll(it) }
-                    }
-                }
-
-                updatePlaces(resultPlaces)
-                Log.d("07/22", "fetchplaces done")
-            }
-        }
     }
 
     companion object {
