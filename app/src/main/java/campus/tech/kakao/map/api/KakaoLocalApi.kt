@@ -32,7 +32,14 @@ data class Document(
     val addressName: String,
 
     @SerializedName("category_group_name")
-    val categoryGroupName: String
+    val categoryGroupName: String,
+
+    @SerializedName("y")
+    val latitude: Double,
+
+    @SerializedName("x")
+    val longitude: Double
+
 )
 
 data class Meta(
