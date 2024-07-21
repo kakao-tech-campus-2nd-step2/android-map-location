@@ -19,8 +19,6 @@ import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.MapView
 import com.kakao.vectormap.camera.CameraUpdate
 import com.kakao.vectormap.camera.CameraUpdateFactory
-import com.kakao.vectormap.label.Label
-import com.kakao.vectormap.label.LabelLayer
 import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.label.LabelStyle
 import com.kakao.vectormap.label.LabelStyles
@@ -37,8 +35,6 @@ class MapActivity : AppCompatActivity() {
 	private lateinit var model: MainViewModel
 	private lateinit var placeName:String
 	private lateinit var addressName:String
-	private var layer: LabelLayer? = null
-	private var label: Label? = null
 	private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
 	private lateinit var bottomSheet :LinearLayout
 	private lateinit var bottomSheetName:TextView
@@ -97,7 +93,7 @@ class MapActivity : AppCompatActivity() {
 			documentClicked = false
 		}
 		else{
-			layer?.remove(label)
+			map?.labelManager?.layer?.removeAll()
 			bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 		}
 		val cameraUpdate: CameraUpdate = CameraUpdateFactory.newCenterPosition(LatLng.from(latitude, longitude))
@@ -124,11 +120,8 @@ class MapActivity : AppCompatActivity() {
 			MARKER_TEXT_SIZE, Color.BLACK)))
 		if(styles != null){
 			val options = LabelOptions.from(LatLng.from(latitude, longitude)).setStyles(styles).setTexts(placeName)
-			layer = map?.labelManager?.layer
-			if(label != null){
-				layer?.remove(label)
-			}
-			label = layer?.addLabel(options)
+			map?.labelManager?.layer?.removeAll()
+			map?.labelManager?.layer?.addLabel(options)
 		}
 		else{
 			Log.e("MapActivity", "makeMarker: styles is null")
