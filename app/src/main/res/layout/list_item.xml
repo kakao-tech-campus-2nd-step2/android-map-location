@@ -11,25 +11,31 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:background="#FBFBFB"
+        android:paddingVertical="16dp"
+        android:paddingHorizontal="24dp">
 
         <ImageView
             android:id="@+id/imgLocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/icon_location"
+            android:src="@drawable/icon_location_resize"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
         <TextView
             android:id="@+id/tvName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{place.place}"
-            android:textSize="24sp"
+            android:textSize="16sp"
             android:textStyle="bold"
+            android:textColor="#4B4B4B"
+            android:paddingLeft="24dp"
             app:layout_constraintStart_toEndOf="@+id/imgLocation"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/tvPlace"/>
 
         <TextView
             android:id="@+id/tvPlace"
@@ -37,17 +43,19 @@
             android:layout_height="wrap_content"
             android:text="@{place.address}"
             android:textSize="12sp"
-            android:textStyle="bold"
+            android:textColor="#848484"
+            android:paddingLeft="24dp"
             app:layout_constraintStart_toEndOf="@+id/imgLocation"
-            app:layout_constraintTop_toBottomOf="@id/tvName"/>
+            app:layout_constraintTop_toBottomOf="@id/tvName"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
         <TextView
             android:id="@+id/tvCategory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{place.category}"
-            android:textSize="16sp"
-            android:textStyle="bold"
+            android:textSize="12sp"
+            android:textColor="#848484"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tvName"/>
 

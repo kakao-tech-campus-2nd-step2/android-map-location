@@ -14,29 +14,74 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingBottom="24dp"
+        android:background="#FBFBFB"
         tools:context=".view.ViewActivity">
 
-        <EditText
-            android:id="@+id/edtSearch"
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/navSearch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="검색어를 입력해 주세요."
-            android:text="@={viewModel.searchText}"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            android:paddingTop="24dp"
+            android:paddingHorizontal="16dp"
+            android:paddingBottom="12dp"
+            android:background="#FBFBFB"
+            android:elevation="4dp"
+            android:orientation="vertical"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent">
 
-        <ImageButton
-            android:id="@+id/btnClear"
-            app:layout_constraintEnd_toEndOf="@id/edtSearch"
-            app:layout_constraintTop_toTopOf="@id/edtSearch"
-            app:layout_constraintBottom_toBottomOf="@id/edtSearch"
-            android:layout_marginBottom="4dp"
-            android:layout_marginRight="16dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:src="@drawable/icon_cancel"
-            android:onClick="@{() -> viewModel.clearSearch()}"/>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/searchBar"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:background="@drawable/searchview_background"
+                android:paddingHorizontal="24dp">
+                <ImageView
+                    android:id="@+id/iconSearch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_search"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"/>
+                <EditText
+                    android:id="@+id/edtSearch"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:hint="검색어를 입력해 주세요"
+                    android:text="@={viewModel.searchText}"
+                    android:paddingStart="16dp"
+                    android:background="@null"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/iconSearch"/>
+
+                <ImageButton
+                    android:id="@+id/btnClear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/icon_cancel"
+                    android:onClick="@{() -> viewModel.clearSearch()}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerLog"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/searchBar">
+            </androidx.recyclerview.widget.RecyclerView>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+
 
         <TextView
             android:id="@+id/tvHelpMessage"
@@ -46,20 +91,13 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edtSearch" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerLog"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/edtSearch">
-        </androidx.recyclerview.widget.RecyclerView>
+            app:layout_constraintTop_toBottomOf="@id/navSearch" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerPlace"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/recyclerLog"/>
+            app:layout_constraintTop_toBottomOf="@id/navSearch"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -1,7 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:drawable="@drawable/icon_x"
-        android:width="16dp"
-        android:height="16dp"/>
-</layer-list>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="23dp"
+    android:height="23dp"
+    android:viewportWidth="23"
+    android:viewportHeight="23">
+
+    <path
+        android:fillColor="#8B8B8B"
+        android:pathData="M5.65685,5.65685C5.26633,6.04738 5.26633,6.68054 5.65685,7.07106L9.89949,11.3137L5.65685,15.5563C5.26633,15.9469 5.26633,16.58 5.65685,16.9706C6.04738,17.3611 6.68054,17.3611 7.07107,16.9706L11.3137,12.7279L15.5563,16.9706C15.9469,17.3611 16.58,17.3611 16.9706,16.9706C17.3611,16.58 17.3611,15.9469 16.9706,15.5563L12.7279,11.3137L16.9706,7.07106C17.3611,6.68054 17.3611,6.04738 16.9706,5.65685C16.58,5.26633 15.9469,5.26633 15.5563,5.65685L11.3137,9.89949L7.07107,5.65685C6.68054,5.26633 6.04738,5.26633 5.65685,5.65685Z" />
+</vector>

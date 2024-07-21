@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.map.BuildConfig
@@ -26,6 +27,8 @@ import campus.tech.kakao.map.data.net.RetrofitApiClient
 import campus.tech.kakao.map.domain.model.Place
 import campus.tech.kakao.map.util.PlaceMapper
 import com.kakao.sdk.common.util.Utility
+import com.kakao.vectormap.mapwidget.component.Horizontal
+import com.kakao.vectormap.mapwidget.component.Vertical
 
 class ViewActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -70,6 +73,7 @@ class ViewActivity : AppCompatActivity() {
 
         searchedPlaceRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@ViewActivity)
+            addItemDecoration(DividerItemDecoration(this@ViewActivity, DividerItemDecoration.VERTICAL ))
             adapter = searchedPlaceAdapter
         }
     }
