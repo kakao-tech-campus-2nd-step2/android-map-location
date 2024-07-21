@@ -6,7 +6,9 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import campus.tech.kakao.map.SearchWordContract.DB_VERSION
+import campus.tech.kakao.map.dto.SearchWordContract.DB_VERSION
+import campus.tech.kakao.map.dto.SearchWord
+import campus.tech.kakao.map.dto.SearchWordContract
 
 class SearchWordDbHelper(context: Context): SQLiteOpenHelper(
 	context, SearchWordContract.DB_NAME, null, DB_VERSION) {

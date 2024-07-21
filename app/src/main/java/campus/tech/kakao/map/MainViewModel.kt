@@ -4,7 +4,9 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import campus.tech.kakao.map.MyApplication.Companion.mapPosition
-import campus.tech.kakao.map.RetrofitData.Companion.getInstance
+import campus.tech.kakao.map.dto.RetrofitData.Companion.getInstance
+import campus.tech.kakao.map.dto.Document
+import campus.tech.kakao.map.dto.SearchWord
 
 class MainViewModel(application: Application): AndroidViewModel(application) {
 

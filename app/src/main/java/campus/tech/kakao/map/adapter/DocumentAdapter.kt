@@ -1,4 +1,4 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,7 +7,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import campus.tech.kakao.map.dto.Document
 import campus.tech.kakao.map.MapActivity.Companion.documentClicked
+import campus.tech.kakao.map.R
 
 class DocumentAdapter(
 	val addWord: (Document) -> Unit,
