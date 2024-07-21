@@ -11,6 +11,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.constraintlayout.widget.ConstraintLayout
 import campus.tech.kakao.map.R
 import campus.tech.kakao.map.domain.model.Place
 import campus.tech.kakao.map.ui.BottomSheetFragment
@@ -26,7 +27,7 @@ import com.kakao.vectormap.label.LabelStyles
 
 class MapActivity : AppCompatActivity() {
     private val mapView by lazy<MapView> { findViewById(R.id.mapView) }
-    private val searchView by lazy<SearchView> { findViewById(R.id.searchView) }
+    private val searchView by lazy<ConstraintLayout> { findViewById(R.id.searchView) }
     private lateinit var resultLauncher: ActivityResultLauncher<Intent>
     private lateinit var bottomSheetFragment: BottomSheetFragment
     private lateinit var tvErrorMessage: TextView
@@ -97,7 +98,7 @@ class MapActivity : AppCompatActivity() {
         kakaoMap.moveCamera(cameraUpdate)
 
         val styles = kakaoMap.labelManager?.addLabelStyles(
-            LabelStyles.from(LabelStyle.from(R.drawable.icon_location))
+            LabelStyles.from(LabelStyle.from(R.drawable.icon_location3))
         )
         val options = LabelOptions.from(
             LatLng.from(place.yPos.toDouble(), place.xPos.toDouble())
