@@ -9,8 +9,12 @@ import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import campus.tech.kakao.map.R
+import campus.tech.kakao.map.presentation.viewmodel.KakaoMapViewModel
+import campus.tech.kakao.map.presentation.viewmodel.KakaoMapViewModelFactory
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.KakaoMapSdk
@@ -33,16 +37,16 @@ class KakaoMapViewActivity : AppCompatActivity() {
     private lateinit var persistentBottomSheet: LinearLayout
 
     private var kakaoMap: KakaoMap? = null
-    private var xCoordinate: Double = 0.0
-    private var yCoordinate: Double = 0.0
-    private var name: String = ""
-    private var address: String = ""
+
+    private val viewModel: KakaoMapViewModel by viewModels {
+        KakaoMapViewModelFactory(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_kakao_map_view)
 
-        getData()
+        observeKakaoMapViewModel()
         initKakaoMap()
 
         searchButton = findViewById(R.id.searchButton)
@@ -54,15 +58,6 @@ class KakaoMapViewActivity : AppCompatActivity() {
         clickSearchButton()
     }
 
-    private fun getData() {
-        val sharedPref = getSharedPreferences("Coordinates", Context.MODE_PRIVATE)
-        xCoordinate = sharedPref.getString("xCoordinate", "127.108621")?.toDoubleOrNull() ?: 127.108621
-        yCoordinate = sharedPref.getString("yCoordinate", "37.402005")?.toDoubleOrNull() ?: 37.402005
-
-        val sharedPref1 = getSharedPreferences("BottomSheet", Context.MODE_PRIVATE)
-        name = sharedPref1.getString("name", "이름") ?: "이름"
-        address = sharedPref1.getString("address", "주소") ?: "주소"
-    }
 
     private fun initKakaoMap() {
         // onMapError 호출하기
@@ -89,6 +84,18 @@ class KakaoMapViewActivity : AppCompatActivity() {
         })
     }
 
+    private fun observeKakaoMapViewModel() {
+        viewModel.name.observe(this, Observer { name ->
+            placeName.text = name
+            mapReady()
+        })
+
+        viewModel.address.observe(this, Observer { address ->
+            placeAddress.text = address
+            mapReady()
+        })
+    }
+
     private fun clickSearchButton() {
         searchButton.setOnClickListener {
             Intent(this, SearchActivity::class.java).let {
@@ -99,26 +106,29 @@ class KakaoMapViewActivity : AppCompatActivity() {
 
     private fun mapReady() {
         kakaoMap?.let { map ->
-            val position = LatLng.from(yCoordinate, xCoordinate)
+            val position = LatLng.from(
+                viewModel.yCoordinate.value ?: 37.402005,
+                viewModel.xCoordinate.value ?: 127.108621
+            )
 
             val style = map.labelManager?.addLabelStyles(
-                LabelStyles.from(LabelStyle.from(R.drawable.kakaomap_logo).setTextStyles(30, Color.BLUE))
+                LabelStyles.from(
+                    LabelStyle.from(R.drawable.kakaomap_logo).setTextStyles(30, Color.BLUE)
+                )
             )
 
             val options: LabelOptions = LabelOptions.from(position).setStyles(style)
 
             val layer = map.labelManager?.layer
-            layer?.addLabel(options)?.changeText(name)
+            layer?.addLabel(options)?.changeText(viewModel.name.value ?: "이름")
 
             val cameraUpdate = CameraUpdateFactory.newCenterPosition(position)
             map.moveCamera(cameraUpdate, CameraAnimation.from(500, true, true))
 
-            if (name == "이름") {
+            if (viewModel.name.value == "이름") {
                 persistentBottomSheet.visibility = View.GONE
                 layer?.hideAllLabel()
             } else {
-                placeName.text = name
-                placeAddress.text = address
                 layer?.showAllLabel()
                 persistentBottomSheet.visibility = View.VISIBLE
             }
