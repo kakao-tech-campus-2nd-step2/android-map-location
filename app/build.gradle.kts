@@ -53,6 +53,11 @@ android {
         viewBinding = true
         buildConfig = true
     }
+    testOptions {
+        packaging {
+            resources.excludes.add("META-INF/*")
+        }
+    }
 }
 
 dependencies {
@@ -69,6 +74,7 @@ dependencies {
     implementation("androidx.activity:activity:1.8.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.3")
     implementation("androidx.test.espresso:espresso-contrib:3.6.1")
+    implementation("androidx.test.uiautomator:uiautomator:2.3.0")
     testImplementation("junit:junit:4.13.2")
     testImplementation("io.mockk:mockk:1.13.12")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.1")
