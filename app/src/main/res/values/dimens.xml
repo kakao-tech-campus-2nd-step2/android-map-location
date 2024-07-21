@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 기본 MapView 높이 -->
+    <dimen name="map_height_original">670dp</dimen>
+    <!-- 확장된 MapView 높이 -->
+    <dimen name="map_height_expanded">570dp</dimen>
+</resources>

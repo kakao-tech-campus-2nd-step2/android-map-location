@@ -5,4 +5,5 @@ object PlaceEntry {
     const val COLUMN_NAME = "name"
     const val COLUMN_ADDRESS = "address"
     const val COLUMN_CATEGORY = "category"
+
 }

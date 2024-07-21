@@ -7,5 +7,7 @@ data class ResultSearch(
 data class Placeitem(
     var place_name: String,
     var category_group_name: String,
-    var road_address_name: String
+    var road_address_name: String,
+    var x: String,
+    var y: String
 )

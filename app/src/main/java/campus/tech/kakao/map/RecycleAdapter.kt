@@ -1,9 +1,10 @@
-package campus.tech.kakao.map
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import campus.tech.kakao.map.ListLayout
 import campus.tech.kakao.map.databinding.ItemRecyclerviewBinding
-class RecycleAdapter(private val onClick: (String) -> Unit) : RecyclerView.Adapter<RecycleAdapter.Holder>() {
+
+class RecycleAdapter(private val onClick: (ListLayout) -> Unit) : RecyclerView.Adapter<RecycleAdapter.Holder>() {
 
     private var itemList = listOf<ListLayout>()
 
@@ -35,7 +36,7 @@ class RecycleAdapter(private val onClick: (String) -> Unit) : RecyclerView.Adapt
                 Category.text = item.category
 
                 itemView.setOnClickListener {
-                    onClick(item.name)  // 클릭 시 콜백 함수 호출
+                    onClick(item)  // 클릭 시 콜백 함수 호출
                 }
             }
         }
