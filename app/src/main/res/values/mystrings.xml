@@ -6,4 +6,5 @@
     <string name="explanation_map_icon">지도의 위치 모양 이미지입니다.</string>
     <string name="explanation_delete_recent_search">누르면 최근 검색어가 삭제되는 버튼입니다.</string>
     <string name="searchBar_text">검색어를 입력해 주세요.</string>
+    <string name="error_text">지도 인증을 실패했습니다.\n다시 시도해 주세요.</string>
 </resources>

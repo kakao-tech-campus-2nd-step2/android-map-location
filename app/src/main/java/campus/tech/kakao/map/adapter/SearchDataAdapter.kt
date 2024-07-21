@@ -6,12 +6,14 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.map.R
+import campus.tech.kakao.map.listener.SearchAdapterListener
 import campus.tech.kakao.map.viewModel.RecentViewModel
 import campus.tech.kakao.map.retrofit.Document
 
 class SearchDataAdapter(
     private var items: List<Document>,
-    private val recentViewModel: RecentViewModel
+    private val recentViewModel: RecentViewModel,
+    private var adapterListener: SearchAdapterListener
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     class SearchDataViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -42,6 +44,12 @@ class SearchDataAdapter(
         holder.itemView.setOnClickListener {
             val searchTime = System.currentTimeMillis()
             recentViewModel.addRecentData(item.name, item.address, searchTime)
+            adapterListener.displaySearchLocation(
+                item.name,
+                item.address,
+                item.latitude,
+                item.longitude
+            )
         }
     }
 
