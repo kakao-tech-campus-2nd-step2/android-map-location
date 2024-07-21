@@ -18,7 +18,7 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
-class ActivityUITest {
+class MapActivityTest {
     private lateinit var selectedLocation: LocationData
 
     @Before
