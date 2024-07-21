@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
@@ -52,7 +53,7 @@ class MapActivity : AppCompatActivity() {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_map)
 		mapView = findViewById(R.id.map_view)
-		model = MainViewModel(application)
+		model = ViewModelProvider(this)[MainViewModel::class.java]
 		getMapInfo()
 		mapView.start(object : MapLifeCycleCallback() {
 			override fun onMapDestroy() {
