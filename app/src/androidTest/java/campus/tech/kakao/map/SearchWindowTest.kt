@@ -25,12 +25,13 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
-private const val TEST_SEARCH_KEYWORD = "충남대학교"
+private const val TEST_SEARCH_KEYWORD = "cafe"
 private const val TEST_PLACE_NAME = "충남대학교 대덕캠퍼스"
 
 @RunWith(AndroidJUnit4::class)
 class SearchWindowTest {
-    @Rule
+
+    @get: Rule
     val activityRule = ActivityScenarioRule(SearchWindowActivity::class.java)
 
     @Before
@@ -45,40 +46,50 @@ class SearchWindowTest {
     }
 
     @Test
-    fun testSearchWindowTextChange() {
+    fun testChangeSearchWindowText() {
+        // when
         onView(withId(R.id.searchWindow)).perform(
             typeText(TEST_SEARCH_KEYWORD),
             closeSoftKeyboard()
         )
+
+        // then
         onView(withId(R.id.emptySearchResults)).check(matches(not(isDisplayed())))
         onView(withId(R.id.searchResultsList)).check(matches(isDisplayed()))
     }
 
     @Test
     fun testDeleteSearchKeyword() {
+        // when
         onView(withId(R.id.delSearchKeyword)).perform(click())
+
+        // then
         onView(withId(R.id.searchWindow)).check(matches(withText("")))
     }
 
     @Test
-    fun testSearchResultClick() {
+    fun testClickSearchResult() {
+        // when
         onView(withId(R.id.searchWindow)).perform(
             typeText(TEST_SEARCH_KEYWORD),
             closeSoftKeyboard()
         )
+        Thread.sleep(3000)
         onView(withId(R.id.searchResultsList))
             .perform(actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()))
+
+        // then
         Intents.intended(hasExtra(ActivityKeys.INTENT_PLACE, Place::class.java))
     }
 
     @Test
-    fun testSavedSearchKeywordClick() {
+    fun testClickSavedSearchKeyword() {
         // recyclerview의 item view 클릭 추가
         // onView(withId(R.id.searchWindow)).check(matches(withText(TEST_PLACE_NAME)))
     }
 
     @Test
-    fun testSavedSearchKeywordDelete() {
+    fun testDeleteSavedSearchKeyword() {
         // recyclerview의 item view 클릭 추가
         // onView(withText(TEST_PLACE_NAME)).check(matches(not(isDisplayed())))
     }
