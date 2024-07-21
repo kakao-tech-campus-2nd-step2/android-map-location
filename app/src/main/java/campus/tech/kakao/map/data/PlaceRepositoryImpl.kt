@@ -47,8 +47,6 @@ class PlaceRepositoryImpl(context: Context):
             updatePlaces(resultPlaces)
             resultPlaces
         }
-
-
     override suspend fun updatePlaces(places: List<Place>) {
         val db = writableDatabase
 
@@ -64,6 +62,25 @@ class PlaceRepositoryImpl(context: Context):
             }
             db.insert(PlaceContract.TABLE_NAME, null, values)
         }
+    }
+
+    override fun getPlaceById(id: String): Place? {
+        val cursor = readableDatabase.query(
+            PlaceContract.TABLE_NAME,
+            null, "${PlaceContract.COLUMN_ID} = ?", arrayOf(id), null, null, null
+        )
+        var place: Place? = null
+        cursor?.use {
+            if (it.moveToFirst()) {
+                val name = it.getString(it.getColumnIndexOrThrow(PlaceContract.COLUMN_NAME))
+                val address = it.getString(it.getColumnIndexOrThrow(PlaceContract.COLUMN_LOCATION))
+                val type = it.getString(it.getColumnIndexOrThrow(PlaceContract.COLUMN_TYPE))
+                val xPos = it.getString(it.getColumnIndexOrThrow(PlaceContract.COLUMN_X_POS))
+                val yPos = it.getString(it.getColumnIndexOrThrow(PlaceContract.COLUMN_Y_POS))
+                place = Place(id, name, address, type, xPos, yPos)
+            }
+        }
+        return place
     }
 
     override fun updateLogs(logs: List<Place>) {

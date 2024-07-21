@@ -18,6 +18,7 @@ import campus.tech.kakao.map.databinding.ActivityMainBinding
 import campus.tech.kakao.map.view.adapter.SearchedPlaceAdapter
 import campus.tech.kakao.map.view.adapter.LogAdapter
 import campus.tech.kakao.map.domain.model.Place
+import campus.tech.kakao.map.util.PlaceMapper
 import kotlinx.coroutines.launch
 
 class ViewActivity : AppCompatActivity() {
@@ -70,7 +71,7 @@ class ViewActivity : AppCompatActivity() {
 
     private fun handlePlaceClick(place: Place) {
         val intent = Intent(this, MapActivity::class.java).apply {
-            putExtra("placeData", place)
+            putExtra("placeData", viewModel.getPlaceById(place.id))
         }
         setResult(RESULT_OK,intent)
         finish()
@@ -96,11 +97,11 @@ class ViewActivity : AppCompatActivity() {
             }
         }
         viewModel.logList.observe(this, Observer { logList ->
-            logAdapter.submitList(logList)
+            logAdapter.submitList(PlaceMapper.mapPlaces(logList))
         })
     }
 
     private fun updateSearchedPlaceList(places: List<Place>) {
-        searchedPlaceAdapter.submitList(places)
+        searchedPlaceAdapter.submitList(PlaceMapper.mapPlaces(places))
     }
 }

@@ -57,6 +57,10 @@ class PlaceViewModel(private val repository: PlaceRepository) : ViewModel() {
     suspend fun getPlaces(keyword: String): List<Place>{
         return withContext(Dispatchers.IO) { repository.getPlaces(keyword) }
     }
+
+    fun getPlaceById(id: String): Place?{
+        return repository.getPlaceById(id)
+    }
     fun getLogs(): List<Place> {
         return repository.getLogs()
     }

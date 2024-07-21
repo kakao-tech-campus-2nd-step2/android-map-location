@@ -12,6 +12,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.constraintlayout.widget.ConstraintLayout
+import campus.tech.kakao.map.PlaceApplication
 import campus.tech.kakao.map.R
 import campus.tech.kakao.map.domain.model.Place
 import campus.tech.kakao.map.ui.BottomSheetFragment
@@ -60,9 +61,7 @@ class MapActivity : AppCompatActivity() {
     }
 
     private fun isNetworkAvailable(): Boolean {
-        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val activeNetwork: NetworkInfo? = connectivityManager.activeNetworkInfo
-        return activeNetwork?.isConnected == true
+        return PlaceApplication.isNetworkActive()
     }
 
     private fun initializeSearchView() {
