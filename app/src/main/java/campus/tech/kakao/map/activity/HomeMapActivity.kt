@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import campus.tech.kakao.map.Application
 import campus.tech.kakao.map.R
+import campus.tech.kakao.map.dataContract.LocationDataContract
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
@@ -35,10 +36,10 @@ class HomeMapActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_home_map)
 
-        val name = intent.getStringExtra("name")
-        val address = intent.getStringExtra("address")
-        val latitude = intent.getStringExtra("latitude")?.toDouble()
-        val longitude = intent.getStringExtra("longitude")?.toDouble()
+        val name = intent.getStringExtra(LocationDataContract.LOCATION_NAME)
+        val address = intent.getStringExtra(LocationDataContract.LOCATION_ADDRESS)
+        val latitude = intent.getStringExtra(LocationDataContract.LOCATION_LATITUDE)?.toDouble()
+        val longitude = intent.getStringExtra(LocationDataContract.LOCATION_LONGITUDE)?.toDouble()
 
         mapView = findViewById(R.id.mapView)
         placeNameTextView = findViewById(R.id.placeName)
