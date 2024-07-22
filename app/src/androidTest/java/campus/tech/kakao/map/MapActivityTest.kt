@@ -23,11 +23,14 @@ class MapActivityTest {
 
     @Test
     fun when_SearchResultSelected_Expect_ShowMarkerOnMap() {
+        //Given
         onView(withId(R.id.inputSearch)).perform(click())
         onView(withId(R.id.inputSearch)).perform(replaceText("카카오"))
         SystemClock.sleep(1000)
+        //When
         onView(withId(R.id.searchRecyclerView)).perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()))
         SystemClock.sleep(1000)
+        //Then
         onView(withId(R.id.bottomSheet)).check(matches(isDisplayed()))
         onView(withId(R.id.place_name)).check(matches(withText("카카오")))
         onView(withId(R.id.place_address)).check(matches(withText("경기 성남시 분당구 백현동 532")))

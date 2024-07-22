@@ -34,27 +34,36 @@ class MainActivityTest {
 
     @Test
     fun when_InputSearch_Expect_DisplaySearchResults() {
+        //Given
         onView(withId(R.id.inputSearch)).perform(click())
+        //When
         onView(withId(R.id.inputSearch)).perform(typeText("kakao"))
         SystemClock.sleep(1000)
+        //Then
         onView(withId(R.id.searchRecyclerView)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
     }
 
     @Test
     fun when_ClickClearButton_Expect_ClearInputSearch() {
+        //Given
         onView(withId(R.id.inputSearch)).perform(click())
         onView(withId(R.id.inputSearch)).perform(replaceText("kakao"))
+        //When
         onView(withId(R.id.buttonX)).perform(click())
+        //Then
         onView(withId(R.id.inputSearch)).check(matches(withText("")))
     }
 
     @Test
     fun when_SelectSearchResult_Expect_StartMapActivity() {
+        //Given
         Intents.init()
         onView(withId(R.id.inputSearch)).perform(click())
         onView(withId(R.id.inputSearch)).perform(replaceText("카카오"))
         SystemClock.sleep(1000)
+        //When
         onView(withId(R.id.searchRecyclerView)).perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0,click()))
+        //Then
         Intents.intended(IntentMatchers.hasComponent(MapActivity::class.java.name))
         Intents.release()
     }
