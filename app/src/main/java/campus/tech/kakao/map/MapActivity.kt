@@ -24,10 +24,7 @@ import com.kakao.vectormap.label.LabelStyle
 import com.kakao.vectormap.label.LabelStyles
 import java.lang.Exception
 
-const val MARKER_WIDTH = 100
-const val MARKER_HEIGHT = 100
-const val MARKER_TEXT_SIZE = 40
-const val ZOOM_LEVEL = 17
+
 class MapActivity : AppCompatActivity() {
 	private lateinit var mapView: MapView
 	private var map: KakaoMap? = null
@@ -43,6 +40,10 @@ class MapActivity : AppCompatActivity() {
 	private var latitude:Double = 0.0
 	companion object{
 		var documentClicked = false
+		const val MARKER_WIDTH = 100
+		const val MARKER_HEIGHT = 100
+		const val MARKER_TEXT_SIZE = 40
+		const val ZOOM_LEVEL = 17
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {

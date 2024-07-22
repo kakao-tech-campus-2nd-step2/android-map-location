@@ -17,8 +17,7 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
 	private val retrofitData = getInstance()
 	val documentList: LiveData<List<Document>> get() = retrofitData.getDocuments()
 
-	private val initLatitude = "37.402005"
-	private val initLongitude = "127.108621"
+
 
 
 	fun addWord(document: Document){
@@ -50,10 +49,19 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
 	}
 
 	fun getMapInfo():List<String>{
-		val latitude = getMapPosition(getApplication()).getPreferences("latitude",initLatitude)
-		val longitude = getMapPosition(getApplication()).getPreferences("longitude",initLongitude)
-		val placeName = getMapPosition(getApplication()).getPreferences("placeName","")
-		val addressName = getMapPosition(getApplication()).getPreferences("addressName","")
+		val latitude = getMapPosition(getApplication()).getPreferences(LATITUDE,INIT_LATITUDE)
+		val longitude = getMapPosition(getApplication()).getPreferences(LONGITUDE,INIT_LONGITUDE)
+		val placeName = getMapPosition(getApplication()).getPreferences(PLACE_NAME,"")
+		val addressName = getMapPosition(getApplication()).getPreferences(ADDRESS_NAME,"")
 		return listOf(latitude, longitude, placeName, addressName)
+	}
+
+	companion object{
+		const val INIT_LATITUDE = "37.402005"
+		const val INIT_LONGITUDE = "127.108621"
+		const val LATITUDE = "latitude"
+		const val LONGITUDE = "longitude"
+		const val PLACE_NAME = "placeName"
+		const val ADDRESS_NAME = "addressName"
 	}
 }
