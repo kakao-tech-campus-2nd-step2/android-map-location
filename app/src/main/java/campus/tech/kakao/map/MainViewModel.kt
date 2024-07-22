@@ -10,9 +10,10 @@ import kotlinx.coroutines.launch
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
+
     private val apiService = KakaoAPIRetrofitClient.retrofitService
-    private val repository = PlaceRepository(apiService)
-    private val preferencesRepository = PreferencesRepository(application.applicationContext)
+    var repository = PlaceRepository(apiService)
+    var preferencesRepository = PreferencesRepository(application.applicationContext)
 
     private val _searchResults = MutableLiveData<List<Document>>()
     val searchResults: LiveData<List<Document>> get() = _searchResults
@@ -45,7 +46,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         saveSearchesToPreferences(new)
     }
 
-    private fun loadSavedSearches() {
+    fun loadSavedSearches() {
         val searches = preferencesRepository.getSavedSearches()
         _savedSearches.postValue(searches)
     }
