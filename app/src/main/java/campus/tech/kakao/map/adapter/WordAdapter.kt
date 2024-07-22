@@ -8,12 +8,12 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import campus.tech.kakao.map.AdapterCallback
 import campus.tech.kakao.map.R
 import campus.tech.kakao.map.dto.SearchWord
 
 class WordAdapter(
-	val deleteWord: (SearchWord) -> Unit,
-	val clickWord: (SearchWord) -> Unit
+	private val callback: AdapterCallback
 ): ListAdapter<SearchWord, WordAdapter.ViewHolder>(
 	object : DiffUtil.ItemCallback<SearchWord>(){
 		override fun areItemsTheSame(oldItem: SearchWord, newItem: SearchWord): Boolean {
@@ -52,12 +52,12 @@ class WordAdapter(
 
 	private val deletedWords = { position:Int ->
 		val word = getItem(position)
-		deleteWord(word)
+		callback.onWordDeleted(word)
 	}
 
 	private val clickedWord = { position:Int ->
 		val word = getItem(position)
-		clickWord(word)
+		callback.onWordSearched(word)
 	}
 
 }

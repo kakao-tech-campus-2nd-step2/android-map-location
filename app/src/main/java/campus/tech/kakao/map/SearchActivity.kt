@@ -12,8 +12,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.map.adapter.DocumentAdapter
 import campus.tech.kakao.map.adapter.WordAdapter
+import campus.tech.kakao.map.dto.Document
+import campus.tech.kakao.map.dto.SearchWord
 
-class SearchActivity : AppCompatActivity() {
+class SearchActivity : AppCompatActivity(), AdapterCallback {
 
     private lateinit var model: MainViewModel
     private lateinit var search:EditText
@@ -29,19 +31,8 @@ class SearchActivity : AppCompatActivity() {
         setupUI()
         searchResult.layoutManager = LinearLayoutManager(this)
         searchWordResult.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        documentAdapter = DocumentAdapter({ document ->
-            model.addWord(document)
-        },{document ->
-            model.setMapInfo(document)
-            finish()
-        })
-        wordAdapter = WordAdapter(
-            { searchWord ->
-                model.deleteWord(searchWord)
-            },{ searchWord ->
-                model.searchLocalAPI(searchWord.name)
-            }
-        )
+        documentAdapter = DocumentAdapter(this)
+        wordAdapter = WordAdapter(this)
         search.doOnTextChanged { text, _, _, _ ->
             val query = text.toString()
             if (query.isEmpty()){
@@ -87,6 +78,23 @@ class SearchActivity : AppCompatActivity() {
         clear.setOnClickListener {
             search.setText("")
         }
+    }
+
+    override fun onWordAdded(document: Document) {
+        model.addWord(document)
+    }
+
+    override fun onDocumentInfoSet(document: Document) {
+        model.setMapInfo(document)
+        finish()
+    }
+
+    override fun onWordDeleted(searchWord: SearchWord) {
+        model.deleteWord(searchWord)
+    }
+
+    override fun onWordSearched(searchWord: SearchWord) {
+        model.searchLocalAPI(searchWord.name)
     }
 
 

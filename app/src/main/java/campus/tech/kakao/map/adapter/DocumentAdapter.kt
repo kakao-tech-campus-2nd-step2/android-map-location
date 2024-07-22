@@ -7,13 +7,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import campus.tech.kakao.map.AdapterCallback
 import campus.tech.kakao.map.dto.Document
 import campus.tech.kakao.map.MapActivity.Companion.documentClicked
 import campus.tech.kakao.map.R
 
 class DocumentAdapter(
-	val addWord: (Document) -> Unit,
-	val sendDocumentInfo: (Document) -> Unit
+	private val callback: AdapterCallback
 ): ListAdapter<Document, DocumentAdapter.ViewHolder>(
 	object : DiffUtil.ItemCallback<Document>(){
 		override fun areItemsTheSame(oldItem: Document, newItem: Document): Boolean {
@@ -28,8 +28,8 @@ class DocumentAdapter(
 ) {
 	private var placeClicked = { position:Int ->
 		val document: Document = getItem(position)
-		addWord(document)
-		sendDocumentInfo(document)
+		callback.onWordAdded(document)
+		callback.onDocumentInfoSet(document)
 		documentClicked = true
 	}
 	inner class ViewHolder(
