@@ -7,8 +7,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import campus.tech.kakao.map.MainViewModel
 import campus.tech.kakao.map.dto.Document
-import campus.tech.kakao.map.MapActivity.Companion.documentClicked
+import campus.tech.kakao.map.MyApplication
 import campus.tech.kakao.map.R
 
 class DocumentAdapter(
@@ -27,9 +28,8 @@ class DocumentAdapter(
 ) {
 	private fun placeClicked(position:Int){
 		val document: Document = getItem(position)
-		callback.onWordAdded(document)
-		callback.onDocumentInfoSet(document)
-		documentClicked = true
+		val viewModel = MainViewModel(MyApplication())
+		viewModel.placeClicked(document, callback)
 	}
 	inner class ViewHolder(
 		itemView: View

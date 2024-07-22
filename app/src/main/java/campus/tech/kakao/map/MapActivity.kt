@@ -39,7 +39,6 @@ class MapActivity : AppCompatActivity() {
 	private var longitude:Double = 0.0
 	private var latitude:Double = 0.0
 	companion object{
-		var documentClicked = false
 		const val MARKER_WIDTH = 100
 		const val MARKER_HEIGHT = 100
 		const val MARKER_TEXT_SIZE = 40
@@ -88,15 +87,18 @@ class MapActivity : AppCompatActivity() {
 		super.onResume()
 		getMapInfo()
 		mapView.resume()
-		if(documentClicked){
-			makeMarker()
-			setBottomSheet()
-			documentClicked = false
+		model.documentClicked.observe(this){documentClicked->
+			if(documentClicked){
+				makeMarker()
+				setBottomSheet()
+				model.documentClickedDone()
+			}
+			else{
+				map?.labelManager?.layer?.removeAll()
+				bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+			}
 		}
-		else{
-			map?.labelManager?.layer?.removeAll()
-			bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-		}
+
 		val cameraUpdate: CameraUpdate = CameraUpdateFactory.newCenterPosition(LatLng.from(latitude, longitude))
 		map?.moveCamera(cameraUpdate)
 	}
@@ -112,6 +114,7 @@ class MapActivity : AppCompatActivity() {
 		longitude = mapInfoList[1].toDouble()
 		placeName = mapInfoList[2]
 		addressName = mapInfoList[3]
+		model.documentClickedDone()
 	}
 
 	private fun makeMarker(){

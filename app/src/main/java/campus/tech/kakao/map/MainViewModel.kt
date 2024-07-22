@@ -3,6 +3,8 @@ package campus.tech.kakao.map
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import campus.tech.kakao.map.adapter.AdapterCallback
 import campus.tech.kakao.map.dto.MapPosition.getMapPosition
 import campus.tech.kakao.map.url.RetrofitData.Companion.getInstance
 import campus.tech.kakao.map.dto.Document
@@ -16,6 +18,9 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
 
 	private val retrofitData = getInstance()
 	val documentList: LiveData<List<Document>> get() = retrofitData.getDocuments()
+
+	private val _documentClicked = MutableLiveData<Boolean>()
+	val documentClicked: LiveData<Boolean> get() = _documentClicked
 
 
 
@@ -54,6 +59,16 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
 		val placeName = getMapPosition(getApplication()).getPreferences(PLACE_NAME,"")
 		val addressName = getMapPosition(getApplication()).getPreferences(ADDRESS_NAME,"")
 		return listOf(latitude, longitude, placeName, addressName)
+	}
+
+	fun placeClicked(document: Document, callback:AdapterCallback){
+		callback.onWordAdded(document)
+		callback.onDocumentInfoSet(document)
+		_documentClicked.value = true
+	}
+
+	fun documentClickedDone(){
+		_documentClicked.value = false
 	}
 
 	companion object{
