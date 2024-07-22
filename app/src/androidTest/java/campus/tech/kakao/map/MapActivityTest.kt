@@ -22,7 +22,7 @@ class MapActivityTest {
     val activityRule = ActivityScenarioRule(MainActivity::class.java)
 
     @Test
-    fun testMarkerOnMap() {
+    fun when_SearchResultSelected_Expect_ShowMarkerOnMap() {
         onView(withId(R.id.inputSearch)).perform(click())
         onView(withId(R.id.inputSearch)).perform(replaceText("카카오"))
         SystemClock.sleep(1000)

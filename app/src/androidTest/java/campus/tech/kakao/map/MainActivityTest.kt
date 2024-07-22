@@ -4,6 +4,7 @@ import androidx.test.espresso.intent.Intents
 import android.os.SystemClock
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.onIdle
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
@@ -32,7 +33,7 @@ class MainActivityTest {
     val activityRule = ActivityScenarioRule(MainActivity::class.java)
 
     @Test
-    fun displaySearchResults() {
+    fun when_InputSearch_Expect_DisplaySearchResults() {
         onView(withId(R.id.inputSearch)).perform(click())
         onView(withId(R.id.inputSearch)).perform(typeText("kakao"))
         SystemClock.sleep(1000)
@@ -40,7 +41,7 @@ class MainActivityTest {
     }
 
     @Test
-    fun deleteInputSearch() {
+    fun when_ClickClearButton_Expect_ClearInputSearch() {
         onView(withId(R.id.inputSearch)).perform(click())
         onView(withId(R.id.inputSearch)).perform(replaceText("kakao"))
         onView(withId(R.id.buttonX)).perform(click())
@@ -48,7 +49,7 @@ class MainActivityTest {
     }
 
     @Test
-    fun selectSearchResultAndStartMap() {
+    fun when_SelectSearchResult_Expect_StartMapActivity() {
         Intents.init()
         onView(withId(R.id.inputSearch)).perform(click())
         onView(withId(R.id.inputSearch)).perform(replaceText("카카오"))
