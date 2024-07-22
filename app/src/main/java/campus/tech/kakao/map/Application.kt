@@ -4,11 +4,7 @@ import android.app.Application
 import com.kakao.vectormap.KakaoMapSdk
 
 class Application : Application() {
-    companion object{
-        lateinit var prefs: PreferenceUtil
-    }
     override fun onCreate(){
-        prefs = PreferenceUtil(applicationContext)
         super.onCreate()
 
         //카카오맵 SDK 초기화
