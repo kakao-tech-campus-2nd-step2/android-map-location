@@ -49,6 +49,7 @@ class MainActivity : AppCompatActivity() {
 
         val resultAdapter = RecyclerViewAdapter {
             mainViewModel.resultItemClickListener(it)
+            mainViewModel.saveLastLocation(it)
             moveMapView(it)
         }
         binding.recyclerView.apply {
@@ -107,11 +108,6 @@ class MainActivity : AppCompatActivity() {
         intent.putExtra(EXTRA_PLACE_X, place.x)
         intent.putExtra(EXTRA_PLACE_Y, place.y)
         startActivity(intent)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        mainViewModel.saveLastLocation()
     }
 
     override fun onDestroy() {

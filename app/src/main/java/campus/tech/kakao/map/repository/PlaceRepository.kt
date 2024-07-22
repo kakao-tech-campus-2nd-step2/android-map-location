@@ -136,11 +136,10 @@ class PlaceRepository(private val application: MyApplication) {
         return logList
     }
 
-    fun saveLastLocation() {
-        val lastLocation = logList.lastOrNull()
+    fun saveLastLocation(item: Place) {
         with(sharedPreferences.edit()) {
-            putString("PLACE_X", lastLocation?.x)
-            putString("PLACE_Y", lastLocation?.y)
+            putString("PLACE_X", item.x)
+            putString("PLACE_Y", item.y)
             apply()
         }
     }
