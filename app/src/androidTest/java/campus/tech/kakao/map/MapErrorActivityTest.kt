@@ -26,7 +26,7 @@ class MapErrorActivityTest {
         )
 
     @Test
-    fun 오류내용_보여줌() {
+    fun onMapError_예외설명_에러화면에_나타남() {
         onView(withId(R.id.error_detail))
             .check(matches(withText("401")))
     }
