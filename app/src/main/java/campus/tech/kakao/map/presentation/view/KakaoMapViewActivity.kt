@@ -106,33 +106,44 @@ class KakaoMapViewActivity : AppCompatActivity() {
 
     private fun mapReady() {
         kakaoMap?.let { map ->
-            val position = LatLng.from(
-                viewModel.yCoordinate.value ?: 37.402005,
-                viewModel.xCoordinate.value ?: 127.108621
-            )
-
-            val style = map.labelManager?.addLabelStyles(
-                LabelStyles.from(
-                    LabelStyle.from(R.drawable.kakaomap_logo).setTextStyles(30, Color.BLUE)
-                )
-            )
-
-            val options: LabelOptions = LabelOptions.from(position).setStyles(style)
-
-            val layer = map.labelManager?.layer
-            layer?.addLabel(options)?.changeText(viewModel.name.value ?: "이름")
-
-            val cameraUpdate = CameraUpdateFactory.newCenterPosition(position)
-            map.moveCamera(cameraUpdate, CameraAnimation.from(500, true, true))
-
-            if (viewModel.name.value == "이름") {
-                persistentBottomSheet.visibility = View.GONE
-                layer?.hideAllLabel()
-            } else {
-                layer?.showAllLabel()
-                persistentBottomSheet.visibility = View.VISIBLE
-            }
+            setLabel(map)
+            moveCamera(map)
         }
+    }
+
+    private fun setLabel(map: KakaoMap){
+        val position = LatLng.from(
+            viewModel.yCoordinate.value ?: 37.402005,
+            viewModel.xCoordinate.value ?: 127.108621
+        )
+
+        val style = map.labelManager?.addLabelStyles(
+            LabelStyles.from(
+                LabelStyle.from(R.drawable.kakaomap_logo).setTextStyles(30, Color.BLUE)
+            )
+        )
+
+        val options: LabelOptions = LabelOptions.from(position).setStyles(style)
+
+        val layer = map.labelManager?.layer
+        layer?.addLabel(options)?.changeText(viewModel.name.value ?: "이름")
+
+        if (viewModel.name.value == "이름") {
+            persistentBottomSheet.visibility = View.GONE
+            layer?.hideAllLabel()
+        } else {
+            layer?.showAllLabel()
+            persistentBottomSheet.visibility = View.VISIBLE
+        }
+    }
+
+    private fun moveCamera(map: KakaoMap){
+        val position = LatLng.from(
+            viewModel.yCoordinate.value ?: 37.402005,
+            viewModel.xCoordinate.value ?: 127.108621
+        )
+        val cameraUpdate = CameraUpdateFactory.newCenterPosition(position)
+        map.moveCamera(cameraUpdate, CameraAnimation.from(500, true, true))
     }
 
     override fun onResume() {

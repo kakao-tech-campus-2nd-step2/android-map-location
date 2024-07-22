@@ -82,7 +82,7 @@ class SearchTest {
         onView(withId(R.id.searchWord))
             .check(matches(isDisplayed()))
 
-        Thread.sleep(2000)
+        Thread.sleep(3000)
 
         onView(withId(R.id.searchWord))
             .perform(replaceText(query))

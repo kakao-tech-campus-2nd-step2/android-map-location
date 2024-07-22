@@ -66,6 +66,7 @@ class SearchActivity : AppCompatActivity() {
         deleteSearchWord = findViewById(R.id.deleteSearchWord)
         searchNothing = findViewById(R.id.searchNothing)
         savedSearchWordRecyclerView = findViewById(R.id.savedSearchWordRecyclerView)
+        savedSearchWordRecyclerView.visibility = View.GONE
 
         adapter = SearchAdapter()
 
@@ -133,7 +134,6 @@ class SearchActivity : AppCompatActivity() {
     private fun fetchData() {
         lifecycleScope.launch {
             try {
-                showDb()
                 searchViewModel.fetchData()
             } catch (e: Exception) {
                 Log.e("fetchDataError", "Search Activity fetchData error!")
