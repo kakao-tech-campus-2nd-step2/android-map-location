@@ -3,7 +3,7 @@ package campus.tech.kakao.map
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import campus.tech.kakao.map.MyApplication.Companion.mapPosition
+import campus.tech.kakao.map.MapPosition.getMapPosition
 import campus.tech.kakao.map.dto.RetrofitData.Companion.getInstance
 import campus.tech.kakao.map.dto.Document
 import campus.tech.kakao.map.dto.SearchWord
@@ -45,14 +45,14 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
 	}
 
 	fun setMapInfo(document: Document){
-		mapPosition.setMapInfo(document)
+		getMapPosition(getApplication()).setMapInfo(document)
 	}
 
 	fun getMapInfo():List<String>{
-		val latitude = mapPosition.getPreferences("latitude",initLatitude)
-		val longitude = mapPosition.getPreferences("longitude",initLongitude)
-		val placeName = mapPosition.getPreferences("placeName","")
-		val addressName = mapPosition.getPreferences("addressName","")
+		val latitude = getMapPosition(getApplication()).getPreferences("latitude",initLatitude)
+		val longitude = getMapPosition(getApplication()).getPreferences("longitude",initLongitude)
+		val placeName = getMapPosition(getApplication()).getPreferences("placeName","")
+		val addressName = getMapPosition(getApplication()).getPreferences("addressName","")
 		return listOf(latitude, longitude, placeName, addressName)
 	}
 }
