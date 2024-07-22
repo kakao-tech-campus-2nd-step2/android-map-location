@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 import campus.tech.kakao.map.Model.LocationData
 
 class DataDbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
@@ -50,22 +51,34 @@ class DataDbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         val selectQuery = "SELECT * FROM $TABLE_NAME"
         val db = this.readableDatabase
         val cursor = db.rawQuery(selectQuery, null)
+
+        val nameIndex = cursor.getColumnIndex(COLUMN_NAME)
+        val locationIndex = cursor.getColumnIndex(COLUMN_LOCATION)
+        val categoryIndex = cursor.getColumnIndex(COLUMN_CATEGORY)
+        val latitudeIndex = cursor.getColumnIndex(COLUMN_LATITUDE)
+        val longitudeIndex = cursor.getColumnIndex(COLUMN_LONGITUDE)
+
         if (cursor.moveToFirst()) {
             do {
-                val location = LocationData(
-                    cursor.getString(cursor.getColumnIndex(COLUMN_NAME)),
-                    cursor.getString(cursor.getColumnIndex(COLUMN_LOCATION)),
-                    cursor.getString(cursor.getColumnIndex(COLUMN_CATEGORY)),
-                    cursor.getDouble(cursor.getColumnIndex(COLUMN_LATITUDE)),
-                    cursor.getDouble(cursor.getColumnIndex(COLUMN_LONGITUDE))
-                )
-                locationList.add(location)
+                if (nameIndex != -1 && locationIndex != -1 && categoryIndex != -1 && latitudeIndex != -1 && longitudeIndex != -1) {
+                    val location = LocationData(
+                        cursor.getString(nameIndex),
+                        cursor.getString(locationIndex),
+                        cursor.getString(categoryIndex),
+                        cursor.getDouble(latitudeIndex),
+                        cursor.getDouble(longitudeIndex)
+                    )
+                    locationList.add(location)
+                } else {
+                    Log.e("DataDbHelper", "Column index not found")
+                }
             } while (cursor.moveToNext())
         }
         cursor.close()
         db.close()
         return locationList
     }
+
 
     fun deleteLocation(location: LocationData) {
         val db = this.writableDatabase
