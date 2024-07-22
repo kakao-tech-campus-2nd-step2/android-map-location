@@ -6,23 +6,17 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.map.domain.PlaceDataModel
 import campus.tech.kakao.map.data.PlaceDatabaseAccess
 import campus.tech.kakao.map.data.PlaceRepository
 import campus.tech.kakao.map.R
+import campus.tech.kakao.map.databinding.SearchLayoutBinding
 
 class PlaceActivity : AppCompatActivity() {
-    lateinit var etSearch: EditText
-    lateinit var btnErase: ImageButton
-    lateinit var tvNoData: TextView
-    lateinit var rvPlaceList: RecyclerView
-    lateinit var rvSearchList: RecyclerView
+    lateinit var binding: SearchLayoutBinding
     lateinit var placeAdapter: PlaceRecyclerViewAdapter
     private lateinit var searchAdapter: SearchRecyclerViewAdapter
     var searchDatabaseAccess = PlaceDatabaseAccess(this, "Search.db")
@@ -31,12 +25,7 @@ class PlaceActivity : AppCompatActivity() {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.search_layout)
-        etSearch = findViewById<EditText>(R.id.etSearch)
-        btnErase = findViewById<ImageButton>(R.id.btnErase)
-        tvNoData = findViewById<TextView>(R.id.tvNoData)
-        rvPlaceList = findViewById<RecyclerView>(R.id.rvPlaceList)
-        rvSearchList = findViewById<RecyclerView>(R.id.rvSearchList)
+        binding = DataBindingUtil.setContentView(this, R.layout.search_layout)
 
         val searchList: MutableList<PlaceDataModel> = searchDatabaseAccess.getAllPlace()
         val keywordList: MutableList<PlaceDataModel> = mutableListOf()
@@ -45,23 +34,23 @@ class PlaceActivity : AppCompatActivity() {
 
         // Search 어댑터
         searchAdapter = searchRecyclerViewAdapter(searchList)
-        rvSearchList.adapter = searchAdapter
-        rvSearchList.layoutManager =
+        binding.rvSearchList.adapter = searchAdapter
+        binding.rvSearchList.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
         // Place 어댑터
         placeAdapter = placeRecyclerViewAdapter(keywordList, searchList)
-        rvPlaceList.adapter = placeAdapter
-        rvPlaceList.layoutManager = LinearLayoutManager(this)
+        binding.rvPlaceList.adapter = placeAdapter
+        binding.rvPlaceList.layoutManager = LinearLayoutManager(this)
 
         controlPlaceVisibility(keywordList)
         controlSearchVisibility(searchList)
 
-        btnErase.setOnClickListener {
-            etSearch.setText("")
+        binding.btnErase.setOnClickListener {
+            binding.etSearch.setText("")
         }
 
-        etSearch.addTextChangedListener(object : TextWatcher {
+        binding.etSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
 
@@ -118,8 +107,8 @@ class PlaceActivity : AppCompatActivity() {
             searchList,
             // 저장 목록 선택 시, 검색칸에 장소명 표시
             onItemClick = { place ->
-                etSearch.setText(place.name)
-                etSearch.setSelection(place.name.length)
+                binding.etSearch.setText(place.name)
+                binding.etSearch.setSelection(place.name.length)
             },
             // X 선택 시, 저장 목록에서 삭제
             onCloseButtonClick = { place ->
@@ -145,21 +134,21 @@ class PlaceActivity : AppCompatActivity() {
     // visibility 조작
     fun controlPlaceVisibility(placeList: List<PlaceDataModel>) {
         if (placeList.isEmpty()) {
-            rvPlaceList.visibility = View.INVISIBLE
-            tvNoData.visibility = View.VISIBLE
+            binding.rvPlaceList.visibility = View.INVISIBLE
+            binding.tvNoData.visibility = View.VISIBLE
         }
         else {
-            rvPlaceList.visibility = View.VISIBLE
-            tvNoData.visibility = View.GONE
+            binding.rvPlaceList.visibility = View.VISIBLE
+            binding.tvNoData.visibility = View.GONE
         }
     }
 
     fun controlSearchVisibility(searchList: List<PlaceDataModel>) {
         if (searchList.isEmpty()) {
-            rvSearchList.visibility = View.GONE
+            binding.rvSearchList.visibility = View.GONE
         }
         else {
-            rvSearchList.visibility = View.VISIBLE
+            binding.rvSearchList.visibility = View.VISIBLE
         }
     }
 }

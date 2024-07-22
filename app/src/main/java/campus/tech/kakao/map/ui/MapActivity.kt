@@ -4,17 +4,18 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.SharedPreferences.Editor
 import android.os.Bundle
-import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import campus.tech.kakao.map.R
+import campus.tech.kakao.map.databinding.ErrorLayoutBinding
+import campus.tech.kakao.map.databinding.MapLayoutBinding
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapLifeCycleCallback
-import com.kakao.vectormap.MapView
 import com.kakao.vectormap.camera.CameraAnimation
 import com.kakao.vectormap.camera.CameraUpdateFactory
 import com.kakao.vectormap.label.LabelManager
@@ -23,9 +24,8 @@ import com.kakao.vectormap.label.LabelStyle
 import com.kakao.vectormap.label.LabelStyles
 
 class MapActivity : AppCompatActivity() {
-
-    lateinit var mapView: MapView
-    lateinit var etSearch: EditText
+    lateinit var mapBinding: MapLayoutBinding
+    lateinit var errorBinding: ErrorLayoutBinding
     private lateinit var labelManager: LabelManager
     private val startZoomLevel = 15
     var latitude: String? = "35.234"
@@ -140,11 +140,9 @@ class MapActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.map_layout)
-        mapView = findViewById(R.id.mapView)
-        etSearch = findViewById(R.id.etSearch)
-        mapView.start(lifeCycleCallback, readyCallback)
-        etSearch.setOnClickListener {
+        mapBinding = DataBindingUtil.setContentView(this, R.layout.map_layout)
+        mapBinding.mapView.start(lifeCycleCallback, readyCallback)
+        mapBinding.etSearch.setOnClickListener {
             val searchIntent = Intent(this, PlaceActivity::class.java)
             startActivity(searchIntent)
         }
@@ -152,15 +150,15 @@ class MapActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        mapView.resume()
+        mapBinding.mapView.resume()
     }
 
     override fun onPause() {
         super.onPause()
-        mapView.pause()
+        mapBinding.mapView.pause()
     }
 
     private fun initializeMap() {
-        mapView.start(lifeCycleCallback, readyCallback)
+        mapBinding.mapView.start(lifeCycleCallback, readyCallback)
     }
 }
