@@ -5,6 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.core.widget.addTextChangedListener
+import androidx.core.widget.doOnTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -86,20 +88,15 @@ class MainActivity : AppCompatActivity() {
 
         binding.closeButton.setOnClickListener {
             binding.input.text.clear()
-            mainViewModel.closeButtonClickListener()
+            mainViewModel.clearPlaceList()
         }
     }
 
     private fun observeInputTextChanges(){
-        val inputChangeObservable = binding.input.textChanges()
-        val disposable = inputChangeObservable
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { text ->
-                mainViewModel.callResultList(text.toString())
-                mainViewModel.showPlaceList()
-            }
-        disposables.add(disposable)
+        binding.input.doOnTextChanged { text, _, _, _ ->
+            mainViewModel.callResultList(text.toString())
+            mainViewModel.showPlaceList()
+        }
     }
     private fun moveMapView(place: Place) {
         val intent = Intent(this, MapViewActivity::class.java)

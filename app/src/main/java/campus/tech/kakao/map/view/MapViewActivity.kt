@@ -79,10 +79,9 @@ class MapViewActivity : AppCompatActivity() {
                 override fun onMapReady(map: KakaoMap) {
                     Log.d("KakaoMap", "카카오맵 정상실행")
                     val position: LatLng
-                    if (!placeName.isNullOrEmpty() && !placeAddr.isNullOrEmpty()) { // 아이템 클릭으로 인해 Intent를 전달받았을 경우
+                    if (!placeName.isNullOrEmpty() && !placeAddr.isNullOrEmpty()) {
                         position = LatLng.from(placeY.toDouble(), placeX.toDouble())
 
-                        // 라벨표시
                         val style = map.labelManager?.addLabelStyles(LabelStyles.from(LabelStyle.from(
                             R.drawable.flag
                         ).setTextStyles(40, Color.BLACK)))
@@ -91,7 +90,7 @@ class MapViewActivity : AppCompatActivity() {
                         val layer = map.labelManager?.layer
                         val label = layer?.addLabel(options)
                         label?.changeText(placeName)
-                    } else { // 앱 첫 실행일 경우 -> 인텐트를 받지 못하는 대신 sharedPreference를 전달받음
+                    } else {
                         val (x, y) = lastLocation ?: Pair(DEFAULT_LONGITUDE.toDouble(), DEFAULT_LATITUDE.toDouble())
                         position = LatLng.from(y, x)
                     }

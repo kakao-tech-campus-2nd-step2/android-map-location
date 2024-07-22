@@ -28,10 +28,9 @@ class MainViewModel(
         initSearchLog()
     }
 
-    // 앱 키면 가장 먼저 할 것 : ⓐ db 비우기 ⓑ 검색결과 채우기 ⓒ 클릭결과 가져오기
     private fun initSearchLog() {
-        initSearchList() // researchList를 새로 불러오고
-        updateTabViewVisible()   // tabview를 보일지 아닐지
+        initSearchList()
+        updateTabViewVisible()
     }
 
     private fun updateTabViewVisible() {
@@ -57,8 +56,6 @@ class MainViewModel(
         _placeListVisible.value = !_placeList.value.isNullOrEmpty()
     }
 
-    fun callLogList() = placeRepository.getLogList()
-
     fun resultItemClickListener(item: Place) {
         placeRepository.insertLog(item)
 
@@ -68,7 +65,7 @@ class MainViewModel(
         updateTabViewVisible()
     }
 
-    fun closeButtonClickListener() {
+    fun clearPlaceList() {
         _placeList.postValue(emptyList())
     }
 
