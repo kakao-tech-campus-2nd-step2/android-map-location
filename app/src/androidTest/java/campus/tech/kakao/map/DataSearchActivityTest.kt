@@ -17,7 +17,7 @@ class DataSearchActivityTest {
     val activityRule = ActivityScenarioRule(DataSearchActivity::class.java)
 
     @Test
-    fun 검색어를_입력하면_검색_결과가_나타남() {
+    fun 검색어_입력시_검색_결과가_나타남() {
         onView(withId(R.id.searchBar))
             .perform(replaceText("전남대학교"), closeSoftKeyboard())
         onView(withId(R.id.searchResulListView))
