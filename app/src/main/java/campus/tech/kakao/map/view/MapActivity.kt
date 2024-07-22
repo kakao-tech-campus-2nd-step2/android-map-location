@@ -51,6 +51,11 @@ class MapActivity : AppCompatActivity() {
     lateinit var bottomSheetBehavior : BottomSheetBehavior<ConstraintLayout>
     lateinit var editor : Editor
 
+    companion object ChonnamUnivLocation {
+        const val LATITUDE = "35.175487"
+        const val LONGITUDE = "126.907163"
+    }
+
     enum class ErrorCode(val code: String, val errorMessage : String){
         UNKNOWN_ERROR("-1", "인증 과정 중 원인을 알 수 없는 에러가 발생했습니다"),
         CONNECTION_ERROR("-2", "통신 연결 시도 중 에러가 발생하였습니다"),
@@ -130,12 +135,11 @@ class MapActivity : AppCompatActivity() {
             }
 
             override fun getPosition(): LatLng {
-                val latitude = sharedPreferences.getString(Constants.Keys.KEY_LATITUDE, "37.406960")?.toDouble() ?: 37.406960
-                val longitude = sharedPreferences.getString(Constants.Keys.KEY_LONGITUDE, "127.115587")?.toDouble() ?: 127.115587
+                val latitude = sharedPreferences.getString(Constants.Keys.KEY_LATITUDE, LATITUDE)?.toDouble() ?: LATITUDE.toDouble()
+                val longitude = sharedPreferences.getString(Constants.Keys.KEY_LONGITUDE, LONGITUDE)?.toDouble() ?: LONGITUDE.toDouble()
                 return LatLng.from(latitude, longitude)
             }
         })
-
     }
 
     private fun bringFrontSearchField() {
@@ -154,8 +158,8 @@ class MapActivity : AppCompatActivity() {
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result.resultCode == RESULT_OK) {
                     val place = getPlaceToResult(result)
-                    val latitude = place?.y?.toDouble() ?: 127.115587
-                    val longitude = place?.x?.toDouble()?: 37.406960
+                    val latitude = place?.y?.toDouble() ?: LATITUDE.toDouble()
+                    val longitude = place?.x?.toDouble()?: LONGITUDE.toDouble()
                     val pos = LatLng.from(latitude, longitude)
                     moveMapCamera(pos)
                     createLabel(pos)
