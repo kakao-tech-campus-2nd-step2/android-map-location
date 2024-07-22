@@ -4,7 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
-import campus.tech.kakao.map.presentation.MapActivity
+import campus.tech.kakao.map.ui.MapActivity
 import campus.tech.kakao.map.ui.ModalBottomSheet
 import org.junit.Assert.*
 import org.junit.Before

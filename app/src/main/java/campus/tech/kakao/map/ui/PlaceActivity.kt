@@ -1,4 +1,4 @@
-package campus.tech.kakao.map.presentation
+package campus.tech.kakao.map.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -12,12 +12,10 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import campus.tech.kakao.map.data.PlaceDataModel
+import campus.tech.kakao.map.domain.PlaceDataModel
 import campus.tech.kakao.map.data.PlaceDatabaseAccess
-import campus.tech.kakao.map.ui.PlaceRecyclerViewAdapter
 import campus.tech.kakao.map.data.PlaceRepository
 import campus.tech.kakao.map.R
-import campus.tech.kakao.map.ui.SearchRecyclerViewAdapter
 
 class PlaceActivity : AppCompatActivity() {
     lateinit var etSearch: EditText
@@ -34,7 +32,6 @@ class PlaceActivity : AppCompatActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.search_layout)
-
         etSearch = findViewById<EditText>(R.id.etSearch)
         btnErase = findViewById<ImageButton>(R.id.btnErase)
         tvNoData = findViewById<TextView>(R.id.tvNoData)

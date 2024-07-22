@@ -11,8 +11,8 @@ import androidx.test.espresso.matcher.ViewMatchers.hasMinimumChildCount
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
-import campus.tech.kakao.map.presentation.MapActivity
-import campus.tech.kakao.map.presentation.PlaceActivity
+import campus.tech.kakao.map.ui.MapActivity
+import campus.tech.kakao.map.ui.PlaceActivity
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith

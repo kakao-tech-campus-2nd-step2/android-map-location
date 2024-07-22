@@ -1,4 +1,4 @@
-package campus.tech.kakao.map.domain
+package campus.tech.kakao.map.data
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
