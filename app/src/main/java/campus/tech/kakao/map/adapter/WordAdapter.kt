@@ -50,12 +50,12 @@ class WordAdapter(
 		holder.searchWord.text = word.name
 	}
 
-	private val deletedWords = { position:Int ->
+	private fun deletedWords(position:Int){
 		val word = getItem(position)
 		callback.onWordDeleted(word)
 	}
 
-	private val clickedWord = { position:Int ->
+	private fun clickedWord(position:Int){
 		val word = getItem(position)
 		callback.onWordSearched(word)
 	}
