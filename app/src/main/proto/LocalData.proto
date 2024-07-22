@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+option java_package = "campus.tech.kakao.map";
+option java_outer_classname = "LocationDataProto";
+
+message LocationData {
+    string name = 1;
+    double latitude = 2;
+    double longitude = 3;
+    string address = 4;
+}

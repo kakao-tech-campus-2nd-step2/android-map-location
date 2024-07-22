@@ -14,15 +14,19 @@ class SavedSearchWordRecyclerViewAdapter(
     private val savedSearchWordTextViewClickListener: SearchActivity.OnSavedSearchWordTextViewClickListener,
 ) :
     ListAdapter<SavedSearchWord, SavedSearchWordRecyclerViewAdapter.SavedSearchWordViewHolder>(
-            SavedSearchWordDiffCallback(),
-        ) {
+        SavedSearchWordDiffCallback(),
+    ) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
     ): SavedSearchWordViewHolder {
         val binding =
             ItemSavedSearchWordBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return SavedSearchWordViewHolder(binding, savedSearchWordClearImageViewClickListener, savedSearchWordTextViewClickListener)
+        return SavedSearchWordViewHolder(
+            binding,
+            savedSearchWordClearImageViewClickListener,
+            savedSearchWordTextViewClickListener,
+        )
     }
 
     override fun onBindViewHolder(
@@ -38,30 +42,44 @@ class SavedSearchWordRecyclerViewAdapter(
         private val savedSearchWordImageViewClickListener: SearchActivity.OnSavedSearchWordClearImageViewClickListener,
         private val savedSearchWordTextViewClickListener: SearchActivity.OnSavedSearchWordTextViewClickListener,
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(savedSearchWord: SavedSearchWord) {
-            binding.savedSearchWordTextView.text = savedSearchWord.name
-            binding.savedSearchWordTextView.setOnClickListener {
-                savedSearchWordTextViewClickListener.onSavedSearchWordTextViewClicked(savedSearchWord)
-            }
+
+        private lateinit var currentSavedSearchWord: SavedSearchWord
+
+        init {
             binding.savedSearchWordClearImageView.setOnClickListener {
-                savedSearchWordImageViewClickListener.onSavedSearchWordClearImageViewClicked(savedSearchWord)
+                savedSearchWordImageViewClickListener.onSavedSearchWordClearImageViewClicked(
+                    currentSavedSearchWord
+                )
             }
+
+            binding.savedSearchWordTextView.setOnClickListener {
+                savedSearchWordTextViewClickListener.onSavedSearchWordTextViewClicked(
+                    currentSavedSearchWord
+                )
+            }
+        }
+
+        fun bind(savedSearchWord: SavedSearchWord) {
+            currentSavedSearchWord = savedSearchWord
+            binding.savedSearchWordTextView.text = savedSearchWord.name
         }
     }
 
-    private class SavedSearchWordDiffCallback : DiffUtil.ItemCallback<SavedSearchWord>() {
-        override fun areItemsTheSame(
-            oldItem: SavedSearchWord,
-            newItem: SavedSearchWord,
-        ): Boolean {
-            return oldItem.id == newItem.id
-        }
+}
 
-        override fun areContentsTheSame(
-            oldItem: SavedSearchWord,
-            newItem: SavedSearchWord,
-        ): Boolean {
-            return oldItem == newItem
-        }
+private class SavedSearchWordDiffCallback : DiffUtil.ItemCallback<SavedSearchWord>() {
+    override fun areItemsTheSame(
+        oldItem: SavedSearchWord,
+        newItem: SavedSearchWord,
+    ): Boolean {
+        return oldItem.id == newItem.id
+    }
+
+    override fun areContentsTheSame(
+        oldItem: SavedSearchWord,
+        newItem: SavedSearchWord,
+    ): Boolean {
+        return oldItem == newItem
     }
 }
+

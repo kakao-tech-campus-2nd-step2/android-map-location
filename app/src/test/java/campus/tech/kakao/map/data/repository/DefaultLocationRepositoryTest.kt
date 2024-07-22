@@ -1,7 +1,7 @@
 package campus.tech.kakao.map.data.repository
 
 import android.content.SharedPreferences
-import campus.tech.kakao.map.ui.map.MapActivity.MarkerData
+import campus.tech.kakao.map.model.Location
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -9,16 +9,16 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 
-class LocationRepositoryImplTest {
+class DefaultLocationRepositoryTest {
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var editor: SharedPreferences.Editor
-    private lateinit var locationRepository: LocationRepositoryImpl
+    private lateinit var locationRepository: DefaultLocationRepository
 
     @Before
     fun setup() {
         sharedPreferences = mockk()
         editor = mockk()
-        locationRepository = LocationRepositoryImpl(sharedPreferences)
+        locationRepository = DefaultLocationRepository(sharedPreferences)
 
         every { sharedPreferences.edit() } returns editor
         every { editor.putString(any(), any()) } returns editor
@@ -28,7 +28,7 @@ class LocationRepositoryImplTest {
     @Test
     fun testSaveLocation() {
         // given
-        val markerData = MarkerData("Test Place", 123.456, 78.90, "Test Address")
+        val markerData = Location("Test Place", 123.456, 78.90, "Test Address")
 
         // when
         locationRepository.saveLocation(markerData)

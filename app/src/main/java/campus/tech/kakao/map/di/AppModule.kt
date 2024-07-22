@@ -1,10 +1,11 @@
 package campus.tech.kakao.map.di
 
 import android.content.Context
-import android.content.SharedPreferences
+import androidx.datastore.core.DataStore
+import androidx.datastore.dataStore
 import campus.tech.kakao.map.data.SavedSearchWordDBHelper
-import campus.tech.kakao.map.data.repository.LocationRepository
-import campus.tech.kakao.map.data.repository.LocationRepositoryImpl
+import campus.tech.kakao.map.data.repository.LocationSerializer
+import campus.tech.kakao.map.model.Location
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,6 +16,11 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+    private val Context.dataStore: DataStore<Location> by dataStore(
+        fileName = "location_data.pb",
+        serializer = LocationSerializer,
+    )
+
     @Provides
     @Singleton
     fun provideSavedSearchWordDBHelper(
@@ -25,15 +31,9 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideSharedPreferences(
+    fun provideDataStore(
         @ApplicationContext context: Context,
-    ): SharedPreferences {
-        return context.getSharedPreferences(LocationRepositoryImpl.PREF_NAME, Context.MODE_PRIVATE)
-    }
-
-    @Provides
-    @Singleton
-    fun provideLocationRepository(sharedPreferences: SharedPreferences): LocationRepository {
-        return LocationRepositoryImpl(sharedPreferences)
+    ): DataStore<Location> {
+        return context.dataStore
     }
 }

@@ -4,7 +4,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.intent.Intents
@@ -47,8 +46,8 @@ class MapActivityTest {
 
             // 리사이클러뷰가 나오는지 확인
             onView(withId(R.id.search_result_recycler_view)).check(
-                ViewAssertions.matches(
-                    ViewMatchers.isDisplayed(),
+                matches(
+                    isDisplayed(),
                 ),
             )
 

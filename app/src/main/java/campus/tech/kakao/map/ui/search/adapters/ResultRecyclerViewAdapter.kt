@@ -1,5 +1,6 @@
 package campus.tech.kakao.map.ui.search.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -16,7 +17,7 @@ class ResultRecyclerViewAdapter(private val clickListener: SearchActivity.OnPlac
         viewType: Int,
     ): PlaceViewHolder {
         val binding = ItemPlaceBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return PlaceViewHolder(binding)
+        return PlaceViewHolder(binding, clickListener)
     }
 
     override fun onBindViewHolder(
@@ -25,13 +26,23 @@ class ResultRecyclerViewAdapter(private val clickListener: SearchActivity.OnPlac
     ) {
         val place = getItem(position)
         holder.bind(place)
-        holder.itemView.setOnClickListener {
-            clickListener.onPlaceItemClicked(place)
-        }
     }
 
-    class PlaceViewHolder(private val binding: ItemPlaceBinding) : RecyclerView.ViewHolder(binding.root) {
+    class PlaceViewHolder(
+        private val binding: ItemPlaceBinding,
+        private val clickListener: SearchActivity.OnPlaceItemClickListener
+    ) :
+        RecyclerView.ViewHolder(binding.root) {
+        private lateinit var currentPlace: Place
+
+        init {
+            itemView.setOnClickListener {
+                clickListener.onPlaceItemClicked(currentPlace)
+            }
+        }
+
         fun bind(place: Place) {
+            currentPlace = place
             binding.placeNameTextView.text = place.name
             binding.placeCategoryTextView.text = place.category
             binding.placeAddressTextView.text = place.address

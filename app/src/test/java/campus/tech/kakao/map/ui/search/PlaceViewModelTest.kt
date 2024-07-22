@@ -54,16 +54,16 @@ class PlaceViewModelTest {
                         name = "마트 1",
                         category = "대형마트",
                         address = "주소1",
-                        longitude = "12.3456",
-                        latitude = "123.4567",
+                        longitude = 12.3456,
+                        latitude = 123.4567,
                     ),
                     Place(
                         id = "1235",
                         name = "마트 2",
                         category = "대형마트",
                         address = "주소2",
-                        longitude = "12.3457",
-                        latitude = "123.4568",
+                        longitude = 12.3457,
+                        latitude = 123.4568,
                     ),
                 )
 

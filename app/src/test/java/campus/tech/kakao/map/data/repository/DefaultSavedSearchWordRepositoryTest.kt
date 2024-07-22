@@ -12,14 +12,14 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
-class SavedSearchWordRepositoryImplTest {
+class DefaultSavedSearchWordRepositoryTest {
     private lateinit var dbHelper: SavedSearchWordDBHelper
-    private lateinit var repository: SavedSearchWordRepositoryImpl
+    private lateinit var repository: DefaultSavedSearchWordRepository
 
     @Before
     fun setup() {
         dbHelper = mockk()
-        repository = SavedSearchWordRepositoryImpl(dbHelper)
+        repository = DefaultSavedSearchWordRepository(dbHelper)
     }
 
     @After
@@ -35,8 +35,8 @@ class SavedSearchWordRepositoryImplTest {
                 name = "부산대병원",
                 placeId = "1234",
                 address = "부산광역시 서구 구덕로 179",
-                latitude = "123.456",
-                longitude = "12.34",
+                latitude = 123.456,
+                longitude = 12.34,
             )
 
         // When
@@ -56,15 +56,15 @@ class SavedSearchWordRepositoryImplTest {
                     name = "부산대병원",
                     placeId = "1234",
                     address = "부산광역시 서구 구덕로 179",
-                    latitude = "123.456",
-                    longitude = "12.34",
+                    latitude = 123.456,
+                    longitude = 12.34,
                 ),
                 SavedSearchWord(
                     name = "부산대학교",
                     placeId = "1235",
                     address = "부산광역시 금정구 부산대학로63번길 2",
-                    latitude = "124.567",
-                    longitude = "23.45",
+                    latitude = 124.567,
+                    longitude = 23.45,
                 ),
             )
 

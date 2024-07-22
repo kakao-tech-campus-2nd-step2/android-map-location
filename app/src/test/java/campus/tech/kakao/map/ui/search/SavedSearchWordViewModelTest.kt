@@ -1,8 +1,8 @@
 package campus.tech.kakao.map.ui.search
 
 import campus.tech.kakao.map.data.SavedSearchWordDBHelper
+import campus.tech.kakao.map.data.repository.DefaultSavedSearchWordRepository
 import campus.tech.kakao.map.data.repository.SavedSearchWordRepository
-import campus.tech.kakao.map.data.repository.SavedSearchWordRepositoryImpl
 import campus.tech.kakao.map.model.SavedSearchWord
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -32,7 +32,7 @@ class SavedSearchWordViewModelTest {
     fun setup() {
         Dispatchers.setMain(testDispatcher)
         dbHelper = mockk(relaxed = true)
-        repository = SavedSearchWordRepositoryImpl(dbHelper)
+        repository = DefaultSavedSearchWordRepository(dbHelper)
         viewModel = SavedSearchWordViewModel(repository)
 
         searchWord1 =
@@ -41,8 +41,8 @@ class SavedSearchWordViewModelTest {
                 name = "부산대병원",
                 placeId = "1234",
                 address = "부산광역시 서구 구덕로 179",
-                latitude = "123.456",
-                longitude = "12.34",
+                latitude = 123.456,
+                longitude = 12.34,
             )
         searchWord2 =
             SavedSearchWord(
@@ -50,8 +50,8 @@ class SavedSearchWordViewModelTest {
                 name = "부산대학교",
                 placeId = "1235",
                 address = "부산광역시 금정구 부산대학로63번길 2",
-                latitude = "124.567",
-                longitude = "23.45",
+                latitude = 124.567,
+                longitude = 23.45,
             )
     }
 

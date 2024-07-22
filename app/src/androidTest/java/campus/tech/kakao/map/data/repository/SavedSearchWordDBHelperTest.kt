@@ -26,16 +26,16 @@ class SavedSearchWordDBHelperTest {
                 name = "부산대병원",
                 placeId = "1234",
                 address = "부산광역시 서구 구덕로 179",
-                latitude = "123.456",
-                longitude = "12.34",
+                latitude = 123.456,
+                longitude = 12.34,
             )
         searchWord2 =
             SavedSearchWord(
                 name = "부산대학교",
                 placeId = "1235",
                 address = "부산광역시 금정구 부산대학로63번길 2",
-                latitude = "124.567",
-                longitude = "23.45",
+                latitude = 124.567,
+                longitude = 23.45,
             )
     }
 

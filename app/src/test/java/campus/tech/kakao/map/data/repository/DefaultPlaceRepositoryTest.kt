@@ -14,14 +14,14 @@ import org.junit.Before
 import org.junit.Test
 import java.io.IOException
 
-class PlaceRepositoryImplTest {
-    private lateinit var repository: PlaceRepositoryImpl
+class DefaultPlaceRepositoryTest {
+    private lateinit var repository: DefaultPlaceRepository
     private lateinit var mockService: KakaoLocalService
 
     @Before
     fun setUp() {
         mockService = mockk()
-        repository = PlaceRepositoryImpl(mockService)
+        repository = DefaultPlaceRepository(mockService)
 
         mockLogClass()
     }
@@ -139,8 +139,8 @@ class PlaceRepositoryImplTest {
                     placeName = "마트$curNumber",
                     address = "주소$curNumber",
                     category = categoryInput,
-                    longitude = "37.${curNumber}2345",
-                    latitude = "127.${curNumber}5678",
+                    longitude = 37.12345,
+                    latitude = 127.45678,
                 ),
             )
         }

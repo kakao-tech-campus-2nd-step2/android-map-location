@@ -68,9 +68,10 @@ class SavedSearchWordDBHelper(context: Context) :
                     val name = it.getString(it.getColumnIndexOrThrow(COLUMN_NAME))
                     val placeId = it.getString(it.getColumnIndexOrThrow(COLUMN_PLACE_ID))
                     val address = it.getString(it.getColumnIndexOrThrow(COLUMN_ADDRESS))
-                    val longitude = it.getString(it.getColumnIndexOrThrow(COLUMN_LONGITUDE))
-                    val latitude = it.getString(it.getColumnIndexOrThrow(COLUMN_LATITUDE))
-                    val savedSearchWord = SavedSearchWord(id, name, placeId, address, longitude, latitude)
+                    val longitude = it.getDouble(it.getColumnIndexOrThrow(COLUMN_LONGITUDE))
+                    val latitude = it.getDouble(it.getColumnIndexOrThrow(COLUMN_LATITUDE))
+                    val savedSearchWord =
+                        SavedSearchWord(id, name, placeId, address, longitude, latitude)
                     searchWords.add(savedSearchWord)
                 }
             }

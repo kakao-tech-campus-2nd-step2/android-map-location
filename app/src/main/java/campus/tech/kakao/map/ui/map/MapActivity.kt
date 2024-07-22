@@ -7,11 +7,14 @@ import android.util.Log
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import campus.tech.kakao.map.BuildConfig
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import campus.tech.kakao.map.R
-import campus.tech.kakao.map.data.repository.LocationRepository
 import campus.tech.kakao.map.databinding.ActivityMapBinding
+import campus.tech.kakao.map.model.Location
 import campus.tech.kakao.map.ui.IntentKeys.EXTRA_MAP_ERROR_MESSAGE
 import campus.tech.kakao.map.ui.IntentKeys.EXTRA_PLACE_ADDRESS
 import campus.tech.kakao.map.ui.IntentKeys.EXTRA_PLACE_LATITUDE
@@ -20,7 +23,6 @@ import campus.tech.kakao.map.ui.IntentKeys.EXTRA_PLACE_NAME
 import campus.tech.kakao.map.ui.search.SearchActivity
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
-import com.kakao.vectormap.KakaoMapSdk
 import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.label.LabelManager
@@ -28,35 +30,26 @@ import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.label.LabelStyle
 import com.kakao.vectormap.label.LabelStyles
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MapActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMapBinding
     private lateinit var searchActivityResultLauncher: ActivityResultLauncher<Intent>
-    private lateinit var markerData: MarkerData
 
-    @Inject
-    lateinit var locationRepository: LocationRepository
+    private val locationViewModel: LocationViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMapBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        initializeKakaoMapSdk()
-        loadLocation()
+        collectLocationUpdates()
         setBottomSheet()
         startMapView()
         setSearchBoxClickListener()
         setSearchActivityResultLauncher()
-    }
-
-    /**
-     * Kakao Map SDK를 초기화하는 함수.
-     */
-    private fun initializeKakaoMapSdk() {
-        KakaoMapSdk.init(this, BuildConfig.KAKAO_API_KEY)
     }
 
     /**
@@ -98,10 +91,11 @@ class MapActivity : AppCompatActivity() {
             val data: Intent? = result.data
             val name = data?.getStringExtra(EXTRA_PLACE_NAME) ?: ""
             val address = data?.getStringExtra(EXTRA_PLACE_ADDRESS) ?: ""
-            val longitude = data?.getStringExtra(EXTRA_PLACE_LONGITUDE) ?: ""
-            val latitude = data?.getStringExtra(EXTRA_PLACE_LATITUDE) ?: ""
+            val longitude = data?.getDoubleExtra(EXTRA_PLACE_LONGITUDE, 0.0) ?: 0.0
+            val latitude = data?.getDoubleExtra(EXTRA_PLACE_LATITUDE, 0.0) ?: 0.0
 
-            setMarker(name, longitude, latitude, address)
+            val newLocation = Location(name, latitude, longitude, address)
+            locationViewModel.saveLocation(newLocation)
             setBottomSheet()
             startMapView()
         }
@@ -112,33 +106,10 @@ class MapActivity : AppCompatActivity() {
      *
      */
     private fun setBottomSheet() {
-        binding.bottomSheetPlaceNameTextView.text = markerData.name
-        binding.bottomSheetPlaceAddressTextView.text = markerData.address
-    }
-
-    /**
-     * marker의 위치를 설정하는 함수.
-     *
-     * @param name marker를 표시할 위치의 이름.
-     * @param longitude marker를 표시할 위치의 경도 좌표.
-     * @param latitude marker를 표시할 위치의 위도 좌표.
-     */
-    private fun setMarker(
-        name: String,
-        longitude: String,
-        latitude: String,
-        address: String,
-    ) {
-        markerData = MarkerData(name, latitude.toDouble(), longitude.toDouble(), address)
-    }
-
-    /**
-     * location 정보를 SharedPreferences에서 가져오는 함수.
-     *
-     * 데이터가 존재한다면 정보를 가져와서 저장. 그 외의 경우는 기본값(부산대 컴공관) 저장.
-     */
-    private fun loadLocation() {
-        markerData = locationRepository.loadLocation()
+        locationViewModel.location.value.let { location ->
+            binding.bottomSheetPlaceNameTextView.text = location.name
+            binding.bottomSheetPlaceAddressTextView.text = location.address
+        }
     }
 
     /**
@@ -187,7 +158,10 @@ class MapActivity : AppCompatActivity() {
             }
 
             override fun getPosition(): LatLng {
-                return LatLng.from(markerData.latitude, markerData.longitude)
+                return LatLng.from(
+                    locationViewModel.location.value.latitude,
+                    locationViewModel.location.value.longitude
+                )
             }
         }
     }
@@ -226,9 +200,14 @@ class MapActivity : AppCompatActivity() {
         labelManager: LabelManager,
         styles: LabelStyles,
     ): LabelOptions {
-        return LabelOptions.from(LatLng.from(markerData.latitude, markerData.longitude))
+        return LabelOptions.from(
+            LatLng.from(
+                locationViewModel.location.value.latitude,
+                locationViewModel.location.value.longitude
+            )
+        )
             .setStyles(labelManager.addLabelStyles(styles))
-            .setTexts(markerData.name)
+            .setTexts(locationViewModel.location.value.name)
     }
 
     /**
@@ -278,21 +257,20 @@ class MapActivity : AppCompatActivity() {
 
     @Override
     override fun onDestroy() {
-        saveLocation()
+        locationViewModel.location.value.let { location ->
+            locationViewModel.saveLocation(location)
+        }
         super.onDestroy()
     }
 
-    /**
-     * location 정보를 SharedPreferences에 저장하는 함수.
-     */
-    private fun saveLocation() {
-        locationRepository.saveLocation(markerData)
+    private fun collectLocationUpdates() {
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                locationViewModel.location.collectLatest { location ->
+                    binding.bottomSheetPlaceNameTextView.text = location.name
+                    binding.bottomSheetPlaceAddressTextView.text = location.address
+                }
+            }
+        }
     }
-
-    data class MarkerData(
-        val name: String,
-        val latitude: Double,
-        val longitude: Double,
-        val address: String,
-    )
 }

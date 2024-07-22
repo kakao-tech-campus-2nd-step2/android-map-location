@@ -1,9 +1,11 @@
 package campus.tech.kakao.map.di
 
+import campus.tech.kakao.map.data.repository.DefaultLocationRepository
+import campus.tech.kakao.map.data.repository.DefaultPlaceRepository
+import campus.tech.kakao.map.data.repository.DefaultSavedSearchWordRepository
+import campus.tech.kakao.map.data.repository.LocationRepository
 import campus.tech.kakao.map.data.repository.PlaceRepository
-import campus.tech.kakao.map.data.repository.PlaceRepositoryImpl
 import campus.tech.kakao.map.data.repository.SavedSearchWordRepository
-import campus.tech.kakao.map.data.repository.SavedSearchWordRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -15,9 +17,13 @@ import dagger.hilt.android.scopes.ViewModelScoped
 abstract class ViewModelModule {
     @Binds
     @ViewModelScoped
-    abstract fun bindPlaceRepository(placeRepositoryImpl: PlaceRepositoryImpl): PlaceRepository
+    abstract fun bindPlaceRepository(placeRepositoryImpl: DefaultPlaceRepository): PlaceRepository
 
     @Binds
     @ViewModelScoped
-    abstract fun bindSavedSearchWordRepository(savedSearchWordRepositoryImpl: SavedSearchWordRepositoryImpl): SavedSearchWordRepository
+    abstract fun bindSavedSearchWordRepository(savedSearchWordRepositoryImpl: DefaultSavedSearchWordRepository): SavedSearchWordRepository
+
+    @Binds
+    @ViewModelScoped
+    abstract fun bindLocationRepository(locationRepositoryImpl: DefaultLocationRepository): LocationRepository
 }

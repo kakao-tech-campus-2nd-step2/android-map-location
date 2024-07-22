@@ -134,8 +134,8 @@ class SearchActivity : AppCompatActivity() {
     private fun navigateToMapActivity(
         placeName: String,
         placeAddress: String,
-        placeLongitude: String,
-        placeLatitude: String,
+        placeLongitude: Double,
+        placeLatitude: Double,
     ) {
         val intent = Intent()
         intent.putExtra(EXTRA_PLACE_NAME, placeName)
@@ -179,7 +179,10 @@ class SearchActivity : AppCompatActivity() {
                 }
             }
         binding.savedSearchWordRecyclerView.adapter =
-            SavedSearchWordRecyclerViewAdapter(savedSearchWordClearImageViewClickListener, savedSearchWordTextViewClickListener)
+            SavedSearchWordRecyclerViewAdapter(
+                savedSearchWordClearImageViewClickListener,
+                savedSearchWordTextViewClickListener
+            )
         binding.savedSearchWordRecyclerView.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
     }
