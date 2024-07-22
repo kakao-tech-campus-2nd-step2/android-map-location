@@ -1,4 +1,4 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.presentation
 
 import android.content.Intent
 import android.os.Bundle
@@ -12,6 +12,12 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import campus.tech.kakao.map.data.PlaceDataModel
+import campus.tech.kakao.map.data.PlaceDatabaseAccess
+import campus.tech.kakao.map.ui.PlaceRecyclerViewAdapter
+import campus.tech.kakao.map.data.PlaceRepository
+import campus.tech.kakao.map.R
+import campus.tech.kakao.map.ui.SearchRecyclerViewAdapter
 
 class PlaceActivity : AppCompatActivity() {
     lateinit var etSearch: EditText
