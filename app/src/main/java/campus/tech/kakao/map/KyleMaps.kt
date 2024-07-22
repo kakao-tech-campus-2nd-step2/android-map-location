@@ -9,10 +9,11 @@ import retrofit2.converter.gson.GsonConverterFactory
 class KyleMaps : Application() {
 
     lateinit var kakaoRepository: KakaoRepository
+//    var isTestMode: Boolean = false
 
     override fun onCreate() {
         super.onCreate()
-        KakaoMapSdk.init(this, getString(R.string.kakao_api_key));
+        KakaoMapSdk.init(this, getString(R.string.kakao_api_key))
         val retrofit = Retrofit.Builder()
             .baseUrl("https://dapi.kakao.com")
             .addConverterFactory(GsonConverterFactory.create())
