@@ -51,6 +51,25 @@ class MapActivity : AppCompatActivity() {
     lateinit var bottomSheetBehavior : BottomSheetBehavior<ConstraintLayout>
     lateinit var editor : Editor
 
+    enum class ErrorCode(val code: String, val errorMessage : String){
+        UNKNOWN_ERROR("-1", "인증 과정 중 원인을 알 수 없는 에러가 발생했습니다"),
+        CONNECTION_ERROR("-2", "통신 연결 시도 중 에러가 발생하였습니다"),
+        SOCKET_TIMEOUT("-3", "통신 연결 중 SocketTimeoutException 에러가 발생하였습니다"),
+        CONNECT_TIMEOUT("-4", "통신 시도 중 ConnectTimeoutException 에러가 발생하였습니다"),
+        BAD_REQUEST("400", "요청을 처리하지 못하였습니다"),
+        AUTHORIZED_FAILURE("401", "인증 오류가 발생하였습니다. 인증 자격 증명이 충분치 않습니다"),
+        FORBIDDEN("403", "권한 오류가 발생하였습니다"),
+        TOO_MANY_REQUESTS("429", "정해진 사용량이나, 초당 요청 한도를 초과하였습니다"),
+        CONNECTION_FAILURE("499", "통신이 실패하였습니다. 인터넷 연결을 확인해주십시오"),
+        UNKNOWN("X", "오류 코드 X");
+
+        companion object {
+            fun getErrorMessage(errorText: String): ErrorCode {
+                return entries.find { errorText == it.code } ?: UNKNOWN
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
@@ -157,7 +176,8 @@ class MapActivity : AppCompatActivity() {
 
     private fun showErrorMessageView(error: String) {
         errorTextView.isVisible = true
-        val errorText = getErrorMessage(error) + "\n\n" + error
+        val errorCode = getErrorCode(error)
+        val errorText = ErrorCode.getErrorMessage(errorCode).errorMessage + "\n\n" + error
         errorTextView.text = errorText
     }
 
@@ -166,43 +186,6 @@ class MapActivity : AppCompatActivity() {
         val code = regex.find(errorText)
         Log.d("testt", "errorcode" + code?.groups?.get(1)?.value)
         return code?.groups?.get(1)?.value ?: ""
-    }
-
-    private fun getErrorMessage(errorText: String): String {
-        val errorCode = getErrorCode(errorText)
-        // enum으로 처리?
-        when (errorCode) {
-            "-1" -> {
-                return "인증 과정 중 원인을 알 수 없는 에러가 발생했습니다"
-            }
-            "-2" -> {
-                return "통신 연결 시도 중 에러가 발생하였습니다"
-            }
-            "-3" -> {
-                return "통신 연결 중 SocketTimeoutException 에러가 발생하였습니다"
-            }
-            "-4" -> {
-                return "통신 시도 중 ConnectTimeoutException 에러가 발생하였습니다"
-            }
-            "400" -> {
-                return "요청을 처리하지 못하였습니다"
-            }
-            "401" -> {
-                return "인증 오류가 발생하였습니다. 인증 자격 증명이 충분치 않습니다"
-            }
-            "403" -> {
-                return "권한 오류가 발생하였습니다"
-            }
-            "429" -> {
-                return "정해진 사용량이나, 초당 요청 한도를 초과하였습니다"
-            }
-            "499" -> {
-                return "통신이 실패하였습니다. 인터넷 연결을 확인해주십시오"
-            }
-            else -> {
-                return "오류 코드 X"
-            }
-        }
     }
 
     private fun getPlaceToResult(result: ActivityResult): Place? {
