@@ -1,5 +1,6 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.data
 
+import campus.tech.kakao.map.data.SearchResult
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Header

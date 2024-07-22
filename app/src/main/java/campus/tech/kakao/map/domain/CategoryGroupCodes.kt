@@ -1,4 +1,6 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.domain
+
+import campus.tech.kakao.map.data.CategoryGroupCode
 
 object CategoryGroupCodes {
     val categories = listOf(

@@ -1,4 +1,4 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,35 +6,26 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import campus.tech.kakao.map.domain.PlaceDataModel
+import campus.tech.kakao.map.data.PlaceDatabaseAccess
+import campus.tech.kakao.map.data.PlaceRepository
+import campus.tech.kakao.map.R
+import campus.tech.kakao.map.databinding.SearchLayoutBinding
 
 class PlaceActivity : AppCompatActivity() {
-
-    private lateinit var etSearch: EditText
-    private lateinit var btnErase: ImageButton
-    private lateinit var tvNoData: TextView
-    private lateinit var rvPlaceList: RecyclerView
-    private lateinit var rvSearchList: RecyclerView
-    private lateinit var placeAdapter: PlaceRecyclerViewAdapter
+    lateinit var binding: SearchLayoutBinding
+    lateinit var placeAdapter: PlaceRecyclerViewAdapter
     private lateinit var searchAdapter: SearchRecyclerViewAdapter
-    private val searchDatabaseAccess = PlaceDatabaseAccess(this, "Search.db")
+    var searchDatabaseAccess = PlaceDatabaseAccess(this, "Search.db")
 
-    private lateinit var placeRepository: PlaceRepository
+    lateinit var placeRepository: PlaceRepository
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.search_layout)
-
-        etSearch = findViewById<EditText>(R.id.etSearch)
-        btnErase = findViewById<ImageButton>(R.id.btnErase)
-        tvNoData = findViewById<TextView>(R.id.tvNoData)
-        rvPlaceList = findViewById<RecyclerView>(R.id.rvPlaceList)
-        rvSearchList = findViewById<RecyclerView>(R.id.rvSearchList)
+        binding = DataBindingUtil.setContentView(this, R.layout.search_layout)
 
         val searchList: MutableList<PlaceDataModel> = searchDatabaseAccess.getAllPlace()
         val keywordList: MutableList<PlaceDataModel> = mutableListOf()
@@ -43,32 +34,30 @@ class PlaceActivity : AppCompatActivity() {
 
         // Search 어댑터
         searchAdapter = searchRecyclerViewAdapter(searchList)
-        rvSearchList.adapter = searchAdapter
-        rvSearchList.layoutManager =
+        binding.rvSearchList.adapter = searchAdapter
+        binding.rvSearchList.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
         // Place 어댑터
         placeAdapter = placeRecyclerViewAdapter(keywordList, searchList)
-        rvPlaceList.adapter = placeAdapter
-        rvPlaceList.layoutManager = LinearLayoutManager(this)
+        binding.rvPlaceList.adapter = placeAdapter
+        binding.rvPlaceList.layoutManager = LinearLayoutManager(this)
 
         controlPlaceVisibility(keywordList)
         controlSearchVisibility(searchList)
 
-        btnErase.setOnClickListener {
-            etSearch.setText("")
+        binding.btnErase.setOnClickListener {
+            binding.etSearch.setText("")
         }
 
-        etSearch.addTextChangedListener(object : TextWatcher {
+        binding.etSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
                 val keyword = s.toString()
                 Log.d("API response", "$keyword")
                 searchPlace(keyword)
-
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -118,8 +107,8 @@ class PlaceActivity : AppCompatActivity() {
             searchList,
             // 저장 목록 선택 시, 검색칸에 장소명 표시
             onItemClick = { place ->
-                etSearch.setText(place.name)
-                etSearch.setSelection(place.name.length)
+                binding.etSearch.setText(place.name)
+                binding.etSearch.setSelection(place.name.length)
             },
             // X 선택 시, 저장 목록에서 삭제
             onCloseButtonClick = { place ->
@@ -129,13 +118,13 @@ class PlaceActivity : AppCompatActivity() {
         )
 
     // 검색 저장 기록 조작
-    private fun addPlaceRecord(searchList: MutableList<PlaceDataModel>, place: PlaceDataModel) {
+    fun addPlaceRecord(searchList: MutableList<PlaceDataModel>, place: PlaceDataModel) {
         searchList.add(place)
         searchDatabaseAccess.insertPlace(place)
         searchAdapter.notifyDataSetChanged()
     }
 
-    private fun removePlaceRecord(searchList: MutableList<PlaceDataModel>, place: PlaceDataModel) {
+    fun removePlaceRecord(searchList: MutableList<PlaceDataModel>, place: PlaceDataModel) {
         val index = searchList.indexOf(place)
         searchList.removeAt(index)
         searchDatabaseAccess.deletePlace(place.name)
@@ -143,23 +132,23 @@ class PlaceActivity : AppCompatActivity() {
     }
 
     // visibility 조작
-    private fun controlPlaceVisibility(placeList: List<PlaceDataModel>) {
+    fun controlPlaceVisibility(placeList: List<PlaceDataModel>) {
         if (placeList.isEmpty()) {
-            rvPlaceList.visibility = View.INVISIBLE
-            tvNoData.visibility = View.VISIBLE
+            binding.rvPlaceList.visibility = View.INVISIBLE
+            binding.tvNoData.visibility = View.VISIBLE
         }
         else {
-            rvPlaceList.visibility = View.VISIBLE
-            tvNoData.visibility = View.GONE
+            binding.rvPlaceList.visibility = View.VISIBLE
+            binding.tvNoData.visibility = View.GONE
         }
     }
 
-    private fun controlSearchVisibility(searchList: List<PlaceDataModel>) {
+    fun controlSearchVisibility(searchList: List<PlaceDataModel>) {
         if (searchList.isEmpty()) {
-            rvSearchList.visibility = View.GONE
+            binding.rvSearchList.visibility = View.GONE
         }
         else {
-            rvSearchList.visibility = View.VISIBLE
+            binding.rvSearchList.visibility = View.VISIBLE
         }
     }
 }

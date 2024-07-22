@@ -1,4 +1,4 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.data
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -11,6 +11,8 @@ object RetrofitInstance {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
-    val retrofitLocalCategoryService: RetrofitLocalCategoryService = retrofit.create(RetrofitLocalCategoryService::class.java)
-    val retrofitLocalKeywordService: RetrofitLocalKeywordService = retrofit.create(RetrofitLocalKeywordService::class.java)
+    val retrofitLocalCategoryService: RetrofitLocalCategoryService = retrofit.create(
+        RetrofitLocalCategoryService::class.java)
+    val retrofitLocalKeywordService: RetrofitLocalKeywordService = retrofit.create(
+        RetrofitLocalKeywordService::class.java)
 }

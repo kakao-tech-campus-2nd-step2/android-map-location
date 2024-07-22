@@ -1,4 +1,4 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.domain
 
 data class PlaceDataModel(
     val name: String,

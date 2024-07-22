@@ -1,8 +1,9 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.data
 
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
+import campus.tech.kakao.map.domain.PlaceDataModel
 
 class PlaceDatabaseAccess(context: Context, databaseName: String) {
     private val dbHelper = PlaceDatabaseHelper(context, databaseName)
