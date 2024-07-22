@@ -50,6 +50,11 @@ class MapActivity : AppCompatActivity() {
     lateinit var bottomSheetBehavior : BottomSheetBehavior<ConstraintLayout>
     lateinit var editor : Editor
 
+    companion object ChonnamUniversity {
+        const val LATITUDE = 35.175487
+        const val LONGITUDE = 126.907163
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
@@ -105,8 +110,8 @@ class MapActivity : AppCompatActivity() {
             }
 
             override fun getPosition(): LatLng {
-                val latitude = sharedPreferences.getString(Constants.Keys.KEY_LATITUDE, "37.406960")?.toDouble() ?: 37.406960
-                val longitude = sharedPreferences.getString(Constants.Keys.KEY_LONGITUDE, "127.115587")?.toDouble() ?: 127.115587
+                val latitude = sharedPreferences.getString(Constants.Keys.KEY_LATITUDE, LATITUDE.toString())?.toDouble() ?: 37.406960
+                val longitude = sharedPreferences.getString(Constants.Keys.KEY_LONGITUDE, LONGITUDE.toString())?.toDouble() ?: 127.115587
                 return LatLng.from(latitude, longitude)
             }
         })
@@ -129,8 +134,8 @@ class MapActivity : AppCompatActivity() {
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result.resultCode == RESULT_OK) {
                     val place = getPlaceToResult(result)
-                    val latitude = place?.y?.toDouble() ?: 127.115587
-                    val longitude = place?.x?.toDouble()?: 37.406960
+                    val latitude = place?.y?.toDouble() ?: LATITUDE
+                    val longitude = place?.x?.toDouble()?: LONGITUDE
                     val pos = LatLng.from(latitude, longitude)
                     moveMapCamera(pos)
                     createLabel(pos)
