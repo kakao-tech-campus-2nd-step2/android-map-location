@@ -13,19 +13,10 @@ class LocationAdapter(
     private val onItemViewClick: (LocationData) -> Unit
 ) : RecyclerView.Adapter<LocationAdapter.ViewHolder>() {
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val nameTextView: TextView = itemView.findViewById(R.id.name)
         val locationTextView: TextView = itemView.findViewById(R.id.location)
         val categoryTextView: TextView = itemView.findViewById(R.id.category)
-
-        init {
-            itemView.setOnClickListener {
-                val position = adapterPosition
-                if (position != RecyclerView.NO_POSITION) {
-                    onItemViewClick(locationList[position])
-                }
-            }
-        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

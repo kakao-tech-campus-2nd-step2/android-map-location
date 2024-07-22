@@ -43,8 +43,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        db = DataDbHelper(this)
-
         mainViewModel.setUiStateChangedListener {uiState ->
             locationList.clear()
             locationList.addAll(uiState.locationList)
