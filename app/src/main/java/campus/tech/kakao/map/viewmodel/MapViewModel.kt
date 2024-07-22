@@ -1,9 +1,12 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import campus.tech.kakao.map.BuildConfig
+import campus.tech.kakao.map.model.KakaoMapProductResponse
+import campus.tech.kakao.map.network.RetrofitClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

@@ -1,4 +1,4 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.ui
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,8 +7,12 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import campus.tech.kakao.map.viewmodel.MapItem
+import campus.tech.kakao.map.R
 
-class SearchResultAdapter(private val listener: OnItemClickListener) : ListAdapter<MapItem, SearchResultAdapter.ViewHolder>(DiffCallback()) {
+class SearchResultAdapter(private val listener: OnItemClickListener) : ListAdapter<MapItem, SearchResultAdapter.ViewHolder>(
+    DiffCallback()
+) {
 
     interface OnItemClickListener {
         fun onItemClick(item: MapItem)

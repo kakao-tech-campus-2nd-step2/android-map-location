@@ -1,4 +1,4 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.network
 
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit

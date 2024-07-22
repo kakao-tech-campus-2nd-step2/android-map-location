@@ -1,25 +1,27 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.ui
 
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import campus.tech.kakao.map.viewmodel.MapItem
+import campus.tech.kakao.map.viewmodel.MapViewModel
+import campus.tech.kakao.map.R
 
-class MainActivity : AppCompatActivity(), SearchResultAdapter.OnItemClickListener, KeywordAdapter.OnKeywordRemoveListener {
+class MainActivity : AppCompatActivity(), SearchResultAdapter.OnItemClickListener,
+    KeywordAdapter.OnKeywordRemoveListener {
 
-    private lateinit var mapViewModel: MapViewModel
+    lateinit var mapViewModel: MapViewModel             // 유닛 테스트를 위해 public으로 변경
     private lateinit var etKeywords: EditText
     private lateinit var rvSearchResult: RecyclerView
     private lateinit var rvKeywords: RecyclerView

@@ -1,4 +1,4 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.ui
 
 import android.content.Intent
 import android.graphics.Color
@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import campus.tech.kakao.map.R
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
@@ -23,8 +24,8 @@ class MapActivity : AppCompatActivity() {
 
     private lateinit var mapView: MapView
     private var kakaoMap: KakaoMap? = null
-    private var savedLatitude: Double = 37.3957122
-    private var savedLongitude: Double = 127.1105181
+    var savedLatitude: Double = 37.3957122          // MapActivity Unit 테스트를 위해 public으로 변경
+    var savedLongitude: Double = 127.1105181        // // MapActivity Unit 테스트를 위해 public으로 변경
     private lateinit var errorLayout: View
     private lateinit var searchLayout: View
 
@@ -93,7 +94,8 @@ class MapActivity : AppCompatActivity() {
         saveDataToPreferences(latitude.toString(), longitude.toString())
     }
 
-    private fun saveCurrentLocation() {
+    // MapActivity Unit 테스트를 위해 public으로 변경
+    fun saveCurrentLocation() {
         saveDataToPreferences(savedLatitude.toString(), savedLongitude.toString())
     }
 
@@ -106,7 +108,8 @@ class MapActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadSavedLocation() {
+    // MapActivity Unit 테스트를 위해 public으로 변경
+    fun loadSavedLocation() {
         val preferences = getSharedPreferences("location_prefs", MODE_PRIVATE)
         savedLatitude = preferences.getString("latitude", "37.3957122")?.toDouble() ?: 37.3957122
         savedLongitude = preferences.getString("longitude", "127.1105181")?.toDouble() ?: 127.1105181
