@@ -26,7 +26,6 @@ import campus.tech.kakao.map.model.Place
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
-import com.kakao.vectormap.KakaoMapSdk
 import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.MapView
@@ -58,7 +57,6 @@ class MapActivity : AppCompatActivity() {
         initVar()
         initSharedPreferece()
         initBottomSheet()
-        initSDK()
         initMapView()
         initClickListener()
         initResultLauncher()
@@ -85,9 +83,6 @@ class MapActivity : AppCompatActivity() {
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
     }
 
-    private fun initSDK() {
-        KakaoMapSdk.init(this, BuildConfig.KAKAO_NATIVE_APP_KEY)
-    }
 
     private fun initMapView() {
         map = findViewById<MapView>(R.id.map_view)
