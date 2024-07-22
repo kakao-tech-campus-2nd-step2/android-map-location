@@ -55,8 +55,9 @@ object PlaceContract {
                 "$COLUMN_NAME = "
     }
 
-    fun getPlaceByCursor(cursor: Cursor): Place {
+    fun getPlaceByCursor(cursor: Cursor): Place? {
         cursor.moveToFirst()
+        if(cursor.count == 0) return null
         return Place(
             cursor.getInt(
                 cursor.getColumnIndexOrThrow(PlaceEntry.COLUMN_ID)
@@ -107,6 +108,7 @@ object PlaceContract {
                     cursor.getColumnIndexOrThrow(PlaceEntry.COLUMN_Y)
                 )
             )
+            result.add(place)
         }
         return result
     }

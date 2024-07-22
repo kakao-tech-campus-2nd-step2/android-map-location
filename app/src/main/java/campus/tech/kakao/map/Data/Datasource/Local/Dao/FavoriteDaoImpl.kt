@@ -34,11 +34,12 @@ class FavoriteDaoImpl(private val db : SQLiteDatabase) : FavoriteDao {
         db.insert(PlaceContract.FavoriteEntry.TABLE_NAME, null, values)
     }
 
-    override fun getFavoriteById(id: Int): Place {
+    override fun getFavoriteById(id: Int): Place? {
         val cursor = db.rawQuery(
             "SELECT * FROM ${PlaceContract.FavoriteEntry.TABLE_NAME} WHERE id=?",
             arrayOf(id.toString())
         )
+
         return PlaceContract.getPlaceByCursor(cursor)
     }
 }

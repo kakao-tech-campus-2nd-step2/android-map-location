@@ -45,7 +45,7 @@ class HttpUrlConnect : RemoteService{
             else -> {}
         }
 
-        if (pageCount > MAX_PAGE) {
+        if (pageCount >= MAX_PAGE) {
             val threads = mutableListOf<Thread>()
             for (i in START_PAGE + 1..MAX_PAGE) {
                 body["page"] = i.toString()

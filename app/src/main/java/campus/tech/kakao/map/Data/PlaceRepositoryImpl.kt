@@ -26,11 +26,11 @@ class PlaceRepositoryImpl(
         return placeDao.getSimilarPlacesByName(name)
     }
 
-    override fun getPlaceById(id : Int): Place {
+    override fun getPlaceById(id : Int): Place? {
         return placeDao.getPlaceById(id)
     }
 
-    override fun getFavoriteById(id: Int) : Place{
+    override fun getFavoriteById(id: Int) : Place?{
         return favoriteDao.getFavoriteById(id)
     }
 

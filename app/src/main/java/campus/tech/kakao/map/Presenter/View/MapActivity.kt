@@ -11,10 +11,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProvider
-import campus.tech.kakao.map.Base.ErrorEnum
-import campus.tech.kakao.map.Base.ViewModelFactory
-import campus.tech.kakao.map.Domain.PlaceRepository
-import campus.tech.kakao.map.MyApplication
 import campus.tech.kakao.map.Presenter.ViewModel.MapViewModel
 import campus.tech.kakao.map.R
 import com.kakao.vectormap.KakaoMap

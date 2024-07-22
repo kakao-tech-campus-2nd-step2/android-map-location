@@ -5,5 +5,5 @@ import campus.tech.kakao.map.Domain.Model.Place
 interface PlaceDao {
     fun deletePlace(id : Int)
     fun getSimilarPlacesByName(name: String) : List<Place>
-    fun getPlaceById(id : Int): Place
+    fun getPlaceById(id : Int): Place?
 }

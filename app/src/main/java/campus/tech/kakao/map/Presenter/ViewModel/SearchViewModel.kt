@@ -43,7 +43,7 @@ class SearchViewModel(private val repository: PlaceRepository) : ViewModel() {
         }
     }
 
-    fun findPlaceById(id:Int) : Place?{
+    private fun findPlaceById(id:Int) : Place?{
         return currentResult.value?.find{
             it.id == id
         }
