@@ -26,7 +26,7 @@ class DocumentAdapter(
 
 	}
 ) {
-	private var placeClicked = { position:Int ->
+	private val placeClicked = { position:Int ->
 		val document: Document = getItem(position)
 		callback.onWordAdded(document)
 		callback.onDocumentInfoSet(document)
