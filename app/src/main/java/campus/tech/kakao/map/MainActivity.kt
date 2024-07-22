@@ -135,13 +135,15 @@ class MainActivity : AppCompatActivity() {
             if (documents.isEmpty()) {
                 showNoResults()
             } else {
-                val profiles = documents.map { document ->
-                    Profile(document.name, document.address, document.type, document.latitude, document.longitude)
-                }
+                val profiles = documents.map { it.toProfile()}
                 adapter.updateProfiles(profiles)
                 tvNoResult.visibility = View.GONE
             }
         } ?: showNoResults()
+    }
+
+    fun Document.toProfile(): Profile {
+        return Profile(this.name, this.address, this.type, this.latitude, this.longitude)
     }
 
     fun showNoResults() {

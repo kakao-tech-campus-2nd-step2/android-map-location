@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.EditText
 import android.widget.TextView
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -21,6 +22,7 @@ import com.kakao.vectormap.label.LabelStyles
 
 class MapActivity : AppCompatActivity() {
     lateinit var mapView: MapView
+    lateinit var startMainActivityForResult: ActivityResultLauncher<Intent>
     var map: KakaoMap? = null
     var savedLatitude: Double = 37.5642
     var savedLongitude: Double = 127.00
@@ -32,6 +34,23 @@ class MapActivity : AppCompatActivity() {
         val etSearch = findViewById<EditText>(R.id.etSearch)
         mapView = findViewById(R.id.map_view)
         loadData()  // 저장 위치 가져오기
+
+        // 수정 필요 (Week4 Step 1 Feedback)
+        startMainActivityForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                result.data?.let { data ->
+                    val name = data.getStringExtra("name") ?: ""
+                    val address = data.getStringExtra("address") ?: ""
+                    val latitude = data.getStringExtra("latitude")?.toDoubleOrNull()
+                    val longitude = data.getStringExtra("longitude")?.toDoubleOrNull()
+                }
+            }
+        }
+
+        etSearch.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startMainActivityForResult.launch(intent)
+        }
 
         mapView.start(object : MapLifeCycleCallback() {
             override fun onMapDestroy() {
@@ -61,17 +80,6 @@ class MapActivity : AppCompatActivity() {
                 }
             }
         })
-
-        val startMainActivityForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == RESULT_OK) {
-                // 나중에 반환된걸로 처리할 게 있으면 사용하기
-            }
-        }
-
-        etSearch.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            startMainActivityForResult.launch(intent)
-        }
     }
     override fun onResume() {
         super.onResume()
