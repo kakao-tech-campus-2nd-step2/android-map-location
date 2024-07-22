@@ -9,13 +9,10 @@ import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import campus.tech.kakao.map.Application
 import campus.tech.kakao.map.R
 import campus.tech.kakao.map.dataContract.LocationDataContract
 import campus.tech.kakao.map.viewModel.MapViewModel
-import campus.tech.kakao.map.viewModel.RecentViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
@@ -90,8 +87,12 @@ class HomeMapActivity : AppCompatActivity() {
 
             // 지도 시작 시 위치 좌표 설정
             override fun getPosition(): LatLng {
-                val savedLatitude = mapViewModel.getLocation("latitude", null).toDoubleOrNull()
-                val savedLongitude = mapViewModel.getLocation("longitude", null).toDoubleOrNull()
+                val savedLatitude =
+                    mapViewModel.getLocation(LocationDataContract.LOCATION_LATITUDE, null)
+                        .toDoubleOrNull()
+                val savedLongitude =
+                    mapViewModel.getLocation(LocationDataContract.LOCATION_LONGITUDE, null)
+                        .toDoubleOrNull()
 
                 return if (latitude != null && longitude != null) {
                     LatLng.from(latitude, longitude)
@@ -131,8 +132,8 @@ class HomeMapActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         intent.getStringExtra(LocationDataContract.LOCATION_LATITUDE)
-            ?.let { mapViewModel.saveLocation("latitude", it) }
+            ?.let { mapViewModel.saveLocation(LocationDataContract.LOCATION_LATITUDE, it) }
         intent.getStringExtra(LocationDataContract.LOCATION_LONGITUDE)
-            ?.let { mapViewModel.saveLocation("longitude", it) }
+            ?.let { mapViewModel.saveLocation(LocationDataContract.LOCATION_LONGITUDE, it) }
     }
 }
