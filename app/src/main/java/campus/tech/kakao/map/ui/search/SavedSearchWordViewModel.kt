@@ -13,36 +13,35 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SavedSearchWordViewModel
-    @Inject
-    constructor(private val repository: SavedSearchWordRepository) :
+@Inject
+constructor(private val repository: SavedSearchWordRepository) :
     ViewModel() {
-        private val _savedSearchWords = MutableStateFlow<List<SavedSearchWord>>(emptyList())
-        val savedSearchWords: StateFlow<List<SavedSearchWord>> get() = _savedSearchWords
+    private val _savedSearchWords = MutableStateFlow<List<SavedSearchWord>>(emptyList())
+    val savedSearchWords: StateFlow<List<SavedSearchWord>> get() = _savedSearchWords
 
-        init {
-            getAllSearchWords()
-        }
+    init {
+        updateSavedSearchWords()
+    }
 
-        fun insertSearchWord(searchWord: SavedSearchWord) {
-            viewModelScope.launch(Dispatchers.IO) {
-                repository.insertOrUpdateSearchWord(searchWord)
-                getAllSearchWords()
-            }
-        }
-
-        fun deleteSearchWordById(searchWord: SavedSearchWord) {
-            viewModelScope.launch(Dispatchers.IO) {
-                repository.deleteSearchWordById(searchWord.id)
-                val currentList = _savedSearchWords.value.toMutableList()
-                currentList.remove(searchWord)
-                _savedSearchWords.emit(currentList)
-            }
-        }
-
-        private fun getAllSearchWords() {
-            viewModelScope.launch(Dispatchers.IO) {
-                val searchWords = repository.getAllSearchWords()
-                _savedSearchWords.emit(searchWords)
-            }
+    fun insertSearchWord(searchWord: SavedSearchWord) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.insertOrUpdateSearchWord(searchWord)
         }
     }
+
+    fun deleteSearchWordById(searchWord: SavedSearchWord) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteSearchWordById(searchWord.id)
+            val currentList = _savedSearchWords.value.toMutableList()
+            currentList.remove(searchWord)
+            _savedSearchWords.emit(currentList)
+        }
+    }
+
+    fun updateSavedSearchWords() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val searchWords = repository.getAllSearchWords()
+            _savedSearchWords.emit(searchWords)
+        }
+    }
+}

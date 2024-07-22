@@ -2,6 +2,7 @@ package campus.tech.kakao.map.data
 
 import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
@@ -14,7 +15,10 @@ class SavedSearchWordDBHelper(context: Context) :
             CREATE TABLE $TABLE_NAME (
                 $COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT,
                 $COLUMN_NAME TEXT,
-                $COLUMN_PLACE_ID TEXT
+                $COLUMN_PLACE_ID TEXT,
+                $COLUMN_ADDRESS TEXT,
+                $COLUMN_LONGITUDE TEXT,
+                $COLUMN_LATITUDE TEXT
             )
         """
         db.execSQL(createTableQuery)
@@ -34,10 +38,14 @@ class SavedSearchWordDBHelper(context: Context) :
         db.beginTransaction()
         try {
             db.delete(TABLE_NAME, "$COLUMN_PLACE_ID = ?", arrayOf(searchWord.placeId))
+
             val contentValues =
                 ContentValues().apply {
                     put(COLUMN_NAME, searchWord.name)
                     put(COLUMN_PLACE_ID, searchWord.placeId)
+                    put(COLUMN_ADDRESS, searchWord.address)
+                    put(COLUMN_LONGITUDE, searchWord.longitude)
+                    put(COLUMN_LATITUDE, searchWord.latitude)
                 }
             db.insert(TABLE_NAME, null, contentValues)
             db.setTransactionSuccessful()
@@ -49,16 +57,29 @@ class SavedSearchWordDBHelper(context: Context) :
     }
 
     fun getAllSearchWords(): List<SavedSearchWord> {
-        val db = readableDatabase
-        val cursor = db.query(TABLE_NAME, null, null, null, null, null, null)
         val searchWords = mutableListOf<SavedSearchWord>()
-        while (cursor.moveToNext()) {
-            val id = cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_ID))
-            val name = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME))
-            val placeId = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PLACE_ID))
-            searchWords.add(SavedSearchWord(id, name, placeId))
+        val query = "SELECT * FROM $TABLE_NAME"
+        val db = readableDatabase
+        val cursor: Cursor? = db.rawQuery(query, null)
+        try {
+            cursor?.let {
+                while (it.moveToNext()) {
+                    val id = it.getLong(it.getColumnIndexOrThrow(COLUMN_ID))
+                    val name = it.getString(it.getColumnIndexOrThrow(COLUMN_NAME))
+                    val placeId = it.getString(it.getColumnIndexOrThrow(COLUMN_PLACE_ID))
+                    val address = it.getString(it.getColumnIndexOrThrow(COLUMN_ADDRESS))
+                    val longitude = it.getDouble(it.getColumnIndexOrThrow(COLUMN_LONGITUDE))
+                    val latitude = it.getDouble(it.getColumnIndexOrThrow(COLUMN_LATITUDE))
+                    val savedSearchWord =
+                        SavedSearchWord(id, name, placeId, address, longitude, latitude)
+                    searchWords.add(savedSearchWord)
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("dbError", "Error while fetching all search words: ${e.message}")
+        } finally {
+            cursor?.close()
         }
-        cursor.close()
         return searchWords
     }
 
@@ -76,5 +97,8 @@ class SavedSearchWordDBHelper(context: Context) :
         const val COLUMN_ID = "id"
         const val COLUMN_NAME = "name"
         const val COLUMN_PLACE_ID = "place_id"
+        const val COLUMN_ADDRESS = "address"
+        const val COLUMN_LONGITUDE = "longitude"
+        const val COLUMN_LATITUDE = "latitude"
     }
 }
