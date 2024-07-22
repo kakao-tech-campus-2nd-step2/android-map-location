@@ -33,7 +33,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var placeRepository: PlaceRepository
     private lateinit var mainViewModel: MainViewModel
-    private val disposables = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -105,11 +104,6 @@ class MainActivity : AppCompatActivity() {
         intent.putExtra(EXTRA_PLACE_X, place.x)
         intent.putExtra(EXTRA_PLACE_Y, place.y)
         startActivity(intent)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        disposables.clear()
     }
 }
 
