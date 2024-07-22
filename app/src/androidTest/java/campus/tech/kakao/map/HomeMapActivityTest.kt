@@ -15,6 +15,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import campus.tech.kakao.map.activity.DataSearchActivity
 import campus.tech.kakao.map.activity.HomeMapActivity
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -35,12 +36,17 @@ class HomeMapActivityTest {
         )
 
     @Before
-    fun 인텐트_초기화() {
+    fun setup() {
         init()
     }
 
+    @After
+    fun teardown() {
+        release()
+    }
+
     @Test
-    fun 목록에서_선택한_장소의_정보가_BottomSheet_에_나타남() {
+    fun 목록에서_선택한_장소의_정보가_BottomSheet에_나타남() {
         onView(withId(R.id.placeName))
             .check(matches(withText("전남대학교 여수캠퍼스")))
         onView(withId(R.id.placeAddress))
@@ -54,6 +60,6 @@ class HomeMapActivityTest {
         onView(withId(R.id.search_home))
             .perform(click())
         intended(hasComponent(DataSearchActivity::class.java.name))
-        release()
     }
+
 }
