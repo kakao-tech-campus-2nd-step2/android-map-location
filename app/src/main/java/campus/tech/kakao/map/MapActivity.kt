@@ -31,7 +31,7 @@ class MapActivity : AppCompatActivity() {
 
         val sharedPreferences : SharedPreferences = applicationContext.getSharedPreferences("lastPos", Context.MODE_PRIVATE)
 
-        val inputSpace = findViewById<TextView>(R.id.inputSpace)
+        val inputSpace = findViewById<TextView>(R.id.toSearchActivity)
         val bottomSheet = findViewById<LinearLayoutCompat>(R.id.bottomSheet)
         val sheetBehavior = BottomSheetBehavior.from(bottomSheet)
         val nameText = findViewById<TextView>(R.id.name)

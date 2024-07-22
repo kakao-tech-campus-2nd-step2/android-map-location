@@ -16,7 +16,7 @@ class SelectListAdapter(
 
         init {
             name = itemView.findViewById<TextView>(R.id.name)
-            cancelBtn = itemView.findViewById<ImageView>(R.id.cancelBtn)
+            cancelBtn = itemView.findViewById<ImageView>(R.id.cancelBtnSelectList)
 
             cancelBtn.setOnClickListener {
                 cancelBtnListener.onClick(it, selectItemList[bindingAdapterPosition])
