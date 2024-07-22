@@ -1,4 +1,4 @@
-package campus.tech.kakao.map.Adapter
+package campus.tech.kakao.map.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,11 +7,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import campus.tech.kakao.map.DTO.Document
+import campus.tech.kakao.map.MainViewModel
+import campus.tech.kakao.map.dto.Document
+import campus.tech.kakao.map.MyApplication
 import campus.tech.kakao.map.R
 
 class DocumentAdapter(
-	val addWord: (Document) -> Unit
+	private val callback: AdapterCallback
 ): ListAdapter<Document, DocumentAdapter.ViewHolder>(
 	object : DiffUtil.ItemCallback<Document>(){
 		override fun areItemsTheSame(oldItem: Document, newItem: Document): Boolean {
@@ -24,9 +26,10 @@ class DocumentAdapter(
 
 	}
 ) {
-	private var placeClicked = { position:Int ->
+	private fun placeClicked(position:Int){
 		val document: Document = getItem(position)
-		addWord(document)
+		val viewModel = MainViewModel(MyApplication())
+		viewModel.placeClicked(document, callback)
 	}
 	inner class ViewHolder(
 		itemView: View

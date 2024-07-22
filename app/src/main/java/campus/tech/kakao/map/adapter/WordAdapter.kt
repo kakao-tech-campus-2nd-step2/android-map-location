@@ -1,4 +1,4 @@
-package campus.tech.kakao.map.Adapter
+package campus.tech.kakao.map.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -9,10 +9,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.map.R
-import campus.tech.kakao.map.DTO.SearchWord
+import campus.tech.kakao.map.dto.SearchWord
 
 class WordAdapter(
-	val deleteWord: (SearchWord) -> Unit
+	private val callback: AdapterCallback
 ): ListAdapter<SearchWord, WordAdapter.ViewHolder>(
 	object : DiffUtil.ItemCallback<SearchWord>(){
 		override fun areItemsTheSame(oldItem: SearchWord, newItem: SearchWord): Boolean {
@@ -34,6 +34,9 @@ class WordAdapter(
 			delete.setOnClickListener {
 				deletedWords(bindingAdapterPosition)
 			}
+			searchWord.setOnClickListener {
+				clickedWord(bindingAdapterPosition)
+			}
 		}
 	}
 
@@ -46,8 +49,14 @@ class WordAdapter(
 		holder.searchWord.text = word.name
 	}
 
-	private val deletedWords = { position:Int ->
+	private fun deletedWords(position:Int){
 		val word = getItem(position)
-		deleteWord(word)
+		callback.onWordDeleted(word)
 	}
+
+	private fun clickedWord(position:Int){
+		val word = getItem(position)
+		callback.onWordSearched(word)
+	}
+
 }

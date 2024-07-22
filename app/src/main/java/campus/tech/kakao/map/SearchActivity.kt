@@ -10,10 +10,13 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import campus.tech.kakao.map.Adapter.DocumentAdapter
-import campus.tech.kakao.map.Adapter.WordAdapter
+import campus.tech.kakao.map.adapter.AdapterCallback
+import campus.tech.kakao.map.adapter.DocumentAdapter
+import campus.tech.kakao.map.adapter.WordAdapter
+import campus.tech.kakao.map.dto.Document
+import campus.tech.kakao.map.dto.SearchWord
 
-class SearchActivity : AppCompatActivity() {
+class SearchActivity : AppCompatActivity(), AdapterCallback {
 
     private lateinit var model: MainViewModel
     private lateinit var search:EditText
@@ -29,13 +32,9 @@ class SearchActivity : AppCompatActivity() {
         setupUI()
         searchResult.layoutManager = LinearLayoutManager(this)
         searchWordResult.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        documentAdapter = DocumentAdapter(){ Document ->
-            model.addWord(Document)
-        }
-        wordAdapter = WordAdapter() { SearchWord ->
-            model.deleteWord(SearchWord)
-        }
-        search.doOnTextChanged { text, start, before, count ->
+        documentAdapter = DocumentAdapter(this)
+        wordAdapter = WordAdapter(this)
+        search.doOnTextChanged { text, _, _, _ ->
             val query = text.toString()
             if (query.isEmpty()){
                 noResult.visibility = View.VISIBLE
@@ -71,7 +70,7 @@ class SearchActivity : AppCompatActivity() {
         })
     }
 
-    fun setupUI(){
+    private fun setupUI(){
         search = findViewById(R.id.search)
         clear = findViewById(R.id.search_clear)
         noResult = findViewById(R.id.no_search_result)
@@ -80,6 +79,23 @@ class SearchActivity : AppCompatActivity() {
         clear.setOnClickListener {
             search.setText("")
         }
+    }
+
+    override fun onWordAdded(document: Document) {
+        model.addWord(document)
+    }
+
+    override fun onDocumentInfoSet(document: Document) {
+        model.setMapInfo(document)
+        finish()
+    }
+
+    override fun onWordDeleted(searchWord: SearchWord) {
+        model.deleteWord(searchWord)
+    }
+
+    override fun onWordSearched(searchWord: SearchWord) {
+        model.searchLocalAPI(searchWord.name)
     }
 
 

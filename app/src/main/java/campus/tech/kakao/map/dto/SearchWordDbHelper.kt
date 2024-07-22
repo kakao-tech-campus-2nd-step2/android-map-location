@@ -1,15 +1,12 @@
-package campus.tech.kakao.map.DBHelper
+package campus.tech.kakao.map.dto
 
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import campus.tech.kakao.map.DTO.SearchWord
-import campus.tech.kakao.map.DTO.SearchWordContract
-import campus.tech.kakao.map.DTO.SearchWordContract.DB_VERSION
+import campus.tech.kakao.map.dto.SearchWordContract.DB_VERSION
 
 class SearchWordDbHelper(context: Context): SQLiteOpenHelper(
 	context, SearchWordContract.DB_NAME, null, DB_VERSION) {
