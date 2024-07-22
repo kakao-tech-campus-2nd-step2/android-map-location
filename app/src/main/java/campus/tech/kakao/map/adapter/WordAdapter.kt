@@ -8,7 +8,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import campus.tech.kakao.map.AdapterCallback
 import campus.tech.kakao.map.R
 import campus.tech.kakao.map.dto.SearchWord
 

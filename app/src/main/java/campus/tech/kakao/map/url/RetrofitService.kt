@@ -1,4 +1,4 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.url
 
 import campus.tech.kakao.map.dto.PlaceResponse
 import retrofit2.Call

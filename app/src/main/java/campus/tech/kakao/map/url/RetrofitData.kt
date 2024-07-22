@@ -1,8 +1,9 @@
-package campus.tech.kakao.map.dto
+package campus.tech.kakao.map.url
 
 import androidx.lifecycle.MutableLiveData
-import campus.tech.kakao.map.RetrofitService
-import campus.tech.kakao.map.dto.UrlContract.AUTHORIZATION
+import campus.tech.kakao.map.dto.Document
+import campus.tech.kakao.map.dto.PlaceResponse
+import campus.tech.kakao.map.url.UrlContract.AUTHORIZATION
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

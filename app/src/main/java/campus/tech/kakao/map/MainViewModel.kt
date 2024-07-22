@@ -3,10 +3,11 @@ package campus.tech.kakao.map
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import campus.tech.kakao.map.MapPosition.getMapPosition
-import campus.tech.kakao.map.dto.RetrofitData.Companion.getInstance
+import campus.tech.kakao.map.dto.MapPosition.getMapPosition
+import campus.tech.kakao.map.url.RetrofitData.Companion.getInstance
 import campus.tech.kakao.map.dto.Document
 import campus.tech.kakao.map.dto.SearchWord
+import campus.tech.kakao.map.dto.SearchWordDbHelper
 
 class MainViewModel(application: Application): AndroidViewModel(application) {
 

@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import campus.tech.kakao.map.adapter.AdapterCallback
 import campus.tech.kakao.map.adapter.DocumentAdapter
 import campus.tech.kakao.map.adapter.WordAdapter
 import campus.tech.kakao.map.dto.Document
