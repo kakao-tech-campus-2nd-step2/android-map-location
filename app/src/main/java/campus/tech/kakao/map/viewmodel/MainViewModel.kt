@@ -10,7 +10,7 @@ import campus.tech.kakao.map.Model.RetrofitClient
 import campus.tech.kakao.map.Model.SearchCallback
 import campus.tech.kakao.map.Model.SearchResult
 
-class MainViewModel(application: Application) : AndroidViewModel(application) {
+class MainViewModel(application: Application, private val dataDbHelper: DataDbHelper) : AndroidViewModel(application) {
 
     private var listener: (UiState) -> Unit = {}
     private lateinit var call: Call<SearchResult>
@@ -62,11 +62,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun deleteLocation(location: LocationData) {
-        db.deleteLocation(location)
+        dataDbHelper.deleteLocation(location)
     }
 
     fun deleteAllLocations() {
-        db.deleteAllLocations()
+        dataDbHelper.deleteAllLocations()
     }
 
     override fun onCleared() {
