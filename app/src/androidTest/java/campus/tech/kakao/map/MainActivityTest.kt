@@ -21,7 +21,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-
 @RunWith(AndroidJUnit4::class)
 class MainActivityTest {
 
@@ -43,11 +42,15 @@ class MainActivityTest {
 
     @Test
     fun `앱_실행_직후_메인에서_보여주는_지도는_가장_최근검색어의_위치_혹은_기본값`() {
+        // given
         val editor = sharedPreferences.edit()
         editor.putString(Constants.SEARCH_HISTORY_KEY, "[{\"document\":{\"x\":\"126.9780\",\"y\":\"37.5665\"}}]")
         editor.apply()
 
+        // when
         activityRule.scenario.moveToState(Lifecycle.State.RESUMED)
+
+        // then
         onView(withId(R.id.map_view)).check(matches(isDisplayed()))
 
         editor.clear().apply()
@@ -55,32 +58,40 @@ class MainActivityTest {
 
     @Test
     fun `앱_실행_직후_최근검색어가_없는_경우_기본위치_확인`() {
+        // given
         val editor = sharedPreferences.edit()
         editor.clear().apply()
+
+        // when
         activityRule.scenario.moveToState(Lifecycle.State.RESUMED)
+
+        // then
         onView(withId(R.id.map_view)).check(matches(isDisplayed()))
     }
 
     @Test
     fun `지도_호출_오류시_오류화면_이동`() {
+        // given
         activityRule.scenario.onActivity { activity ->
             runOnUiThread {
                 val mapView = activity.findViewById<MapView>(R.id.map_view)
                 mapView.start(object : MapLifeCycleCallback() {
                     override fun onMapDestroy() {
-
+                        // 지도 파괴 시 처리
                     }
 
                     override fun onMapError(error: Exception) {
+                        // when
                         activity.startActivity(
                             Intent(activity, ErrorActivity::class.java)
                                 .putExtra("Error", "Test Error Message")
                         )
                     }
                 }, null)
-
             }
         }
+
+        // then
         Intents.intended(hasComponent(ErrorActivity::class.java.name))
     }
 }

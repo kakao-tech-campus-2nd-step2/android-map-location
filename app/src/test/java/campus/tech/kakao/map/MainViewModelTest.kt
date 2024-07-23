@@ -23,20 +23,24 @@ class MainViewModelTest {
         MapApplication.prefs = preferenceManager
         viewModel = MainViewModel(preferenceManager)
     }
-
     @Test
     fun setLocation_withCoordinates_returnsLatLng() {
+        // given
         val latitude = 37.7749
         val longitude = -122.4194
-        val result = viewModel.setLocation(latitude, longitude)
-        val expected = LatLng.from(latitude, longitude)
 
+        // when
+        val result = viewModel.setLocation(latitude, longitude)
+
+        // then
+        val expected = LatLng.from(latitude, longitude)
         assertEquals(expected.latitude, result?.latitude)
         assertEquals(expected.longitude, result?.longitude)
     }
 
     @Test
     fun setLocation_withoutCoordinates_returnsLastKnownLatLng() {
+        // given
         val document = Document(
             addressName = "123 Main St",
             categoryGroupCode = "ABC",
@@ -54,12 +58,15 @@ class MainViewModelTest {
         val searchHistory = SearchHistory("Some history", document)
         preferenceManager.addSearchHistory(searchHistory)
 
+        // when
         val result = viewModel.setLocation()
-        val expected = LatLng.from(37.7749, -122.4194)
 
+        // then
+        val expected = LatLng.from(37.7749, -122.4194)
         assertEquals(expected.latitude, result?.latitude)
         assertEquals(expected.longitude, result?.longitude)
     }
+
 
     // FakePreferenceManager 클래스 추가
     class FakePreferenceManager(context: Context) : PreferenceManager(context) {
