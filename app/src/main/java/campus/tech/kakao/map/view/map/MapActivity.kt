@@ -127,16 +127,14 @@ class MapActivity : AppCompatActivity() {
     }
 
     private fun hideBottomSheet() {
-        runOnUiThread { bottomSheetLayout.visibility = View.GONE }
+        bottomSheetLayout.visibility = View.GONE
     }
 
     private fun showBottomSheet(coordinates: Coordinates) {
-        runOnUiThread {
-            bottomSheetLayout.visibility = View.VISIBLE
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-            bottom_sheet_title.text = coordinates.title
-            bottom_sheet_address.text = coordinates.address
-        }
+        bottomSheetLayout.visibility = View.VISIBLE
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        bottom_sheet_title.text = coordinates.title
+        bottom_sheet_address.text = coordinates.address
     }
 
     private fun getCoordinates(): Coordinates? {
