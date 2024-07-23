@@ -59,7 +59,7 @@ class LocationLocalDataSource(private val dbHelper : LocationDbHelper) {
         val title = getString(getColumnIndexOrThrow(LocationEntry.COLUMN_NAME_TITLE))
         val address = getString(getColumnIndexOrThrow(LocationEntry.COLUMN_NAME_ADDRESS))
         val category = getString(getColumnIndexOrThrow(LocationEntry.COLUMN_NAME_CATEGORY))
-        return Location(title, address, category, "", "")
+        return Location(title, address, category, 0.0, 0.0)
     }
 
     fun addSavedLocation(title: String): Long {

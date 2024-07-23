@@ -152,13 +152,11 @@ class MapActivity : AppCompatActivity() {
     private fun getCoordinatesByIntent(): Coordinates? {
         if (intent.hasExtra("title") && intent.hasExtra("longitude")
             && intent.hasExtra("latitude") && intent.hasExtra("address")) {
-            val title = intent.getStringExtra("title").toString()
-            val longitudeString = intent.getStringExtra("longitude")
-            val latitudeString = intent.getStringExtra("latitude")
+            val title = intent.getStringExtra("title")
+            val longitude = intent.getDoubleExtra("longitude", 0.0)
+            val latitude = intent.getDoubleExtra("latitude", 0.0)
             val address = intent.getStringExtra("address").toString()
-            if (longitudeString != null && latitudeString != null) {
-                val longitude = longitudeString.toDouble()
-                val latitude = latitudeString.toDouble()
+            if (title != null) {
                 return Coordinates(title, longitude, latitude, address)
             } else return null
         } else return null
