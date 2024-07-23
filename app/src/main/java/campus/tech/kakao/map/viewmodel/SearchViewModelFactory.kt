@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import campus.tech.kakao.map.repository.PlaceRepository
 import campus.tech.kakao.map.repository.SavedPlaceRepository
 
-class ViewModelFactory(
+class SearchViewModelFactory(
     private val placeRepository: PlaceRepository,
     private val savedPlaceRepository: SavedPlaceRepository
 ) : ViewModelProvider.Factory {
