@@ -1,20 +1,17 @@
 package campus.tech.kakao.map.viewModel
 
-import android.annotation.SuppressLint
-import android.app.Application
-import android.content.Context
-import android.content.SharedPreferences
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
+import campus.tech.kakao.map.PreferenceRepository
 
-class MapViewModel(application: Application): AndroidViewModel(application){
-    private val prefs: SharedPreferences =
-        application.getSharedPreferences("location_data",Context.MODE_PRIVATE)
-    @SuppressLint("CommitPrefEdits")
-    fun saveLocation(key: String, data:String){
-        prefs.edit().putString(key, data).apply()
+
+class MapViewModel(repository: PreferenceRepository) : ViewModel() {
+    private val prefersRepo = repository
+
+    fun saveLocation(locationKey: String, data: String) {
+        prefersRepo.setString(locationKey, data)
     }
 
-    fun getLocation(key: String, data: String?): String {
-        return prefs.getString(key, data).toString()
+    fun getLocation(locationKey: String, data: String?): String {
+        return prefersRepo.getString(locationKey, data)
     }
 }

@@ -10,6 +10,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProvider
+import campus.tech.kakao.map.MapViewModelFactory
+import campus.tech.kakao.map.PreferenceRepository
 import campus.tech.kakao.map.R
 import campus.tech.kakao.map.dataContract.LocationDataContract
 import campus.tech.kakao.map.viewModel.MapViewModel
@@ -31,6 +33,7 @@ class HomeMapActivity : AppCompatActivity() {
     private lateinit var placeNameTextView: TextView
     private lateinit var placeAddressTextView: TextView
     private lateinit var mapViewModel: MapViewModel
+    private lateinit var prefersRepo: PreferenceRepository
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +41,9 @@ class HomeMapActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_home_map)
 
-        mapViewModel = ViewModelProvider(this)[MapViewModel::class.java]
+        prefersRepo = PreferenceRepository(applicationContext)
+        mapViewModel =
+            ViewModelProvider(this, MapViewModelFactory(prefersRepo))[MapViewModel::class.java]
 
         val name = intent.getStringExtra(LocationDataContract.LOCATION_NAME)
         val address = intent.getStringExtra(LocationDataContract.LOCATION_ADDRESS)
