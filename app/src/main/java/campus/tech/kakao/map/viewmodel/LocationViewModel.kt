@@ -16,22 +16,8 @@ class LocationViewModel(
     private val _searchedLocations = MutableLiveData<List<Location>>()
     val searchedLocations: LiveData<List<Location>> get() = _searchedLocations
 
-    fun setLocationsFromDB() {
-        _locations.value = locationRepository.getLocationLocal()
-        _searchedLocations.value = emptyList()
-    }
-
     private fun getSearchedLocationsSize(): Int {
         return _searchedLocations.value?.size ?: 0
-    }
-
-
-    fun searchLocationsFromDB(query: String): Int {
-        return locationRepository.searchLocationLocal(query).size
-    }
-
-    fun addLocationFromDB() {
-        locationRepository.addLocationLocal()
     }
 
     fun setLocationsFromKakaoAPI() {

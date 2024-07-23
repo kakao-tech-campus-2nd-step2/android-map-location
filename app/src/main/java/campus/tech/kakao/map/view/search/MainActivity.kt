@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity(), OnItemSelectedListener {
     private val locationDbHelper: LocationDbHelper by lazy { LocationDbHelper(this) }
     private val locationLocalDataSource: LocationLocalDataSource by lazy { LocationLocalDataSource(locationDbHelper) }
     private val locationRemoteDataSource: LocationRemoteDataSource by lazy { LocationRemoteDataSource() }
-    private val locationRepository: LocationRepository by lazy { LocationRepository(locationLocalDataSource, locationRemoteDataSource) }
+    private val locationRepository: LocationRepository by lazy { LocationRepository(locationRemoteDataSource) }
     private val savedLocationRepository: SavedLocationRepository by lazy { SavedLocationRepository(locationLocalDataSource) }
 
     private val clearButton: ImageView by lazy { findViewById(R.id.clearButton) }
