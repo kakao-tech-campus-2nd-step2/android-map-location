@@ -61,11 +61,14 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1")  //추가
     implementation("com.kakao.sdk:v2-all:2.20.3")  //추가
     implementation("androidx.test:core-ktx:1.5.0")
+    implementation("androidx.test.espresso:espresso-contrib:3.6.1")
     testImplementation("junit:junit:4.13.2")
     testImplementation("io.mockk:mockk-android:1.13.11")
     testImplementation("io.mockk:mockk-agent:1.13.11")
     testImplementation("androidx.arch.core:core-testing:2.2.0")
     testImplementation("org.robolectric:robolectric:4.11.1")
+    testImplementation("io.mockk:mockk:1.13.0") //추가
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.0") //추가
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation("androidx.test:rules:1.5.0")
