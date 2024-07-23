@@ -66,7 +66,6 @@ class MapActivity : AppCompatActivity() {
     }
 
     private fun setupMapView() {
-        KakaoMapSdk.init(this, BuildConfig.KAKAO_API_KEY);
         mapView.start(object : MapLifeCycleCallback() {
             override fun onMapDestroy() {
                 Log.d("jieun", "onMapDestroy")
