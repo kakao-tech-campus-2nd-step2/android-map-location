@@ -40,6 +40,20 @@ android {
             )
         }
     }
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+        }
+    }
+    packaging {
+        resources {
+            pickFirsts += "mockito-extensions/org.mockito.plugins.MockMaker"
+        }
+        resources {
+            excludes += "mockito-extensions/org.mockito.plugins.MockMaker"
+        }
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -55,7 +69,6 @@ android {
 }
 
 dependencies {
-
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.11.0")
@@ -69,7 +82,21 @@ dependencies {
     implementation("com.kakao.maps.open:android:2.9.5")
     implementation("com.kakao.sdk:v2-all:2.20.3")
     implementation("androidx.activity:activity:1.9.0")
+
+    // 테스트 의존성 추가
     testImplementation("junit:junit:4.13.2")
+    testImplementation("io.mockk:mockk:1.12.0")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    testImplementation("androidx.test.espresso:espresso-contrib:3.5.1")
+    testImplementation("org.robolectric:robolectric:4.6.1")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation("com.linkedin.dexmaker:dexmaker-mockito:2.28.1")
+    androidTestImplementation("io.mockk:mockk-android:1.12.0")
+    // 추가된 의존성
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test:core-ktx:1.4.0")
+    androidTestImplementation("androidx.test:rules:1.4.0")
+    androidTestImplementation("androidx.test:runner:1.4.0")
+    androidTestImplementation("androidx.arch.core:core-testing:2.1.0")
 }

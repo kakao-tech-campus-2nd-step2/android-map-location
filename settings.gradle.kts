@@ -20,5 +20,5 @@ plugins {
     id("org.jetbrains.kotlin.android") version "1.9.0" apply false
     id("org.jlleitschuh.gradle.ktlint") version "12.1.0" apply false
 }
-rootProject.name = "android-map-search"
+rootProject.name = "android-map-location"
 include(":app")
