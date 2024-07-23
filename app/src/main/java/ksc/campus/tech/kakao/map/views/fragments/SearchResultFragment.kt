@@ -1,4 +1,4 @@
-package ksc.campus.tech.kakao.map.views
+package ksc.campus.tech.kakao.map.views.fragments
 
 import android.content.Context
 import android.os.Bundle
@@ -6,23 +6,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.activity.OnBackPressedCallback
-import androidx.constraintlayout.widget.Group
 import androidx.core.view.isVisible
-import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ksc.campus.tech.kakao.map.R
-import ksc.campus.tech.kakao.map.models.SearchResult
+import ksc.campus.tech.kakao.map.models.repositories.SearchResult
 import ksc.campus.tech.kakao.map.view_models.SearchActivityViewModel
 import ksc.campus.tech.kakao.map.views.adapters.SearchResultAdapter
 
-class SearchResultFragment : Fragment() {
+class SearchResultFragment(val viewModel: SearchActivityViewModel) : Fragment() {
     private lateinit var searchResultRecyclerView: RecyclerView
     private lateinit var noResultHelpText: View
-    private val viewModel by activityViewModels<SearchActivityViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

@@ -5,24 +5,33 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.camera.CameraPosition
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import ksc.campus.tech.kakao.map.BuildConfig
-import ksc.campus.tech.kakao.map.models.LocationInfo
-import ksc.campus.tech.kakao.map.models.SearchKeywordRepository
-import ksc.campus.tech.kakao.map.models.SearchResult
-import ksc.campus.tech.kakao.map.models.SearchResultRepository
-import ksc.campus.tech.kakao.map.models.MapViewRepository
+import ksc.campus.tech.kakao.map.MyApplication
+import ksc.campus.tech.kakao.map.models.repositories.LocationInfo
+import ksc.campus.tech.kakao.map.models.repositories.SearchKeywordRepository
+import ksc.campus.tech.kakao.map.models.repositories.SearchResult
+import ksc.campus.tech.kakao.map.models.repositories.SearchResultRepository
+import ksc.campus.tech.kakao.map.models.repositories.MapViewRepository
+import ksc.campus.tech.kakao.map.models.repositoriesImpl.MapViewRepositoryImpl
+import ksc.campus.tech.kakao.map.models.repositoriesImpl.SearchKeywordRepositoryImpl
+import ksc.campus.tech.kakao.map.models.repositoriesImpl.SearchResultRepositoryImpl
 
 
 class SearchActivityViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val mapViewRepository: MapViewRepository =
-        MapViewRepository.getInstance()
-    private val searchResultRepository: SearchResultRepository =
-        SearchResultRepository.getInstance()
-    private val keywordRepository: SearchKeywordRepository =
-        SearchKeywordRepository.getInstance(application)
+    private val mapViewRepository: MapViewRepository by lazy{
+        (application as MyApplication).appContainer.getSingleton<MapViewRepository>()
+    }
+
+    private val searchResultRepository: SearchResultRepository by lazy {
+        (application as MyApplication).appContainer.getSingleton<SearchResultRepository>()
+    }
+    private val keywordRepository: SearchKeywordRepository =(application as MyApplication).appContainer.getSingleton<SearchKeywordRepository>()
 
     private val _searchText: MutableLiveData<String> = MutableLiveData("")
     private val _activeContent: MutableLiveData<ContentType> = MutableLiveData(ContentType.MAP)
@@ -43,7 +52,9 @@ class SearchActivityViewModel(application: Application) : AndroidViewModel(appli
 
 
     init {
-        keywordRepository.getKeywords()
+        CoroutineScope(Dispatchers.IO).launch {
+            keywordRepository.getKeywords()
+        }
         mapViewRepository.loadFromSharedPreference(application)
     }
 
@@ -53,15 +64,21 @@ class SearchActivityViewModel(application: Application) : AndroidViewModel(appli
     }
 
     private fun addKeyword(keyword: String) {
-        keywordRepository.addKeyword(keyword)
+        CoroutineScope(Dispatchers.IO).launch {
+            keywordRepository.addKeyword(keyword)
+        }
     }
 
     private fun deleteKeyword(keyword: String) {
-        keywordRepository.deleteKeyword(keyword)
+        CoroutineScope(Dispatchers.IO).launch {
+            keywordRepository.deleteKeyword(keyword)
+        }
     }
 
     private fun updateLocation(address:String, name:String, latitude:Double, longitude:Double){
-        mapViewRepository.updateSelectedLocation(getApplication(),LocationInfo(address, name, latitude, longitude))
+        mapViewRepository.updateSelectedLocation(getApplication(),
+            LocationInfo(address, name, latitude, longitude)
+        )
         mapViewRepository.updateCameraPositionWithFixedZoom(latitude, longitude)
     }
 

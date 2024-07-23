@@ -1,4 +1,4 @@
-package ksc.campus.tech.kakao.map.models
+package ksc.campus.tech.kakao.map.models.repositoriesImpl
 
 import android.content.Context
 import androidx.lifecycle.LiveData
@@ -6,28 +6,26 @@ import androidx.lifecycle.MutableLiveData
 import com.kakao.vectormap.camera.CameraPosition
 import kotlinx.serialization.Serializable
 import ksc.campus.tech.kakao.map.models.datasources.MapPreferenceLocalDataSource
+import ksc.campus.tech.kakao.map.models.repositories.LocationInfo
+import ksc.campus.tech.kakao.map.models.repositories.MapViewRepository
 
 
-@Serializable
-data class LocationInfo(val address:String, val name:String, val latitude:Double, val longitude:Double)
-
-class MapViewRepository() {
+class MapViewRepositoryImpl(): MapViewRepository {
     private val _selectedLocation: MutableLiveData<LocationInfo?> = MutableLiveData<LocationInfo?>(null)
     private val _cameraPosition: MutableLiveData<CameraPosition> = MutableLiveData(initialCameraPosition)
 
     private val mapPreferenceDataSource: MapPreferenceLocalDataSource = MapPreferenceLocalDataSource()
-    val selectedLocation: LiveData<LocationInfo?>
+    override val selectedLocation: LiveData<LocationInfo?>
         get() = _selectedLocation
 
-    val cameraPosition: LiveData<CameraPosition>
+    override val cameraPosition: LiveData<CameraPosition>
         get() = _cameraPosition
 
     private fun getZoomCameraPosition(latitude: Double, longitude: Double) = CameraPosition.from(
         latitude,
         longitude,
         ZOOMED_CAMERA_ZOOM_LEVEL,
-        ZOOMED_CAMERA_TILT_ANGLE,
-        ZOOMED_CAMERA_ROTATION_ANGLE,
+        ZOOMED_CAMERA_TILT_ANGLE, ZOOMED_CAMERA_ROTATION_ANGLE,
         ZOOMED_CAMERA_HEIGHT)
 
     private fun saveCurrentPositionToSharedPreference(context:Context, position: CameraPosition){
@@ -47,7 +45,7 @@ class MapViewRepository() {
         return mapPreferenceDataSource.getSelectedLocation(context)
     }
 
-    fun loadFromSharedPreference(context:Context){
+    override fun loadFromSharedPreference(context:Context){
         val cameraPosition = loadSavedCurrentPosition(context)
         val selectedLocation = loadSavedSelectedLocation(context)
 
@@ -56,21 +54,21 @@ class MapViewRepository() {
             updateSelectedLocation(context, selectedLocation)
     }
 
-    fun updateSelectedLocation(context:Context, locationInfo: LocationInfo){
+    override fun updateSelectedLocation(context:Context, locationInfo: LocationInfo){
         saveSelectedLocation(context, locationInfo)
         _selectedLocation.postValue(locationInfo)
     }
 
-    fun updateCameraPositionWithFixedZoom(latitude: Double, longitude: Double){
+    override fun updateCameraPositionWithFixedZoom(latitude: Double, longitude: Double){
         _cameraPosition.postValue(getZoomCameraPosition(latitude, longitude))
     }
 
-    fun updateCameraPosition(context:Context, position: CameraPosition){
+    override fun updateCameraPosition(context:Context, position: CameraPosition){
         saveCurrentPositionToSharedPreference(context, position)
         _cameraPosition.postValue(position)
     }
 
-    fun clearSelectedLocation(){
+    override fun clearSelectedLocation(){
         _selectedLocation.postValue(null)
     }
 
@@ -88,13 +86,5 @@ class MapViewRepository() {
             0.0,
             -1.0
         )
-
-        private var _instance: MapViewRepository? = null
-        fun getInstance(): MapViewRepository {
-            if (_instance == null) {
-                _instance = MapViewRepository()
-            }
-            return _instance as MapViewRepository
-        }
     }
 }

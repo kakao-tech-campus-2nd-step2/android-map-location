@@ -19,7 +19,7 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "ksc.campus.tech.kakao.map.CustomTestRunner"
 
         resValue("string", "KAKAO_API_KEY", getApiKey("KAKAO_API_KEY"))
         buildConfigField("String", "KAKAO_REST_API_KEY", getApiKey("KAKAO_REST_API_KEY"))
@@ -39,8 +39,14 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+
     kotlinOptions {
         jvmTarget = "17"
+    }
+
+    testOptions{
+        animationsDisabled = true
+        unitTests.isIncludeAndroidResources = true
     }
 
     buildFeatures {
@@ -65,12 +71,8 @@ dependencies {
     implementation("androidx.activity:activity:1.8.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
     testImplementation("junit:junit:4.13.2")
-    testImplementation("io.mockk:mockk-android:1.13.11")
-    testImplementation("io.mockk:mockk-agent:1.13.11")
-    testImplementation("androidx.arch.core:core-testing:2.2.0")
-    testImplementation("org.robolectric:robolectric:4.11.1")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation("androidx.test:rules:1.5.0")
-    androidTestImplementation("androidx.test.espresso:espresso-intents:3.5.1")
+    debugImplementation ("androidx.fragment:fragment-testing:1.6.0")
+    androidTestImplementation ("androidx.fragment:fragment-testing:1.6.0")
 }

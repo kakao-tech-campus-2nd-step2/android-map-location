@@ -17,6 +17,9 @@ import ksc.campus.tech.kakao.map.view_models.SearchActivityViewModel
 import ksc.campus.tech.kakao.map.views.adapters.SearchKeywordAdapter
 import com.kakao.vectormap.KakaoMapSdk
 import ksc.campus.tech.kakao.map.views.adapters.SearchKeywordClickCallback
+import ksc.campus.tech.kakao.map.views.fragments.KakaoMapFragment
+import ksc.campus.tech.kakao.map.views.fragments.SearchActivityFragmentFactory
+import ksc.campus.tech.kakao.map.views.fragments.SearchResultFragment
 
 class MainActivity : AppCompatActivity() {
     private lateinit var locationInfoNameView: TextView
@@ -117,8 +120,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initiateFragments() {
-        mapFragment = KakaoMapFragment()
-        searchFragment = SearchResultFragment()
+        supportFragmentManager.fragmentFactory = SearchActivityFragmentFactory(searchViewModel)
+        mapFragment = supportFragmentManager.fragmentFactory.instantiate(classLoader, KakaoMapFragment::class.java.name)
+        searchFragment = supportFragmentManager.fragmentFactory.instantiate(classLoader, SearchResultFragment::class.java.name)
     }
 
     private fun initiateViews() {

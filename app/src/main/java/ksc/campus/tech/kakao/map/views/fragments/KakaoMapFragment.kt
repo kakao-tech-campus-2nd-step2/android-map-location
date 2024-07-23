@@ -1,4 +1,4 @@
-package ksc.campus.tech.kakao.map.views
+package ksc.campus.tech.kakao.map.views.fragments
 
 import android.os.Bundle
 import android.util.Log
@@ -6,12 +6,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.constraintlayout.widget.Group
 import androidx.core.view.isVisible
-import androidx.fragment.app.activityViewModels
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
@@ -23,19 +21,17 @@ import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.label.LabelStyle
 import com.kakao.vectormap.label.LabelStyles
 import ksc.campus.tech.kakao.map.R
-import ksc.campus.tech.kakao.map.models.LocationInfo
-import ksc.campus.tech.kakao.map.models.MapViewRepository
+import ksc.campus.tech.kakao.map.models.repositories.LocationInfo
 import ksc.campus.tech.kakao.map.view_models.SearchActivityViewModel
 import java.lang.Exception
 
-class KakaoMapFragment : Fragment() {
+class KakaoMapFragment(val viewModel: SearchActivityViewModel) : Fragment() {
     private lateinit var errorTextView: TextView
     private lateinit var retryButton: ImageButton
     private lateinit var errorMessageGroup: Group
 
     private lateinit var kakaoMapView: MapView
     private var kakaoMap: KakaoMap? = null
-    private val viewModel by activityViewModels<SearchActivityViewModel>()
 
     private fun startKakaoMapView(){
         kakaoMapView.start(object : MapLifeCycleCallback() {
