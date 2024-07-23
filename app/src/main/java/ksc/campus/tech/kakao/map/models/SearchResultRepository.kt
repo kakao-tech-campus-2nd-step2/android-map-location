@@ -3,6 +3,8 @@ package ksc.campus.tech.kakao.map.models
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
+data class SearchResult(val id: String, val name: String, val address: String, val type: String, val latitude: Double, val longitude: Double)
+
 class SearchResultRepository() {
     private val _searchResult: MutableLiveData<List<SearchResult>> = MutableLiveData(emptyList())
     val searchResult: LiveData<List<SearchResult>>

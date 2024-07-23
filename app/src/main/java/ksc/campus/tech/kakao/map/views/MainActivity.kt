@@ -3,6 +3,7 @@ package ksc.campus.tech.kakao.map.views
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -18,6 +19,9 @@ import com.kakao.vectormap.KakaoMapSdk
 import ksc.campus.tech.kakao.map.views.adapters.SearchKeywordClickCallback
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var locationInfoNameView: TextView
+    private lateinit var locationInfoAddressView: TextView
+
     private val fragmentManager = supportFragmentManager
     private lateinit var searchFragment: Fragment
     private lateinit var mapFragment: Fragment
@@ -55,6 +59,9 @@ class MainActivity : AppCompatActivity() {
             } else {
                 switchToSearchMenu()
             }
+        }
+        searchViewModel.selectedLocation.observe(this){
+            updateText(it?.name?:"", it?.address?:"")
         }
     }
 
@@ -104,12 +111,19 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun updateText(name:String, address:String){
+        locationInfoNameView.text = name
+        locationInfoAddressView.text = address
+    }
+
     private fun initiateFragments() {
         mapFragment = KakaoMapFragment()
         searchFragment = SearchResultFragment()
     }
 
     private fun initiateViews() {
+        locationInfoNameView = findViewById(R.id.text_location_name)
+        locationInfoAddressView = findViewById(R.id.text_location_address)
         searchInput = findViewById(R.id.input_search)
         keywordRecyclerView = findViewById(R.id.saved_search_bar)
         searchResultFragmentContainer = findViewById(R.id.fragment_container_search_result)

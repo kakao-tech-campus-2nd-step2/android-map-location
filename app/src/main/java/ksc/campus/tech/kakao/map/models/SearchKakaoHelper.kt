@@ -21,6 +21,8 @@ interface KakaoSearchRetrofitService {
 }
 
 object SearchKakaoHelper {
+    private var _retrofitService:KakaoSearchRetrofitService? = null
+
     private val categoryGroupCodeToDescription: HashMap<String, String> = hashMapOf(
         Pair("MT1", "대형마트"),
         Pair("CS2", "편의점"),
@@ -54,12 +56,15 @@ object SearchKakaoHelper {
 
     private fun isQueryValid(query: String): Boolean = query.isNotBlank()
 
-    private fun getRetrofitService(url: String): KakaoSearchRetrofitService {
-        return Retrofit.Builder()
-            .baseUrl(url)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(KakaoSearchRetrofitService::class.java)
+    private fun getRetrofitService(url: String): KakaoSearchRetrofitService? {
+        if(_retrofitService == null){
+            _retrofitService = Retrofit.Builder()
+                .baseUrl(url)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(KakaoSearchRetrofitService::class.java)
+        }
+        return _retrofitService
     }
 
     private fun parseCategory(category: String) =
@@ -77,7 +82,9 @@ object SearchKakaoHelper {
                     categoryGroupCodeToDescription.getOrDefault(
                         doc.categoryGroupCode,
                         parseCategory(doc.categoryName)
-                    )
+                    ),
+                    doc.y.toDoubleOrNull()?:0.0,
+                    doc.x.toDoubleOrNull()?:0.0
                 )
             )
         }
@@ -121,6 +128,10 @@ object SearchKakaoHelper {
             return
 
         val retrofitService = getRetrofitService(KAKAO_LOCAL_URL)
+        if(retrofitService == null){
+            Log.e("KSC", "failed to load retrofit service")
+            return
+        }
         retrofitService.requestSearchResultByKeyword("KakaoAK $apiKey", query, page).enqueue(
             object : Callback<KeywordSearchResponse> {
                 override fun onResponse(
