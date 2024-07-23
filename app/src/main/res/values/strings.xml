@@ -1,3 +1,30 @@
 <resources>
     <string name="app_name">Map</string>
+    <string name="enter_keyword_label">검색어를 입력해 주세요.</string>
+    <string name="no_search_result_label">검색 결과가 없습니다.</string>
+
+    <string name="place_kakao_cafe">카카오 카페</string>
+    <string name="place_kakao_restaurant">카카오 식당</string>
+    <string name="place_kakao_pub">카카오 포차</string>
+    <string name="place_tech_cafe">테크 카페</string>
+    <string name="place_tech_restaurant">테크 식당</string>
+    <string name="place_tech_pub">테크 포차</string>
+    <string name="place_campus_cafe">캠퍼스 카페</string>
+    <string name="place_campus_restaurant">캠퍼스 식당</string>
+    <string name="place_campus_pub">캠퍼스 포차</string>
+
+    <string name="category_cafe">카페</string>
+    <string name="category_restaurant">식당</string>
+    <string name="category_pub">주점</string>
+
+    <string name="place_address_1">금정구 1</string>
+    <string name="place_address_2">금정구 2</string>
+    <string name="place_address_3">금정구 3</string>
+    <string name="place_address_4">금정구 4</string>
+    <string name="place_address_5">금정구 5</string>
+    <string name="place_address_6">금정구 6</string>
+    <string name="place_address_7">금정구 7</string>
+    <string name="place_address_8">금정구 8</string>
+    <string name="place_address_9">금정구 9</string>
+
 </resources>
