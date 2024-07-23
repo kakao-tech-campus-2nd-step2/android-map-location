@@ -1,5 +1,6 @@
 package campus.tech.kakao.map
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -20,7 +21,7 @@ import kotlinx.coroutines.launch
 
 class SearchActivity : AppCompatActivity() {
     private val viewModel: SearchViewModel by viewModels {
-        ViewModelFactory(applicationContext)
+        ViewModelFactory(applicationContext, MapApplication.prefs)
     }
 
     private val placeAdapter: PlaceAdapter by lazy {
@@ -31,8 +32,16 @@ class SearchActivity : AppCompatActivity() {
                 PlaceAdapter.OnItemClickListener {
                 override fun onItemClick(position: Int) {
                     val item = placeAdapter.getItem(position)
-                    val searchHistory = SearchHistory(item.placeName)
+                    val searchHistory = SearchHistory(item.placeName, item)
                     viewModel.saveSearchHistory(searchHistory)
+
+                    val intent = Intent(this@SearchActivity, MainActivity::class.java)
+                    intent.putExtra("longitude", item.x)
+                    intent.putExtra("longitude", item.y)
+                    intent.putExtra("name", item.placeName)
+                    intent.putExtra("address", item.addressName)
+                    intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+                    startActivity(intent)
                 }
             }
         )

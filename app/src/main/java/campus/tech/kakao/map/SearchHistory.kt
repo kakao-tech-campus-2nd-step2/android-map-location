@@ -1,5 +1,6 @@
 package campus.tech.kakao.map
 
 data class SearchHistory(
-    val searchHistory: String
+    val searchHistory: String,
+    val document: Document
 )
