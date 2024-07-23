@@ -55,6 +55,10 @@ class SavedPlaceViewHolder(itemView: View, val listener: OnClickSavedPlaceListen
             Log.d("testt", "삭제 콜백함수 호출")
             currentSavedPlace?.let { listener.deleteSavedPlace(it, position) }
         }
+        itemView.setOnClickListener {
+            currentSavedPlace?.let { listener.loadPlace(it) }
+        }
+
     }
 
     fun bind(savedPlace: SavedPlace) {

@@ -1,6 +1,7 @@
 package campus.tech.kakao.map.view
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -20,12 +21,13 @@ import campus.tech.kakao.map.R
 import campus.tech.kakao.map.adapter.PlaceViewAdapter
 import campus.tech.kakao.map.adapter.SavedPlaceViewAdapter
 import campus.tech.kakao.map.db.PlaceDBHelper
+import campus.tech.kakao.map.model.Constants
 import campus.tech.kakao.map.model.Place
 import campus.tech.kakao.map.model.SavedPlace
 import campus.tech.kakao.map.repository.PlaceRepository
 import campus.tech.kakao.map.repository.SavedPlaceRepository
 import campus.tech.kakao.map.viewmodel.MainActivityViewModel
-import campus.tech.kakao.map.viewmodel.ViewModelFactory
+import campus.tech.kakao.map.viewmodel.SearchViewModelFactory
 import kotlinx.coroutines.launch
 
 
@@ -57,9 +59,17 @@ class SearchActivity : AppCompatActivity(), OnClickPlaceListener, OnClickSavedPl
         viewModel.deleteSavedPlace(savedPlace)
     }
 
+    override fun loadPlace(savedPlace: SavedPlace){
+        inputSearchField.setText(savedPlace.name)
+    }
+
     override fun savePlace(place: Place) {
         Log.d("testt", "콜백함수 처리")
         viewModel.savePlace(place)
+        intent.putExtra(Constants.Keys.KEY_PLACE, place)
+        Log.d("testt", "Intent" + place.toString())
+        setResult(RESULT_OK, intent)
+        finish()
     }
 
     fun initVar() {
@@ -74,7 +84,7 @@ class SearchActivity : AppCompatActivity(), OnClickPlaceListener, OnClickSavedPl
         viewModel =
             ViewModelProvider(
                 this,
-                ViewModelFactory(placeRepository, savedPlaceRepository)
+                SearchViewModelFactory(placeRepository, savedPlaceRepository)
             )[MainActivityViewModel::class.java]
     }
 
