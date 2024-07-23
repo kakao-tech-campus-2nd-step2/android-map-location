@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mainViewBinding: ActivityMainBinding
     private lateinit var mapView: MapView
     private val mainViewModel: MainViewModel by viewModels {
-        ViewModelFactory(applicationContext)
+        ViewModelFactory(applicationContext, MapApplication.prefs)
     }
     
     override fun onCreate(savedInstanceState: Bundle?) {

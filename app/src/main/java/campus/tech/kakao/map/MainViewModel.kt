@@ -1,12 +1,12 @@
 package campus.tech.kakao.map
 
-import android.content.Context
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.kakao.vectormap.LatLng
 
-class MainViewModel(context: Context) : ViewModel() {
-    private val preferenceManager = MapApplication.prefs
+class MainViewModel(
+    private val preferenceManager: PreferenceManager
+) : ViewModel() {
+
     fun setLocation(latitude: Double? = null, longitude: Double? = null): LatLng? {
         return if (latitude != null && longitude != null) {
             LatLng.from(latitude, longitude)

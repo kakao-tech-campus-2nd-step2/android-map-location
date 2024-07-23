@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 
 class SearchActivity : AppCompatActivity() {
     private val viewModel: SearchViewModel by viewModels {
-        ViewModelFactory(applicationContext)
+        ViewModelFactory(applicationContext, MapApplication.prefs)
     }
 
     private val placeAdapter: PlaceAdapter by lazy {
