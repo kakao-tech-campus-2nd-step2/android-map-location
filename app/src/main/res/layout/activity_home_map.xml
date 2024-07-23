@@ -50,6 +50,6 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <include layout="@layout/map_detail_bottom_sheet" />
-    </androidx.coordinatorlayout.widget.CoordinatorLayout
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

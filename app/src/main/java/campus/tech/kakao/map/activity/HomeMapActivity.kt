@@ -9,8 +9,12 @@ import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import campus.tech.kakao.map.Application
+import androidx.lifecycle.ViewModelProvider
+import campus.tech.kakao.map.MapViewModelFactory
+import campus.tech.kakao.map.PreferenceRepository
 import campus.tech.kakao.map.R
+import campus.tech.kakao.map.dataContract.LocationDataContract
+import campus.tech.kakao.map.viewModel.MapViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
@@ -28,6 +32,8 @@ class HomeMapActivity : AppCompatActivity() {
     private lateinit var bottomBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var placeNameTextView: TextView
     private lateinit var placeAddressTextView: TextView
+    private lateinit var mapViewModel: MapViewModel
+    private lateinit var prefersRepo: PreferenceRepository
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,10 +41,14 @@ class HomeMapActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_home_map)
 
-        val name = intent.getStringExtra("name")
-        val address = intent.getStringExtra("address")
-        val latitude = intent.getStringExtra("latitude")?.toDouble()
-        val longitude = intent.getStringExtra("longitude")?.toDouble()
+        prefersRepo = PreferenceRepository(applicationContext)
+        mapViewModel =
+            ViewModelProvider(this, MapViewModelFactory(prefersRepo))[MapViewModel::class.java]
+
+        val name = intent.getStringExtra(LocationDataContract.LOCATION_NAME)
+        val address = intent.getStringExtra(LocationDataContract.LOCATION_ADDRESS)
+        val latitude = intent.getStringExtra(LocationDataContract.LOCATION_LATITUDE)?.toDouble()
+        val longitude = intent.getStringExtra(LocationDataContract.LOCATION_LONGITUDE)?.toDouble()
 
         mapView = findViewById(R.id.mapView)
         placeNameTextView = findViewById(R.id.placeName)
@@ -53,7 +63,7 @@ class HomeMapActivity : AppCompatActivity() {
             }
 
             override fun onMapError(p0: Exception?) {
-                intentError.putExtra("errorMessage",p0.toString())
+                intentError.putExtra("errorMessage", p0.toString())
                 startActivity(intentError)
             }
 
@@ -82,9 +92,12 @@ class HomeMapActivity : AppCompatActivity() {
 
             // 지도 시작 시 위치 좌표 설정
             override fun getPosition(): LatLng {
-                val savedLatitude = Application.prefs.getString("latitude", null).toDoubleOrNull()
+                val savedLatitude =
+                    mapViewModel.getLocation(LocationDataContract.LOCATION_LATITUDE, null)
+                        .toDoubleOrNull()
                 val savedLongitude =
-                    Application.prefs.getString("longitude", null).toDoubleOrNull()
+                    mapViewModel.getLocation(LocationDataContract.LOCATION_LONGITUDE, null)
+                        .toDoubleOrNull()
 
                 return if (latitude != null && longitude != null) {
                     LatLng.from(latitude, longitude)
@@ -123,7 +136,9 @@ class HomeMapActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        intent.getStringExtra("latitude")?.let { Application.prefs.setString("latitude", it) }
-        intent.getStringExtra("longitude")?.let { Application.prefs.setString("longitude", it) }
+        intent.getStringExtra(LocationDataContract.LOCATION_LATITUDE)
+            ?.let { mapViewModel.saveLocation(LocationDataContract.LOCATION_LATITUDE, it) }
+        intent.getStringExtra(LocationDataContract.LOCATION_LONGITUDE)
+            ?.let { mapViewModel.saveLocation(LocationDataContract.LOCATION_LONGITUDE, it) }
     }
 }

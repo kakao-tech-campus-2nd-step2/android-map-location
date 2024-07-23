@@ -2,6 +2,7 @@ package campus.tech.kakao.map.activity
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.health.connect.datatypes.ExerciseRoute.Location
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -20,6 +21,7 @@ import campus.tech.kakao.map.listener.RecentAdapterListener
 import campus.tech.kakao.map.listener.SearchAdapterListener
 import campus.tech.kakao.map.adapter.RecentSearchAdapter
 import campus.tech.kakao.map.adapter.SearchDataAdapter
+import campus.tech.kakao.map.dataContract.LocationDataContract
 import campus.tech.kakao.map.viewModel.RecentViewModel
 import campus.tech.kakao.map.viewModel.SearchViewModel
 
@@ -126,10 +128,10 @@ class DataSearchActivity : AppCompatActivity(), RecentAdapterListener, SearchAda
     ) {
         val intent = Intent(this@DataSearchActivity, HomeMapActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        intent.putExtra("name", name)
-        intent.putExtra("address", address)
-        intent.putExtra("latitude", latitude)
-        intent.putExtra("longitude", longitude)
+        intent.putExtra(LocationDataContract.LOCATION_NAME, name)
+        intent.putExtra(LocationDataContract.LOCATION_ADDRESS, address)
+        intent.putExtra(LocationDataContract.LOCATION_LATITUDE, latitude)
+        intent.putExtra(LocationDataContract.LOCATION_LONGITUDE, longitude)
         startActivity(intent)
     }
 }
