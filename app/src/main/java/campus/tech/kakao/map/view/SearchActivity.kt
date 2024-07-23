@@ -27,7 +27,7 @@ import campus.tech.kakao.map.model.SavedPlace
 import campus.tech.kakao.map.repository.PlaceRepository
 import campus.tech.kakao.map.repository.SavedPlaceRepository
 import campus.tech.kakao.map.viewmodel.MainActivityViewModel
-import campus.tech.kakao.map.viewmodel.ViewModelFactory
+import campus.tech.kakao.map.viewmodel.SearchViewModelFactory
 import kotlinx.coroutines.launch
 
 
@@ -84,7 +84,7 @@ class SearchActivity : AppCompatActivity(), OnClickPlaceListener, OnClickSavedPl
         viewModel =
             ViewModelProvider(
                 this,
-                ViewModelFactory(placeRepository, savedPlaceRepository)
+                SearchViewModelFactory(placeRepository, savedPlaceRepository)
             )[MainActivityViewModel::class.java]
     }
 

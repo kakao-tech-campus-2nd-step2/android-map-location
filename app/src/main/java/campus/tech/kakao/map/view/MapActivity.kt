@@ -19,10 +19,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.isVisible
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import campus.tech.kakao.map.BuildConfig
 import campus.tech.kakao.map.R
 import campus.tech.kakao.map.model.Constants
 import campus.tech.kakao.map.model.Place
+import campus.tech.kakao.map.repository.SharedPreferenceRepository
+import campus.tech.kakao.map.viewmodel.MapActivityViewModel
+import campus.tech.kakao.map.viewmodel.MapViewModelFactory
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
@@ -44,12 +49,14 @@ class MapActivity : AppCompatActivity() {
     lateinit var errorTextView: TextView
     lateinit var kakaoMap : KakaoMap
     lateinit var resultLauncher : ActivityResultLauncher<Intent>
-    lateinit var sharedPreferences : SharedPreferences
+    lateinit var sharedPreferencesRepository: SharedPreferenceRepository
     lateinit var bottomSheetLayout : ConstraintLayout
     lateinit var placeNameField : TextView
     lateinit var placeLocationField : TextView
     lateinit var bottomSheetBehavior : BottomSheetBehavior<ConstraintLayout>
+    lateinit var viewModel : MapActivityViewModel
     lateinit var editor : Editor
+    var isMapDisplay = false
 
     companion object ChonnamUnivLocation {
         const val LATITUDE = "35.175487"
@@ -80,12 +87,17 @@ class MapActivity : AppCompatActivity() {
         setContentView(R.layout.activity_map)
 
         initVar()
-        initSharedPreferece()
-        initBottomSheet()
-        initSDK()
         initMapView()
+        initBottomSheet()
         initClickListener()
         initResultLauncher()
+        sharedPreferencesRepository = SharedPreferenceRepository(this)
+        viewModel = ViewModelProvider(
+            this, MapViewModelFactory(sharedPreferencesRepository)
+        )[MapActivityViewModel::class.java]
+        viewModel.recentPos.observe(this, Observer {
+            if(isMapDisplay) moveMapCamera(it)
+        })
     }
 
 
@@ -96,13 +108,10 @@ class MapActivity : AppCompatActivity() {
         errorTextView = findViewById<TextView>(R.id.error_text)
         placeNameField = findViewById<TextView>(R.id.place_name)
         placeLocationField = findViewById<TextView>(R.id.place_location)
+
         bringFrontSearchField()
     }
 
-    private fun initSharedPreferece(){
-        sharedPreferences = getSharedPreferences(Constants.Keys.KEY_SHARED, Context.MODE_PRIVATE)
-        editor = sharedPreferences.edit()
-    }
 
     private fun initBottomSheet(){
         bottomSheetLayout = findViewById<ConstraintLayout>(R.id.bottom_sheet)
@@ -110,9 +119,6 @@ class MapActivity : AppCompatActivity() {
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
     }
 
-    private fun initSDK() {
-        KakaoMapSdk.init(this, BuildConfig.KAKAO_NATIVE_APP_KEY)
-    }
 
     private fun initMapView() {
         map = findViewById<MapView>(R.id.map_view)
@@ -132,12 +138,8 @@ class MapActivity : AppCompatActivity() {
                 Log.d("testt", "MapReady")
                 errorTextView.isVisible = false
                 this@MapActivity.kakaoMap = kakaoMap
-            }
-
-            override fun getPosition(): LatLng {
-                val latitude = sharedPreferences.getString(Constants.Keys.KEY_LATITUDE, LATITUDE)?.toDouble() ?: LATITUDE.toDouble()
-                val longitude = sharedPreferences.getString(Constants.Keys.KEY_LONGITUDE, LONGITUDE)?.toDouble() ?: LONGITUDE.toDouble()
-                return LatLng.from(latitude, longitude)
+                isMapDisplay = true
+                viewModel.getRecentPos()
             }
         })
     }
@@ -163,7 +165,7 @@ class MapActivity : AppCompatActivity() {
                     val pos = LatLng.from(latitude, longitude)
                     moveMapCamera(pos)
                     createLabel(pos)
-                    putPosSharedPreference(latitude, longitude)
+                    viewModel.setRecentPos(latitude, longitude)
                     bottomSheetBinding(place)
                     bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
                 }
@@ -207,12 +209,6 @@ class MapActivity : AppCompatActivity() {
     private fun bottomSheetBinding(place: Place?){
         placeNameField.text = place?.name ?: ""
         placeLocationField.text = place?.location ?: ""
-    }
-
-    private fun putPosSharedPreference(latitude : Double, longitude : Double){
-        editor.putString(Constants.Keys.KEY_LATITUDE, latitude.toString())
-        editor.putString(Constants.Keys.KEY_LONGITUDE, longitude.toString())
-        editor.apply()
     }
 
     private fun removeAllLabel(){
