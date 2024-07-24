@@ -31,6 +31,12 @@ class SavedPlaceViewAdapter(
         val currentSavedPlace = getItem(position)
         holder.bind(currentSavedPlace)
     }
+
+    fun existPlace(savedPlace: SavedPlace) : Boolean = currentList.contains(savedPlace)
+
+    fun getSavedPlaceAtPosition(position : Int) : SavedPlace{
+        return getItem(position)
+    }
 }
 
 class SavedPlaceDiffCallBack : DiffUtil.ItemCallback<SavedPlace>() {
@@ -55,6 +61,10 @@ class SavedPlaceViewHolder(itemView: View, val listener: OnClickSavedPlaceListen
             Log.d("testt", "삭제 콜백함수 호출")
             currentSavedPlace?.let { listener.deleteSavedPlace(it, position) }
         }
+        itemView.setOnClickListener {
+            currentSavedPlace?.let { listener.loadPlace(it) }
+        }
+
     }
 
     fun bind(savedPlace: SavedPlace) {
