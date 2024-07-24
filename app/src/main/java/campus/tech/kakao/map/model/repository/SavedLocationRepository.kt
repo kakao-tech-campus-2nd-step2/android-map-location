@@ -1,10 +1,10 @@
 package campus.tech.kakao.map.model.repository
 
 import campus.tech.kakao.map.model.SavedLocation
-import campus.tech.kakao.map.model.datasource.LocationLocalDataSource
+import campus.tech.kakao.map.model.datasource.SavedLocationDataSource
 
 class SavedLocationRepository(
-    private val locationLocalRepository: LocationLocalDataSource
+    private val locationLocalRepository: SavedLocationDataSource
 ) {
     fun getSavedLocationAll(): MutableList<SavedLocation> {
         val results = locationLocalRepository.getSavedLocationAll()

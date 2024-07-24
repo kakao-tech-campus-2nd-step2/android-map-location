@@ -9,7 +9,7 @@ import campus.tech.kakao.map.model.repository.RetrofitInstance
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class LocationRemoteDataSource {
+class LocationDataSource {
     companion object{
         private const val RESULT_SIZE = 15
     }
@@ -17,7 +17,6 @@ class LocationRemoteDataSource {
     private val client = RetrofitInstance.getInstance().create(KakaoAPI::class.java)
 
     suspend fun getLocations(keyword: String): List<Location> {
-
         return withContext(Dispatchers.IO){
             val response = client.searchFromKeyword(keyword, RESULT_SIZE)
             val locationDtos: List<LocationDto> = response.body()?.documents ?: emptyList()

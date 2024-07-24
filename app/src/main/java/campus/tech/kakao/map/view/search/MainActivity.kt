@@ -1,5 +1,6 @@
 package campus.tech.kakao.map.view.search
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -12,68 +13,56 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import campus.tech.kakao.map.BuildConfig
-import campus.tech.kakao.map.model.datasource.LocationLocalDataSource
-import campus.tech.kakao.map.model.datasource.LocationRemoteDataSource
+import campus.tech.kakao.map.model.datasource.SavedLocationDataSource
+import campus.tech.kakao.map.model.datasource.LocationDataSource
 import campus.tech.kakao.map.R
+import campus.tech.kakao.map.model.Location
 import campus.tech.kakao.map.model.SavedLocation
 import campus.tech.kakao.map.model.LocationDbHelper
 import campus.tech.kakao.map.model.repository.LocationRepository
 import campus.tech.kakao.map.model.repository.SavedLocationRepository
+import campus.tech.kakao.map.view.map.MapActivity
 import campus.tech.kakao.map.viewmodel.ViewModelFactory.LocationViewModelFactory
 import campus.tech.kakao.map.viewmodel.ViewModelFactory.SavedLocationViewModelFactory
 import campus.tech.kakao.map.viewmodel.LocationViewModel
 import campus.tech.kakao.map.viewmodel.SavedLocationViewModel
 
 class MainActivity : AppCompatActivity(), OnItemSelectedListener {
+    private val locationViewModel: LocationViewModel by lazy {
+        ViewModelProvider(this, LocationViewModelFactory(locationRepository))
+        .get(LocationViewModel::class.java)
+    }
+    private val locationAdapter: LocationAdapter by lazy { LocationAdapter(this) }
+    private val locationRecyclerView: RecyclerView by lazy { findViewById(R.id.locationRecyclerView) }
 
-    private lateinit var locationViewModel: LocationViewModel
-    private lateinit var locationAdapter: LocationAdapter
-    private lateinit var locationRecyclerView: RecyclerView
+    private val savedLocationViewModel: SavedLocationViewModel by lazy {
+        ViewModelProvider(this, SavedLocationViewModelFactory(savedLocationRepository))
+        .get(SavedLocationViewModel::class.java)
+    }
 
-    private lateinit var savedLocationViewModel: SavedLocationViewModel
-    private lateinit var savedLocationAdapter: SavedLocationAdapter
-    private lateinit var savedLocationRecyclerView: RecyclerView
+    private val savedLocationAdapter: SavedLocationAdapter by lazy { SavedLocationAdapter(this) }
+    private val savedLocationRecyclerView: RecyclerView by lazy {
+        findViewById(R.id.savedLocationRecyclerView)
+    }
 
-    private lateinit var locationDbHelper: LocationDbHelper
-    private lateinit var locationLocalDataSource: LocationLocalDataSource
-    private lateinit var locationRemoteDataSource: LocationRemoteDataSource
-    private lateinit var locationRepository: LocationRepository
-    private lateinit var savedLocationRepository: SavedLocationRepository
+    private val locationDbHelper: LocationDbHelper by lazy { LocationDbHelper(this) }
+    private val locationLocalDataSource: SavedLocationDataSource by lazy { SavedLocationDataSource(locationDbHelper) }
+    private val locationRemoteDataSource: LocationDataSource by lazy { LocationDataSource() }
+    private val locationRepository: LocationRepository by lazy { LocationRepository(locationRemoteDataSource) }
+    private val savedLocationRepository: SavedLocationRepository by lazy { SavedLocationRepository(locationLocalDataSource) }
 
-    private lateinit var clearButton: ImageView
-    private lateinit var searchEditText: EditText
-    private lateinit var noResultTextView: TextView
+    private val clearButton: ImageView by lazy { findViewById(R.id.clearButton) }
+    private val searchEditText: EditText by lazy { findViewById(R.id.SearchEditTextInMain) }
+    private val noResultTextView: TextView by lazy { findViewById(R.id.NoResultTextView) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        initViews()
         setupSearchEditText()
         setupClearButton()
         setupViewModels()
         setupRecyclerViews()
-    }
-
-    private fun initViews() {
-        locationDbHelper = LocationDbHelper(this)
-        locationLocalDataSource = LocationLocalDataSource(locationDbHelper)
-        locationRemoteDataSource = LocationRemoteDataSource()
-        locationRepository = LocationRepository(locationLocalDataSource, locationRemoteDataSource)
-        savedLocationRepository = SavedLocationRepository(locationLocalDataSource)
-
-        locationViewModel = ViewModelProvider(this, LocationViewModelFactory(locationRepository))
-            .get(LocationViewModel::class.java)
-        locationRecyclerView = findViewById(R.id.locationRecyclerView)
-
-        savedLocationViewModel = ViewModelProvider(this, SavedLocationViewModelFactory(savedLocationRepository))
-            .get(SavedLocationViewModel::class.java)
-        savedLocationRecyclerView = findViewById(R.id.savedLocationRecyclerView)
-
-        clearButton = findViewById(R.id.clearButton)
-        searchEditText = findViewById(R.id.SearchEditTextInMain)
-        noResultTextView = findViewById(R.id.NoResultTextView)
     }
 
     private fun setupSearchEditText() {
@@ -82,12 +71,8 @@ class MainActivity : AppCompatActivity(), OnItemSelectedListener {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val query = s.toString()
-                locationViewModel.searchLocationsFromKakaoAPI(query) {searchLocationsSize ->
-                    if (searchLocationsSize > 0) {
-                        noResultTextView.visibility = View.GONE
-                    } else {
-                        noResultTextView.visibility = View.VISIBLE
-                    }
+                locationViewModel.searchLocationsFromKakaoAPI(query) { searchLocationsSize ->
+                    handleNoResultMessage(searchLocationsSize)
                 }
             }
 
@@ -128,21 +113,47 @@ class MainActivity : AppCompatActivity(), OnItemSelectedListener {
     }
 
     private fun setupRecyclerViews() {
-        locationAdapter = LocationAdapter(this)
         locationRecyclerView.layoutManager = LinearLayoutManager(this)
         locationRecyclerView.adapter = locationAdapter
 
-        savedLocationAdapter = SavedLocationAdapter(this)
         savedLocationRecyclerView.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         savedLocationRecyclerView.adapter = savedLocationAdapter
     }
 
-    override fun addSavedLocation(title: String) {
-        savedLocationViewModel.addSavedLocation(title)
+    override fun onLocationViewClicked(location: Location) {
+        savedLocationViewModel.addSavedLocation(location.title)
+
+        val intent = Intent(this@MainActivity, MapActivity::class.java)
+        intent.putExtra("title", location.title)
+        intent.putExtra("address", location.address)
+        intent.putExtra("category", location.category)
+        intent.putExtra("longitude", location.longitude)
+        intent.putExtra("latitude", location.latitude)
+        startActivity(intent)
     }
 
-    override fun deleteSavedLocation(item: SavedLocation) {
+    override fun onSavedLocationXButtonClicked(item: SavedLocation) {
         savedLocationViewModel.deleteSavedLocation(item)
+    }
+
+    override fun onSavedLocationViewClicked(title: String) {
+        updateEditText(title)
+        locationViewModel.searchLocationsFromKakaoAPI(title){ searchLocationsSize ->
+            handleNoResultMessage(searchLocationsSize)
+        }
+    }
+
+    private fun updateEditText(title: String) {
+        searchEditText.setText(title)
+        searchEditText.setSelection(searchEditText.text.length)
+    }
+
+    private fun handleNoResultMessage(searchLocationsSize: Int) {
+        if (searchLocationsSize > 0) {
+            noResultTextView.visibility = View.GONE
+        } else {
+            noResultTextView.visibility = View.VISIBLE
+        }
     }
 }

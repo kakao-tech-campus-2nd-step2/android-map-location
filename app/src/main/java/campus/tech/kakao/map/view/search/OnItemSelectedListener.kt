@@ -1,8 +1,10 @@
 package campus.tech.kakao.map.view.search
 
+import campus.tech.kakao.map.model.Location
 import campus.tech.kakao.map.model.SavedLocation
 
 interface OnItemSelectedListener {
-    fun addSavedLocation(title: String)
-    fun deleteSavedLocation(item: SavedLocation)
+    fun onLocationViewClicked(location: Location)
+    fun onSavedLocationXButtonClicked(item: SavedLocation)
+    fun onSavedLocationViewClicked(title: String)
 }

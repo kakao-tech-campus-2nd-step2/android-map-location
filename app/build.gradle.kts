@@ -59,9 +59,16 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.0.0")
     implementation("com.android.identity:identity-credential-android:20231002")
     implementation("androidx.activity:activity:1.9.0")
+    implementation("androidx.test:core-ktx:1.6.1")
+    testImplementation("androidx.test.ext:junit:1.1.1")
+    testImplementation ("org.robolectric:robolectric:4.9")
+
     testImplementation("junit:junit:4.13.2")
+    testImplementation("org.mockito:mockito-core:5.8.0")
+    androidTestImplementation("org.mockito:mockito-core:5.8.0")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation("androidx.test.espresso:espresso-contrib:3.2.0")
 
     implementation("androidx.activity:activity-ktx:1.1.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
@@ -71,4 +78,5 @@ dependencies {
     // retrofit
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
     implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+    androidTestImplementation("androidx.test.espresso:espresso-intents:3.3.0")
 }
