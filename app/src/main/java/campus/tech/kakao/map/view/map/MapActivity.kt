@@ -1,8 +1,6 @@
 package campus.tech.kakao.map.view.map
 
-import android.app.Activity
 import android.content.Intent
-import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -11,13 +9,14 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import campus.tech.kakao.map.BuildConfig
 import campus.tech.kakao.map.R
+import campus.tech.kakao.map.model.Location
+import campus.tech.kakao.map.model.datasource.LastLocationLocalDataSource
+import campus.tech.kakao.map.model.repository.LastLocationRepository
 import campus.tech.kakao.map.view.search.MainActivity
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
-import com.kakao.vectormap.KakaoMapSdk
 import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.MapView
@@ -34,6 +33,9 @@ class MapActivity : AppCompatActivity() {
     private val bottom_sheet_address by lazy { findViewById<TextView>(R.id.bottom_sheet_address) }
     private val errorMessageTextView by lazy { findViewById<TextView>(R.id.errorMessageTextView) }
     private val bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout> by lazy { BottomSheetBehavior.from(bottomSheetLayout) }
+
+    private val lastLocationLocalDataSource: LastLocationLocalDataSource by lazy { LastLocationLocalDataSource() }
+    private val lastLocationRepository: LastLocationRepository by lazy { LastLocationRepository(lastLocationLocalDataSource) }
 
     companion object{
         private val DEFAULT_LONGITUDE = 127.115587
@@ -76,13 +78,13 @@ class MapActivity : AppCompatActivity() {
                 showErrorMessage(error)
             }
         }, object : KakaoMapReadyCallback() {
-            val coordinates = getCoordinates()
+            val location = getCoordinates()
             override fun onMapReady(kakaoMap: KakaoMap) { // 인증 후 API 가 정상적으로 실행될 때 호출됨
-                Log.d("jieun", "onMapReady coordinates: " + coordinates.toString())
-                if (coordinates != null) {
-                    showLabel(coordinates, kakaoMap)
-                    showBottomSheet(coordinates)
-                    setSharedData("pref", coordinates)
+                Log.d("jieun", "onMapReady coordinates: " + location.toString())
+                if (location != null) {
+                    showLabel(location, kakaoMap)
+                    showBottomSheet(location)
+                    lastLocationRepository.putLastLocation(location)
 //                    Log.d("jieun", "onMapReady setSharedData: " + getSharedData("pref"))
                 } else{
                     hideBottomSheet()
@@ -91,8 +93,8 @@ class MapActivity : AppCompatActivity() {
 
             override fun getPosition(): LatLng {
 //                Log.d("jieun", "getPosition coordinates: " + coordinates.toString())
-                if (coordinates != null) {
-                    return LatLng.from(coordinates.latitude, coordinates.longitude)
+                if (location != null) {
+                    return LatLng.from(location.latitude, location.longitude)
                 } else{
                     return LatLng.from(DEFAULT_LATITUDE, DEFAULT_LONGITUDE)
                 }
@@ -110,7 +112,7 @@ class MapActivity : AppCompatActivity() {
     }
 
     private fun showLabel(
-        coordinates: Coordinates,
+        location: Location,
         kakaoMap: KakaoMap
     ) {
         val labelStyles: LabelStyles = LabelStyles.from(
@@ -118,11 +120,11 @@ class MapActivity : AppCompatActivity() {
             LabelStyle.from(R.drawable.location_red_icon_resized)
                 .setTextStyles(32, Color.BLACK, 1, Color.GRAY).setZoomLevel(15)
         )
-        val position = LatLng.from(coordinates.latitude, coordinates.longitude)
+        val position = LatLng.from(location.latitude, location.longitude)
         kakaoMap.labelManager?.getLayer()?.addLabel(
             LabelOptions.from(position)
                 .setStyles(labelStyles)
-                .setTexts(coordinates.title)
+                .setTexts(location.title)
         )
     }
 
@@ -130,56 +132,33 @@ class MapActivity : AppCompatActivity() {
         bottomSheetLayout.visibility = View.GONE
     }
 
-    private fun showBottomSheet(coordinates: Coordinates) {
+    private fun showBottomSheet(location: Location) {
         bottomSheetLayout.visibility = View.VISIBLE
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-        bottom_sheet_title.text = coordinates.title
-        bottom_sheet_address.text = coordinates.address
+        bottom_sheet_title.text = location.title
+        bottom_sheet_address.text = location.address
     }
 
-    private fun getCoordinates(): Coordinates? {
-        var coordinates = getCoordinatesByIntent()
-        if(coordinates == null) {
-            coordinates = getCoordinatedBySharedPreference("pref")
+    private fun getCoordinates(): Location? {
+        var location = getCoordinatesByIntent()
+        if(location == null) {
+            location = lastLocationRepository.getLastLocation()
         }
-        return coordinates
+        return location
 
     }
 
-    private fun getCoordinatesByIntent(): Coordinates? {
+    private fun getCoordinatesByIntent(): Location? {
         if (intent.hasExtra("title") && intent.hasExtra("longitude")
             && intent.hasExtra("latitude") && intent.hasExtra("address")) {
             val title = intent.getStringExtra("title")
             val longitude = intent.getDoubleExtra("longitude", 0.0)
             val latitude = intent.getDoubleExtra("latitude", 0.0)
             val address = intent.getStringExtra("address").toString()
+            val category = intent.getStringExtra("category").toString()
             if (title != null) {
-                return Coordinates(title, longitude, latitude, address)
+                return Location(title, address, category, longitude, latitude)
             } else return null
         } else return null
-    }
-
-    fun setSharedData(name: String, coordinates: Coordinates?) {
-        if (coordinates != null) {
-            var pref: SharedPreferences = getSharedPreferences(name, Activity.MODE_PRIVATE)
-            var editor: SharedPreferences.Editor = pref.edit()
-            editor.putString("longitude", coordinates.longitude.toString())
-            editor.putString("latitude", coordinates.latitude.toString())
-            editor.putString("title", coordinates.title.toString())
-            editor.putString("address", coordinates.address.toString())
-            editor.apply()
-        }
-    }
-
-    fun getCoordinatedBySharedPreference(name: String): Coordinates? {
-        var pref: SharedPreferences = getSharedPreferences(name, Activity.MODE_PRIVATE)
-        if(pref.getString("title", "") == ""){
-            return null
-        }
-        val title = pref.getString("title", "").toString()
-        val longitude = pref.getString("longitude", "").toString().toDouble()
-        val latitude = pref.getString("latitude", "").toString().toDouble()
-        val address = pref.getString("address", "").toString()
-        return Coordinates(title, longitude, latitude, address)
     }
 }

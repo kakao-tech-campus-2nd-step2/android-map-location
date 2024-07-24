@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.map.model.datasource.LocationLocalDataSource
 import campus.tech.kakao.map.model.datasource.LocationRemoteDataSource
 import campus.tech.kakao.map.R
+import campus.tech.kakao.map.model.Location
 import campus.tech.kakao.map.model.SavedLocation
 import campus.tech.kakao.map.model.LocationDbHelper
 import campus.tech.kakao.map.model.repository.LocationRepository
@@ -120,14 +121,15 @@ class MainActivity : AppCompatActivity(), OnItemSelectedListener {
         savedLocationRecyclerView.adapter = savedLocationAdapter
     }
 
-    override fun onLocationViewClicked(title: String, longitude: Double, latitude: Double, address:String) {
-        savedLocationViewModel.addSavedLocation(title)
+    override fun onLocationViewClicked(location: Location) {
+        savedLocationViewModel.addSavedLocation(location.title)
 
         val intent = Intent(this@MainActivity, MapActivity::class.java)
-        intent.putExtra("title", title)
-        intent.putExtra("longitude", longitude)
-        intent.putExtra("latitude", latitude)
-        intent.putExtra("address", address)
+        intent.putExtra("title", location.title)
+        intent.putExtra("address", location.address)
+        intent.putExtra("category", location.category)
+        intent.putExtra("longitude", location.longitude)
+        intent.putExtra("latitude", location.latitude)
         startActivity(intent)
     }
 

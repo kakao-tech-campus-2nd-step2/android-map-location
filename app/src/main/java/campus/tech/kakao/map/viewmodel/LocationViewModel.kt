@@ -31,4 +31,5 @@ class LocationViewModel(
             handleNoResultMessage(getSearchedLocationsSize())
         }
     }
+
 }

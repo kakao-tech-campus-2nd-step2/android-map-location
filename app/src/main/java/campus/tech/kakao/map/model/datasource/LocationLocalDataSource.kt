@@ -1,9 +1,8 @@
 package campus.tech.kakao.map.model.datasource
 
 import android.content.ContentValues
-import android.database.Cursor
 import android.util.Log
-import campus.tech.kakao.map.model.Contract.LocationEntry
+import campus.tech.kakao.map.App
 import campus.tech.kakao.map.model.Contract.SavedLocationEntry
 import campus.tech.kakao.map.model.Location
 import campus.tech.kakao.map.model.LocationDbHelper
