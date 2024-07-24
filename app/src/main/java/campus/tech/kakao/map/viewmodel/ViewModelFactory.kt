@@ -3,7 +3,6 @@ package campus.tech.kakao.map.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
-import campus.tech.kakao.map.model.datasource.LocationLocalDataSource
 import campus.tech.kakao.map.model.repository.LocationRepository
 import campus.tech.kakao.map.model.repository.SavedLocationRepository
 

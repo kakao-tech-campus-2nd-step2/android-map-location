@@ -3,7 +3,7 @@ package campus.tech.kakao.map.model.datasource
 import campus.tech.kakao.map.App
 import campus.tech.kakao.map.model.Location
 
-class LastLocationLocalDataSource() {
+class LastLocationlDataSource() {
 
     fun putLastLocation(location: Location) {
         if (location != null) {

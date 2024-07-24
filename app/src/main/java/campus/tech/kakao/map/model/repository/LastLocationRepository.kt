@@ -1,16 +1,16 @@
 package campus.tech.kakao.map.model.repository
 
 import campus.tech.kakao.map.model.Location
-import campus.tech.kakao.map.model.datasource.LastLocationLocalDataSource
+import campus.tech.kakao.map.model.datasource.LastLocationlDataSource
 
 class LastLocationRepository(
-    private val lastLocationLocalDataSource: LastLocationLocalDataSource
+    private val locationLocalDataSource: LastLocationlDataSource
 ) {
     fun putLastLocation(location: Location){
-        lastLocationLocalDataSource.putLastLocation(location)
+        locationLocalDataSource.putLastLocation(location)
     }
 
     fun getLastLocation(): Location? {
-        return lastLocationLocalDataSource.getLastLocation()
+        return locationLocalDataSource.getLastLocation()
     }
 }

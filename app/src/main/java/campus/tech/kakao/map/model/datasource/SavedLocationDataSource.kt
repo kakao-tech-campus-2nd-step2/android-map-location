@@ -2,13 +2,11 @@ package campus.tech.kakao.map.model.datasource
 
 import android.content.ContentValues
 import android.util.Log
-import campus.tech.kakao.map.App
 import campus.tech.kakao.map.model.Contract.SavedLocationEntry
-import campus.tech.kakao.map.model.Location
 import campus.tech.kakao.map.model.LocationDbHelper
 import campus.tech.kakao.map.model.SavedLocation
 
-class LocationLocalDataSource(private val dbHelper : LocationDbHelper) {
+class SavedLocationDataSource(private val dbHelper : LocationDbHelper) {
 
     fun addSavedLocation(title: String): Long {
         val db = dbHelper.writableDatabase

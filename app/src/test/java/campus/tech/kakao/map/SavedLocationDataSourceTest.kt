@@ -5,17 +5,16 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import campus.tech.kakao.map.model.LocationDbHelper
 import campus.tech.kakao.map.model.SavedLocation
-import campus.tech.kakao.map.model.datasource.LocationLocalDataSource
+import campus.tech.kakao.map.model.datasource.SavedLocationDataSource
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(AndroidJUnit4::class)
-class LocationLocalDataSourceTest {
-    private lateinit var locationLocalDataSource: LocationLocalDataSource
+class SavedLocationDataSourceTest {
+    private lateinit var locationLocalDataSource: SavedLocationDataSource
     private lateinit var locationDbHelper: LocationDbHelper
     private lateinit var sqLiteDatabase: SQLiteDatabase
     private lateinit var savedLocations: List<SavedLocation>
@@ -23,7 +22,7 @@ class LocationLocalDataSourceTest {
     @Before
     fun init() {
         locationDbHelper = LocationDbHelper(ApplicationProvider.getApplicationContext())
-        locationLocalDataSource = LocationLocalDataSource(locationDbHelper)
+        locationLocalDataSource = SavedLocationDataSource(locationDbHelper)
 
         savedLocations = listOf(
             SavedLocation("Location 1"),

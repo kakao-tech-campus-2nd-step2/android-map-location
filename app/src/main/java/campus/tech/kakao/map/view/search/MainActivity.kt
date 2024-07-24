@@ -13,8 +13,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import campus.tech.kakao.map.model.datasource.LocationLocalDataSource
-import campus.tech.kakao.map.model.datasource.LocationRemoteDataSource
+import campus.tech.kakao.map.model.datasource.SavedLocationDataSource
+import campus.tech.kakao.map.model.datasource.LocationDataSource
 import campus.tech.kakao.map.R
 import campus.tech.kakao.map.model.Location
 import campus.tech.kakao.map.model.SavedLocation
@@ -46,8 +46,8 @@ class MainActivity : AppCompatActivity(), OnItemSelectedListener {
     }
 
     private val locationDbHelper: LocationDbHelper by lazy { LocationDbHelper(this) }
-    private val locationLocalDataSource: LocationLocalDataSource by lazy { LocationLocalDataSource(locationDbHelper) }
-    private val locationRemoteDataSource: LocationRemoteDataSource by lazy { LocationRemoteDataSource() }
+    private val locationLocalDataSource: SavedLocationDataSource by lazy { SavedLocationDataSource(locationDbHelper) }
+    private val locationRemoteDataSource: LocationDataSource by lazy { LocationDataSource() }
     private val locationRepository: LocationRepository by lazy { LocationRepository(locationRemoteDataSource) }
     private val savedLocationRepository: SavedLocationRepository by lazy { SavedLocationRepository(locationLocalDataSource) }
 
