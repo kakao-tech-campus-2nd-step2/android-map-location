@@ -4,6 +4,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -24,13 +25,6 @@ android {
 
         buildConfigField("String", "KAKAO_API_KEY", kakaoApiKey)
         buildConfigField("String", "KAKAO_REST_API_KEY", kakaoRestApiKey)
-
-        ndk {
-            abiFilters.add("arm64-v8a")
-            abiFilters.add("armeabi-v7a")
-            abiFilters.add("x86")
-            abiFilters.add("x86_64")
-        }
     }
 
     buildTypes {
@@ -52,6 +46,10 @@ android {
 
     buildFeatures {
         viewBinding = true
+    }
+
+    kapt {
+        correctErrorTypes = true
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -94,9 +92,16 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version")
     implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version")
+    implementation("com.google.dagger:hilt-android:2.48.1")
+    val room_version = "2.6.1"
+    implementation ("androidx.room:room-runtime:$room_version")
+    kapt("androidx.room:room-compiler:$room_version")
+    kapt("com.google.dagger:hilt-compiler:2.48.1")
     kapt("androidx.lifecycle:lifecycle-compiler:$lifecycle_version")
     implementation("androidx.fragment:fragment-ktx:1.8.1")
     implementation("com.jakewharton.rxbinding4:rxbinding:4.0.0")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 }
 
 fun getApiKey(key: String): String {

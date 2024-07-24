@@ -1,20 +1,17 @@
 package campus.tech.kakao.map.view
 
-import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.widget.LinearLayout
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProvider
-import campus.tech.kakao.map.repository.MapRepository
 import campus.tech.kakao.map.viewmodel.MapViewModel
-import campus.tech.kakao.map.viewmodel.MapViewModelFactory
-import campus.tech.kakao.map.base.MyApplication
 import campus.tech.kakao.map.R
 import campus.tech.kakao.map.databinding.ActivityMapViewBinding
+import campus.tech.kakao.map.repository.MapRepositoryInterface
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
@@ -25,7 +22,10 @@ import com.kakao.vectormap.camera.CameraUpdateFactory
 import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.label.LabelStyle
 import com.kakao.vectormap.label.LabelStyles
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MapViewActivity : AppCompatActivity() {
     companion object {
         const val EXTRA_ERROR_MSG = "ERROR"
@@ -34,19 +34,14 @@ class MapViewActivity : AppCompatActivity() {
     }
 
     private lateinit var binding: ActivityMapViewBinding
-    private lateinit var mapRepository: MapRepository
-    private lateinit var mapViewModel: MapViewModel
+    @Inject lateinit var mapRepository: MapRepositoryInterface
+    private val mapViewModel: MapViewModel by viewModels()
 
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_map_view)
-
-        mapRepository = MapRepository(application as MyApplication)
-
-        val viewModelFactory = MapViewModelFactory(application as MyApplication, mapRepository)
-        mapViewModel = ViewModelProvider(this, viewModelFactory)[MapViewModel::class.java]
 
         binding.viewModel = mapViewModel
         binding.lifecycleOwner = this

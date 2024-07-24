@@ -3,10 +3,10 @@ package campus.tech.kakao.map.repository
 import android.content.Context
 import campus.tech.kakao.map.base.MyApplication
 
-class MapRepository(private val application: MyApplication) {
+class MapRepository(private val application: MyApplication): MapRepositoryInterface {
     private val sharedPreferences = application.getSharedPreferences("LastLocation", Context.MODE_PRIVATE)
 
-    fun getLastLocation(): Pair<Double, Double>? {
+    override fun getLastLocation(): Pair<Double, Double>? {
         val x = sharedPreferences.getString("PLACE_X", null)
         val y = sharedPreferences.getString("PLACE_Y", null)
         return if (x != null && y != null) {
