@@ -57,6 +57,8 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.0.0")
     implementation("androidx.activity:activity:1.8.0")
 
+    implementation("androidx.activity:activity-ktx:1.8.0")
+
     testImplementation("junit:junit:4.13.2")
     testImplementation ("org.mockito:mockito-core:4.8.0")
     testImplementation ("androidx.arch.core:core-testing:2.1.0")

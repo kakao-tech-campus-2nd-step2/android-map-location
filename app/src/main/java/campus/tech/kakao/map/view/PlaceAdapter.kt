@@ -10,9 +10,9 @@ import campus.tech.kakao.map.model.data.Place
 import campus.tech.kakao.map.R
 
 
-class PlaceAdapter(private var items : List<Place>, private val viewModel: MyViewModel) : RecyclerView.Adapter<PlaceAdapter.ViewHolder>() {
+class PlaceAdapter(private var items : List<Place>, private val onItemClick : (Place) -> Unit) : RecyclerView.Adapter<PlaceAdapter.ViewHolder>() {
 
-    class ViewHolder(view: View, private val viewModel: MyViewModel) : RecyclerView.ViewHolder(view){
+    class ViewHolder(view: View, private val onItemClick : (Place) -> Unit) : RecyclerView.ViewHolder(view){
 
 
         val id : TextView = view.findViewById(R.id.id)
@@ -26,7 +26,8 @@ class PlaceAdapter(private var items : List<Place>, private val viewModel: MyVie
         fun bind(item: Place) {
             itemView.setOnClickListener {
                 it.performHapticFeedback(android.view.HapticFeedbackConstants.VIRTUAL_KEY)  //진동
-                viewModel.itemClick.value = item
+                onItemClick(item)
+//                viewModel.itemClick.value = item
             }
             id.text = item.id.toString()
             name.text = item.name
@@ -40,7 +41,7 @@ class PlaceAdapter(private var items : List<Place>, private val viewModel: MyVie
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view: View =
             LayoutInflater.from(parent.context).inflate(R.layout.item_recyclerview, parent, false)
-        return ViewHolder(view, viewModel)
+        return ViewHolder(view, onItemClick)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
