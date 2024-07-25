@@ -1,6 +1,6 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.kakaoAPI
 
-import android.util.Log
+import campus.tech.kakao.map.database.KakaoMapItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

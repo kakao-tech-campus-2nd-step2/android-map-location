@@ -1,5 +1,7 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.Activity
 
+import android.app.Application
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -12,16 +14,34 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.test.core.app.ApplicationProvider
+import campus.tech.kakao.map.adapter.ItemClickListener
+import campus.tech.kakao.map.database.KakaoMapItem
+import campus.tech.kakao.map.database.MapItemViewModel
+import campus.tech.kakao.map.adapter.MapListAdapter
+import campus.tech.kakao.map.R
+import campus.tech.kakao.map.adapter.SelectItemClickListener
+import campus.tech.kakao.map.adapter.SelectListAdapter
+import campus.tech.kakao.map.database.KakaoMapItemDbHelper
+import campus.tech.kakao.map.database.SelectMapItem
+import campus.tech.kakao.map.kakaoAPI.NetworkService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class SearchActivity : AppCompatActivity() {
+    private lateinit var mapItemDB : KakaoMapItemDbHelper
+    private lateinit var networkService : NetworkService
+    private lateinit var mapItemViewModel : MapItemViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        val mapItemViewModel = MapItemViewModel(this)
+        //val mapItemViewModel = MapItemViewModel(this)
+        mapItemDB = KakaoMapItemDbHelper(applicationContext)
+        networkService = NetworkService()
+        val mapItemViewModel = MapItemViewModel(mapItemDB, networkService)
         mapItemViewModel.makeAllSelectItemList()
 
         val mapList = findViewById<RecyclerView>(R.id.mapList)

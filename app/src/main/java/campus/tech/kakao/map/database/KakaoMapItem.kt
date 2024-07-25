@@ -1,12 +1,10 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.database
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
 import android.util.Log
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 data class KakaoMapItem(
     val id: String,
