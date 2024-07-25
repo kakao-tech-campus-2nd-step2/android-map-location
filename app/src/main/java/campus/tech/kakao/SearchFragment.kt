@@ -7,24 +7,26 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.map.R
-import campus.tech.kakao.Model.ResultSearchKeyword
 import campus.tech.kakao.Model.RetrofitClient
 import campus.tech.kakao.Model.SQLiteDb
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import campus.tech.kakao.PlaceRepository
+import campus.tech.kakao.PlaceViewModel
+import campus.tech.kakao.PlaceViewModelFactory
 
 class SearchFragment : Fragment() {
-    private lateinit var searchView: SearchView
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var noResultTextView: TextView
+    lateinit var searchView: SearchView
+    lateinit var recyclerView: RecyclerView
+    lateinit var noResultTextView: TextView
     private lateinit var databaseHelper: SQLiteDb
-    private lateinit var historyRecyclerView: RecyclerView
+    lateinit var historyRecyclerView: RecyclerView
     private lateinit var historyAdapter: HistoryAdapter
     private lateinit var adapter: PlacesAdapter
+    private lateinit var placeViewModel: PlaceViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,6 +40,7 @@ class SearchFragment : Fragment() {
         initializeViews(view)
         setupRecyclerViews()
         setupSearchView()
+        setupViewModel()
         updateHistoryData()
     }
 
@@ -47,7 +50,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun initializeViews(view: View) {
-        searchView = view.findViewById(R.id.searchView)
+        searchView = view.findViewById(R.id.searchView2)
         recyclerView = view.findViewById(R.id.recyclerView)
         noResultTextView = view.findViewById(R.id.noResultTextView)
         historyRecyclerView = view.findViewById(R.id.historyRecyclerView)
@@ -76,7 +79,8 @@ class SearchFragment : Fragment() {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if (!query.isNullOrEmpty()) {
-                    searchPlaces(query)
+                    val apiKey = "KakaoAK ${campus.tech.kakao.map.BuildConfig.KAKAO_REST_API_KEY}"
+                    placeViewModel.searchPlaces(apiKey, query)
                 }
                 return true
             }
@@ -86,34 +90,29 @@ class SearchFragment : Fragment() {
                     showNoResultMessage()
                     adapter.updateData(emptyList())
                 } else {
-                    searchPlaces(newText)
+                    val apiKey = "KakaoAK ${campus.tech.kakao.map.BuildConfig.KAKAO_REST_API_KEY}"
+                    placeViewModel.searchPlaces(apiKey, newText)
                 }
                 return true
             }
         })
     }
 
-    private fun searchPlaces(query: String) {
-        val apiKey = "KakaoAK ${campus.tech.kakao.map.BuildConfig.KAKAO_REST_API_KEY}"
+    private fun setupViewModel() {
+        val repository = PlaceRepository(RetrofitClient.instance)
+        placeViewModel = ViewModelProvider(this, PlaceViewModelFactory(repository)).get(PlaceViewModel::class.java)
 
-        RetrofitClient.instance.searchPlaces(apiKey, query).enqueue(object : Callback<ResultSearchKeyword> {
-            override fun onResponse(call: Call<ResultSearchKeyword>, response: Response<ResultSearchKeyword>) {
-                if (response.isSuccessful && response.body() != null) {
-                    val places = response.body()?.documents ?: emptyList()
-                    if (places.isEmpty()) {
-                        showNoResultMessage()
-                    } else {
-                        hideNoResultMessage()
-                        adapter.updateData(places)
-                    }
-                } else {
-                    showNoResultMessage()
-                }
-            }
-
-            override fun onFailure(call: Call<ResultSearchKeyword>, t: Throwable) {
+        placeViewModel.places.observe(viewLifecycleOwner, Observer { places ->
+            if (places?.isEmpty() == true) {
                 showNoResultMessage()
+            } else {
+                hideNoResultMessage()
+                places?.let { adapter.updateData(it) }
             }
+        })
+
+        placeViewModel.error.observe(viewLifecycleOwner, Observer { error ->
+            showNoResultMessage()
         })
     }
 

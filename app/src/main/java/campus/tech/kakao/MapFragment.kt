@@ -24,8 +24,8 @@ import com.kakao.vectormap.label.LabelStyles
 class MapFragment : Fragment() {
     private lateinit var mapView: MapView
     private lateinit var searchView: SearchView
-    private var x: Double = 127.108621
-    private var y: Double = 37.402005
+    var x: Double = 127.108621
+    var y: Double = 37.402005
     private var kakaoMap: KakaoMap? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,7 +51,7 @@ class MapFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mapView = view.findViewById(R.id.KakaoMapView)
-        searchView = view.findViewById(R.id.searchView)
+        searchView = view.findViewById(R.id.searchView1)
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -110,7 +110,7 @@ class MapFragment : Fragment() {
         mapView.pause()
     }
 
-    private fun saveLastLocation(lat: Double, lng: Double) {
+    fun saveLastLocation(lat: Double, lng: Double) {
         val sharedPreferences = requireContext().getSharedPreferences("MapPrefs", Context.MODE_PRIVATE)
         with(sharedPreferences.edit()) {
             putFloat("lastX", lng.toFloat())
@@ -119,7 +119,7 @@ class MapFragment : Fragment() {
         }
     }
 
-    private fun getLastLocation(context: Context): Pair<Double, Double> {
+    fun getLastLocation(context: Context): Pair<Double, Double> {
         val sharedPreferences = context.getSharedPreferences("MapPrefs", Context.MODE_PRIVATE)
         val lat = sharedPreferences.getFloat("lastY", 37.402005f).toDouble()
         val lng = sharedPreferences.getFloat("lastX", 127.108621f).toDouble()
