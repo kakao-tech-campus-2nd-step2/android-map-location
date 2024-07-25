@@ -1,14 +1,17 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.database
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import campus.tech.kakao.map.kakaoAPI.NetworkService
 
-class MapItemViewModel(context: Context) : ViewModel() {
-    private val mapItemDB = KakaoMapItemDbHelper(context)
-    val networkService = NetworkService()
+class MapItemViewModel(
+    private val mapItemDB : KakaoMapItemDbHelper,
+    private val networkService : NetworkService
+) : ViewModel() {
+    //private val mapItemDB = KakaoMapItemDbHelper(context)
+    //val networkService = NetworkService()
 
     private val _kakaoMapItemList: MutableLiveData<List<KakaoMapItem>> = MutableLiveData()
     val kakaoMapItemList : LiveData<List<KakaoMapItem>> get() = _kakaoMapItemList

@@ -1,6 +1,7 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.Activity
 
 import android.app.Application
+import campus.tech.kakao.map.R
 import com.kakao.vectormap.KakaoMapSdk
 
 class MyApplication : Application() {

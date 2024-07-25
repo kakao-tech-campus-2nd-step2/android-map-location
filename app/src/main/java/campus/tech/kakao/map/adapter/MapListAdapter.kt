@@ -1,10 +1,12 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.adapter
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import campus.tech.kakao.map.database.KakaoMapItem
+import campus.tech.kakao.map.R
 
 class MapListAdapter(
     var mapItemList: List<KakaoMapItem>, val layoutInflater: LayoutInflater

@@ -1,4 +1,4 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.kakaoAPI
 
 data class KakaoMapResponse (
     val meta: Meta,

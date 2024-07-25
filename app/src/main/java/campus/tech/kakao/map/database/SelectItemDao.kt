@@ -1,7 +1,9 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.database
 
 import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
+import campus.tech.kakao.map.database.SelectItemDB
+import campus.tech.kakao.map.database.SelectMapItem
 
 class SelectItemDao(private val wDb: SQLiteDatabase, private val rDb: SQLiteDatabase) {
 
