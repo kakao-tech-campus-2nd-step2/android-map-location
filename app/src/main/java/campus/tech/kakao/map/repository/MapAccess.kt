@@ -1,9 +1,12 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.repository
 
 import android.content.Context
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import android.util.Log
+import campus.tech.kakao.map.util.Constants
+import campus.tech.kakao.map.model.MapItem
+import campus.tech.kakao.map.network.RetrofitInstance
 
 class MapAccess(context: Context) {
 

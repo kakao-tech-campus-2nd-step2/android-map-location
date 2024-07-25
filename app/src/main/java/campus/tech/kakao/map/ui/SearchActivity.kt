@@ -1,4 +1,4 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +13,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.app.Activity
 import android.content.Intent
+import campus.tech.kakao.map.viemodel.MapViewModel
+import campus.tech.kakao.map.R
+import campus.tech.kakao.map.util.SQLiteHelper
+import campus.tech.kakao.map.model.MapItem
 
 
 class SearchActivity : AppCompatActivity() {

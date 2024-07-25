@@ -1,12 +1,15 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.viemodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import campus.tech.kakao.map.model.MapItem
+import campus.tech.kakao.map.repository.MapAccess
+import campus.tech.kakao.map.repository.MapRepository
 import kotlinx.coroutines.launch
-class MapViewModel(application: Application) : AndroidViewModel(application) {
+class MapViewModel(application: Application, repository: MapRepository) : AndroidViewModel(application) {
     private val repository = MapAccess(application)
 
     //검색한 쿼리 저장 LiveData
