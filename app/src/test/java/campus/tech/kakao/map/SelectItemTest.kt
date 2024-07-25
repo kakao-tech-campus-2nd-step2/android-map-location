@@ -24,7 +24,7 @@ class SelectItemTest {
     private lateinit var selectItemDao : SelectItemDao
 
     @Before
-    fun init() {d
+    fun init() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         mapItemDB = KakaoMapItemDbHelper(context)
         val wDb = mapItemDB.writableDatabase
