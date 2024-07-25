@@ -14,10 +14,10 @@ class PlaceViewModel @Inject constructor(
 ): ViewModel() {
 
     private val _placeList = MutableLiveData<List<Place>>()
-    val placeList: LiveData<List<Place>> = _placeList
+    val placeList: LiveData<List<Place>> get() = _placeList
 
     private var _placeListVisible = MutableLiveData<Boolean>()
-    val placeListVisible: LiveData<Boolean> = _placeListVisible
+    val placeListVisible: LiveData<Boolean> get() = _placeListVisible
 
     fun callResultList(userInput: String, callback: () -> Unit){
         if (userInput == ""){

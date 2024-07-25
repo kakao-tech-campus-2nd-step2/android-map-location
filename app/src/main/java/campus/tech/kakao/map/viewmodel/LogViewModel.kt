@@ -17,10 +17,10 @@ class LogViewModel @Inject constructor(
     private val logRepository: LogRepositoryInterface
 ): ViewModel() {
     private var _logList = MutableLiveData<List<Place>>()
-    val logList: LiveData<List<Place>> = _logList
+    val logList: LiveData<List<Place>> get() = _logList
 
     private var _tabViewVisible = MutableLiveData<Boolean>()
-    val tabViewVisible: LiveData<Boolean> = _tabViewVisible
+    val tabViewVisible: LiveData<Boolean> get() = _tabViewVisible
 
     init {
         initLogData()
