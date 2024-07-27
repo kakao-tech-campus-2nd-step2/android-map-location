@@ -1,4 +1,4 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.presentation.view
 
 import android.content.Context
 import android.content.Intent
@@ -9,15 +9,18 @@ import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.kakao.sdk.common.util.Utility
+import androidx.lifecycle.Observer
+import campus.tech.kakao.map.R
+import campus.tech.kakao.map.presentation.viewmodel.KakaoMapViewModel
+import campus.tech.kakao.map.presentation.viewmodel.KakaoMapViewModelFactory
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.KakaoMapSdk
 import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.MapView
-import com.kakao.vectormap.RoadViewRequest
 import com.kakao.vectormap.camera.CameraAnimation
 import com.kakao.vectormap.camera.CameraUpdateFactory
 import com.kakao.vectormap.label.LabelOptions
@@ -25,7 +28,7 @@ import com.kakao.vectormap.label.LabelStyle
 import com.kakao.vectormap.label.LabelStyles
 
 
-class KakaoMapView : AppCompatActivity() {
+class KakaoMapViewActivity : AppCompatActivity() {
 
     private lateinit var mapView: MapView
     private lateinit var searchButton: Button
@@ -34,16 +37,16 @@ class KakaoMapView : AppCompatActivity() {
     private lateinit var persistentBottomSheet: LinearLayout
 
     private var kakaoMap: KakaoMap? = null
-    private var xCoordinate: Double = 0.0
-    private var yCoordinate: Double = 0.0
-    private var name: String = ""
-    private var address: String = ""
+
+    private val viewModel: KakaoMapViewModel by viewModels {
+        KakaoMapViewModelFactory(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_kakao_map_view)
 
-        getData()
+        observeKakaoMapViewModel()
         initKakaoMap()
 
         searchButton = findViewById(R.id.searchButton)
@@ -55,15 +58,6 @@ class KakaoMapView : AppCompatActivity() {
         clickSearchButton()
     }
 
-    private fun getData() {
-        val sharedPref = getSharedPreferences("Coordinates", Context.MODE_PRIVATE)
-        xCoordinate = sharedPref.getString("xCoordinate", "127.108621")?.toDoubleOrNull() ?: 127.108621
-        yCoordinate = sharedPref.getString("yCoordinate", "37.402005")?.toDoubleOrNull() ?: 37.402005
-
-        val sharedPref1 = getSharedPreferences("BottomSheet", Context.MODE_PRIVATE)
-        name = sharedPref1.getString("name", "이름") ?: "이름"
-        address = sharedPref1.getString("address", "주소") ?: "주소"
-    }
 
     private fun initKakaoMap() {
         // onMapError 호출하기
@@ -75,18 +69,30 @@ class KakaoMapView : AppCompatActivity() {
         mapView = findViewById(R.id.mapView)
         mapView.start(object : MapLifeCycleCallback() {
             override fun onMapDestroy() {
-                Log.e("KakaoMapView", "Map destroyed")
+                Log.e("KakaoMapViewActivity", "Map destroyed")
             }
 
             override fun onMapError(error: Exception) {
-                startActivity(Intent(this@KakaoMapView, MapErrorActivity::class.java))
-                Log.e("KakaoMapView", "Map error: ${error.message}")
+                startActivity(Intent(this@KakaoMapViewActivity, MapErrorActivity::class.java))
+                Log.e("KakaoMapViewActivity", "Map error: ${error.message}")
             }
         }, object : KakaoMapReadyCallback() {
             override fun onMapReady(kakaoMap: KakaoMap) {
-                this@KakaoMapView.kakaoMap = kakaoMap
+                this@KakaoMapViewActivity.kakaoMap = kakaoMap
                 mapReady()
             }
+        })
+    }
+
+    private fun observeKakaoMapViewModel() {
+        viewModel.name.observe(this, Observer { name ->
+            placeName.text = name
+            mapReady()
+        })
+
+        viewModel.address.observe(this, Observer { address ->
+            placeAddress.text = address
+            mapReady()
         })
     }
 
@@ -100,30 +106,44 @@ class KakaoMapView : AppCompatActivity() {
 
     private fun mapReady() {
         kakaoMap?.let { map ->
-            val position = LatLng.from(yCoordinate, xCoordinate)
-
-            val style = map.labelManager?.addLabelStyles(
-                LabelStyles.from(LabelStyle.from(R.drawable.kakaomap_logo).setTextStyles(30, Color.BLUE))
-            )
-
-            val options: LabelOptions = LabelOptions.from(position).setStyles(style)
-
-            val layer = map.labelManager?.layer
-            layer?.addLabel(options)?.changeText(name)
-
-            val cameraUpdate = CameraUpdateFactory.newCenterPosition(position)
-            map.moveCamera(cameraUpdate, CameraAnimation.from(500, true, true))
-
-            if (name == "이름") {
-                persistentBottomSheet.visibility = View.GONE
-                layer?.hideAllLabel()
-            } else {
-                placeName.text = name
-                placeAddress.text = address
-                layer?.showAllLabel()
-                persistentBottomSheet.visibility = View.VISIBLE
-            }
+            setLabel(map)
+            moveCamera(map)
         }
+    }
+
+    private fun setLabel(map: KakaoMap){
+        val position = LatLng.from(
+            viewModel.yCoordinate.value ?: 37.402005,
+            viewModel.xCoordinate.value ?: 127.108621
+        )
+
+        val style = map.labelManager?.addLabelStyles(
+            LabelStyles.from(
+                LabelStyle.from(R.drawable.kakaomap_logo).setTextStyles(30, Color.BLUE)
+            )
+        )
+
+        val options: LabelOptions = LabelOptions.from(position).setStyles(style)
+
+        val layer = map.labelManager?.layer
+        layer?.addLabel(options)?.changeText(viewModel.name.value ?: "이름")
+
+        if (viewModel.name.value == "이름") {
+            persistentBottomSheet.visibility = View.GONE
+            layer?.hideAllLabel()
+        } else {
+            layer?.showAllLabel()
+            persistentBottomSheet.visibility = View.VISIBLE
+        }
+    }
+
+    private fun moveCamera(map: KakaoMap){
+        val position = LatLng.from(
+            viewModel.yCoordinate.value ?: 37.402005,
+            viewModel.xCoordinate.value ?: 127.108621
+        )
+        val cameraUpdate = CameraUpdateFactory.newCenterPosition(position)
+        map.moveCamera(cameraUpdate, CameraAnimation.from(500, true, true))
     }
 
     override fun onResume() {

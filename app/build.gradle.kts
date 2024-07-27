@@ -82,5 +82,12 @@ dependencies {
     androidTestImplementation("androidx.test:rules:1.5.0")
     androidTestImplementation("androidx.test.espresso:espresso-intents:3.5.1")
     androidTestImplementation ("androidx.test.espresso:espresso-contrib:3.5.1")
+
+
+    val lifecycle_version = "2.8.3"
+    val activity_version = "1.9.0"
+    implementation ("androidx.activity:activity-ktx:$activity_version")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
+    implementation ("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version")
 }
 

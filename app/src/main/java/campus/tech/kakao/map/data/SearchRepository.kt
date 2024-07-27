@@ -1,68 +1,22 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.data
 
 import android.content.ContentValues
 import android.content.Context
-import android.database.sqlite.SQLiteDatabase
-import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
-import android.view.View
+import campus.tech.kakao.map.BuildConfig
+import campus.tech.kakao.map.domain.model.SearchData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.awaitResponse
 import retrofit2.converter.gson.GsonConverterFactory
 
-class SearchDbHelper(context: Context) : SQLiteOpenHelper(context, "searchDb", null, 1) {
-    override fun onCreate(db: SQLiteDatabase?) {
-        db?.execSQL(
-            "CREATE TABLE ${SearchData.TABLE_NAME} (" +
-                    "   ${SearchData.TABLE_COLUMN_NAME} varchar(255)," +
-                    "   ${SearchData.TABLE_COLUMN_ADDRESS} varchar(255)," +
-                    "   ${SearchData.TABLE_COLUMN_CATEGORY} varchar(255)," +
-                    "   ${SearchData.TABLE_COLUMN_XCOORDINATE} double," +
-                    "   ${SearchData.TABLE_COLUMN_YCOORDINATE} double" +
-                    ");"
-        )
+class SearchRepository(context: Context) {
+    private val dbHelper = SearchDbHelper(context)
 
-        db?.execSQL(
-            "CREATE TABLE ${SearchData.SAVED_SEARCH_TABLE_NAME} (" +
-                    "   ${SearchData.SAVED_SEARCH_COLUMN_NAME} varchar(255)" +
-                    ");"
-        )
+    private val authorization = "KakaoAK ${BuildConfig.KAKAO_REST_API_KEY}"
 
-    }
-
-    override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        db?.execSQL("DROP TABLE IF EXISTS ${SearchData.TABLE_NAME}")
-        db?.execSQL("DROP TABLE IF EXISTS ${SearchData.SAVED_SEARCH_TABLE_NAME}")
-        onCreate(db)
-    }
-
-    fun getAllSavedWords(): List<String> {
-        val db = readableDatabase
-        val cursor = db.query(
-            SearchData.SAVED_SEARCH_TABLE_NAME,
-            arrayOf(SearchData.SAVED_SEARCH_COLUMN_NAME),
-            null,
-            null,
-            null,
-            null,
-            null
-        )
-        val savedWords = mutableListOf<String>()
-        with(cursor) {
-            while (moveToNext()) {
-                savedWords.add(getString(getColumnIndexOrThrow(SearchData.SAVED_SEARCH_COLUMN_NAME)))
-            }
-        }
-        cursor.close()
-        return savedWords
-    }
-
-    suspend fun fetchApi(authorization: String) {
+    suspend fun fetchApi() {
         withContext(Dispatchers.IO) {
 
             val retrofitService = Retrofit.Builder()
@@ -120,6 +74,28 @@ class SearchDbHelper(context: Context) : SQLiteOpenHelper(context, "searchDb", n
         }
     }
 
+    fun getAllSavedWords(): List<String> {
+        val db = dbHelper.readableDatabase
+        val cursor = db.query(
+            SearchData.SAVED_SEARCH_TABLE_NAME,
+            arrayOf(SearchData.SAVED_SEARCH_COLUMN_NAME),
+            null,
+            null,
+            null,
+            null,
+            null
+        )
+        val savedWords = mutableListOf<String>()
+        with(cursor) {
+            while (moveToNext()) {
+                savedWords.add(getString(getColumnIndexOrThrow(campus.tech.kakao.map.domain.model.SearchData.SAVED_SEARCH_COLUMN_NAME)))
+            }
+        }
+        cursor.close()
+        return savedWords
+    }
+
+
     fun saveDb(
         placeName: String,
         addressName: String,
@@ -127,7 +103,7 @@ class SearchDbHelper(context: Context) : SQLiteOpenHelper(context, "searchDb", n
         xCoordinate: Double,
         yCoordinate: Double
     ) {
-        val wDb = writableDatabase
+        val wDb = dbHelper.writableDatabase
         val values = ContentValues()
 
         values.put(SearchData.TABLE_COLUMN_NAME, placeName)
@@ -141,7 +117,7 @@ class SearchDbHelper(context: Context) : SQLiteOpenHelper(context, "searchDb", n
     }
 
     fun loadDb(): List<SearchData> {
-        val rDb = readableDatabase
+        val rDb = dbHelper.readableDatabase
         val cursor = rDb.query(
             SearchData.TABLE_NAME,
             arrayOf(
@@ -162,13 +138,13 @@ class SearchDbHelper(context: Context) : SQLiteOpenHelper(context, "searchDb", n
 
         with(cursor) {
             while (moveToNext()) {
-                val name = getString(getColumnIndexOrThrow(SearchData.TABLE_COLUMN_NAME))
-                val address = getString(getColumnIndexOrThrow(SearchData.TABLE_COLUMN_ADDRESS))
-                val category = getString(getColumnIndexOrThrow(SearchData.TABLE_COLUMN_CATEGORY))
-                val x = getDouble(getColumnIndexOrThrow(SearchData.TABLE_COLUMN_XCOORDINATE))
-                val y = getDouble(getColumnIndexOrThrow(SearchData.TABLE_COLUMN_YCOORDINATE))
+                val name = getString(getColumnIndexOrThrow(campus.tech.kakao.map.domain.model.SearchData.TABLE_COLUMN_NAME))
+                val address = getString(getColumnIndexOrThrow(campus.tech.kakao.map.domain.model.SearchData.TABLE_COLUMN_ADDRESS))
+                val category = getString(getColumnIndexOrThrow(campus.tech.kakao.map.domain.model.SearchData.TABLE_COLUMN_CATEGORY))
+                val x = getDouble(getColumnIndexOrThrow(campus.tech.kakao.map.domain.model.SearchData.TABLE_COLUMN_XCOORDINATE))
+                val y = getDouble(getColumnIndexOrThrow(campus.tech.kakao.map.domain.model.SearchData.TABLE_COLUMN_YCOORDINATE))
                 searchDataList.add(SearchData(name, address, category, x, y))
-                Log.e("Retrofit", "SearchDataList 찾기: $searchDataList")
+                android.util.Log.e("Retrofit", "SearchDataList 찾기: $searchDataList")
             }
         }
         cursor.close()
@@ -176,7 +152,31 @@ class SearchDbHelper(context: Context) : SQLiteOpenHelper(context, "searchDb", n
     }
 
     private fun clearTable() {
-        val wDb = writableDatabase
+        val wDb = dbHelper.writableDatabase
         wDb.delete(SearchData.TABLE_NAME, null, null)
+    }
+
+    fun deleteSavedWord(savedWord: String) {
+        val db = dbHelper.writableDatabase
+        db.delete(
+            SearchData.SAVED_SEARCH_TABLE_NAME,
+            "${SearchData.SAVED_SEARCH_COLUMN_NAME} = ?",
+            arrayOf(savedWord)
+        )
+    }
+
+    fun savePlaceName(name: String) {
+        val wDb = dbHelper.writableDatabase
+        val values = ContentValues()
+        values.put(SearchData.SAVED_SEARCH_COLUMN_NAME, name)
+        wDb.insert(SearchData.SAVED_SEARCH_TABLE_NAME, null, values)
+    }
+
+
+
+    companion object {
+        fun getInstance(context: Context): SearchRepository {
+            return SearchRepository(context)
+        }
     }
 }

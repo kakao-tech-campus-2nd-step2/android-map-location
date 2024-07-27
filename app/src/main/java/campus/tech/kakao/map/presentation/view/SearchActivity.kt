@@ -1,4 +1,4 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.presentation.view
 
 import android.content.ContentValues
 import android.content.Context
@@ -11,10 +11,23 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import campus.tech.kakao.map.BuildConfig
+import campus.tech.kakao.map.R
+import campus.tech.kakao.map.presentation.adapter.SavedSearchAdapter
+import campus.tech.kakao.map.presentation.adapter.SearchAdapter
+import campus.tech.kakao.map.domain.model.SearchData
+import campus.tech.kakao.map.data.SearchDbHelper
+import campus.tech.kakao.map.data.SearchRepository
+import campus.tech.kakao.map.presentation.viewmodel.KakaoMapViewModel
+import campus.tech.kakao.map.presentation.viewmodel.KakaoMapViewModelFactory
+import campus.tech.kakao.map.presentation.viewmodel.SearchViewModel
+import campus.tech.kakao.map.presentation.viewmodel.SearchViewModelFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -23,7 +36,6 @@ class SearchActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: SearchAdapter
-    private lateinit var db: SearchDbHelper
 
     private lateinit var searchWord: EditText
     private lateinit var deleteSearchWord: Button
@@ -35,19 +47,26 @@ class SearchActivity : AppCompatActivity() {
     private var searchDataList = mutableListOf<SearchData>()
     private var savedSearchList = mutableListOf<String>()
 
-    private val authorization = "KakaoAK ${BuildConfig.KAKAO_REST_API_KEY}"
+    private val searchViewModel: SearchViewModel by viewModels {
+        SearchViewModelFactory(this)
+    }
+
+    private val kakaoMapviewModel: KakaoMapViewModel by viewModels {
+        KakaoMapViewModelFactory(this)
+    }
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        db = SearchDbHelper(context = this)
+        setContentView(R.layout.activity_search)
 
         recyclerView = findViewById(R.id.recyclerView)
         searchWord = findViewById(R.id.searchWord)
         deleteSearchWord = findViewById(R.id.deleteSearchWord)
         searchNothing = findViewById(R.id.searchNothing)
         savedSearchWordRecyclerView = findViewById(R.id.savedSearchWordRecyclerView)
+        savedSearchWordRecyclerView.visibility = View.GONE
 
         adapter = SearchAdapter()
 
@@ -67,9 +86,29 @@ class SearchActivity : AppCompatActivity() {
 
         savedSearchWordRecyclerView.adapter = savedSearchAdapter
 
-        initView()
-        saveData()
+        searchViewModel.searchDataList.observe(this, Observer { data ->
+            data?.let {
+                searchDataList = it.toMutableList()
+                showDb()
+            }
+        })
 
+        searchViewModel.savedSearchList.observe(this, Observer { savedWords ->
+            savedWords?.let {
+                savedSearchList = it.toMutableList()
+                savedSearchAdapter.savedSearchList = savedSearchList
+                savedSearchAdapter.notifyDataSetChanged()
+            }
+        })
+
+        searchViewModel.loadSavedWords()
+
+        fetchData()
+
+        deleteSearchWord.setOnClickListener {
+            searchWord.text.clear()
+            showDb()
+        }
 
         searchWord.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -88,25 +127,19 @@ class SearchActivity : AppCompatActivity() {
 
             override fun afterTextChanged(s: Editable?) {}
         })
+        itemClickSaveWord()
+        savedWordClick()
     }
 
-    private fun saveData() {
+    private fun fetchData() {
         lifecycleScope.launch {
-            showDb()
-            db.fetchApi(authorization)
-            loadData()
-        }
-    }
-
-    private fun loadData() {
-        lifecycleScope.launch {
-            searchDataList = withContext(Dispatchers.IO) {
-                db.loadDb().toMutableList()
+            try {
+                searchViewModel.fetchData()
+            } catch (e: Exception) {
+                Log.e("fetchDataError", "Search Activity fetchData error!")
             }
-            showDb()
         }
     }
-
     private fun showDb() {
         if (searchWord.text.isEmpty()) {
             adapter.searchDataList = emptyList()
@@ -146,61 +179,33 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadSavedWords() {
-        savedSearchList = db.getAllSavedWords().toMutableList()
-        savedSearchAdapter.savedSearchList = savedSearchList
-        savedSearchAdapter.notifyDataSetChanged()
-    }
-
     private fun itemClickSaveWord() {
         adapter.setItemClickListener(object : SearchAdapter.OnItemClickListener {
             override fun onClick(v: View, position: Int) {
                 val searchData = adapter.searchDataList[position]
-                val wDb = db.writableDatabase
-                val values = ContentValues()
+                searchViewModel.saveSelectedPlaceName(searchData.name)
 
-                values.put(SearchData.SAVED_SEARCH_COLUMN_NAME, searchData.name)
-                wDb.insert(SearchData.SAVED_SEARCH_TABLE_NAME, null, values)
-                values.clear()
-                savedSearchList = db.getAllSavedWords().toMutableList()
-                savedSearchAdapter.savedSearchList = savedSearchList
-                savedSearchAdapter.notifyDataSetChanged()
+                kakaoMapviewModel.saveCoordinates(searchData.x, searchData.y)
+                kakaoMapviewModel.saveToBottomSheet(searchData.name, searchData.address)
 
-                saveCoordinates(searchData.x, searchData.y)
-                saveToBottomSheet(searchData.name, searchData.address)
-
-                val intent = Intent(this@SearchActivity, KakaoMapView::class.java)
+                val intent = Intent(this@SearchActivity, KakaoMapViewActivity::class.java)
                 startActivity(intent)
             }
         })
     }
 
-    private fun saveCoordinates(x: Double, y: Double) {
-        val sharedPref = getSharedPreferences("Coordinates", Context.MODE_PRIVATE)
-        with(sharedPref.edit()) {
-            putString("xCoordinate", x.toString())
-            putString("yCoordinate", y.toString())
-            apply()
-        }
-    }
 
-    private fun saveToBottomSheet(name: String, Address: String) {
-        val sharedPref = getSharedPreferences("BottomSheet", Context.MODE_PRIVATE)
-        with(sharedPref.edit()) {
-            putString("name", name)
-            putString("address", Address)
-            apply()
-        }
-    }
-
-    private fun savedWordClick(){
-        savedSearchAdapter.setOnSavedWordClickListener(object : SavedSearchAdapter.OnSavedWordClickListener {
+    private fun savedWordClick() {
+        savedSearchAdapter.setOnSavedWordClickListener(object :
+            SavedSearchAdapter.OnSavedWordClickListener {
             override fun onSavedWordClick(savedWord: String) {
                 filterBySavedWord(savedWord)
             }
 
             override fun onDeleteClick(position: Int) {
-                deleteSavedWord(position)
+                searchViewModel.deleteSavedWord(savedSearchAdapter.savedSearchList[position])
+                savedSearchAdapter.savedSearchList.removeAt(position)
+                savedSearchAdapter.notifyItemRemoved(position)
             }
         })
     }
@@ -219,23 +224,11 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun deleteSavedWord(position: Int) {
-        val deletedWord = savedSearchAdapter.savedSearchList[position]
-        val wDb = db.writableDatabase
-        wDb.delete(
-            SearchData.SAVED_SEARCH_TABLE_NAME,
-            "${SearchData.SAVED_SEARCH_COLUMN_NAME} = ?",
-            arrayOf(deletedWord)
-        )
 
-        savedSearchAdapter.savedSearchList.removeAt(position)
-        savedSearchAdapter.notifyItemRemoved(position)
-    }
 
     private fun initView() {
         itemClickSaveWord()
         deleteWord()
-        loadSavedWords()
         savedWordClick()
     }
 

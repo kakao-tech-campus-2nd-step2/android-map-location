@@ -13,6 +13,8 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
+import campus.tech.kakao.map.presentation.view.KakaoMapViewActivity
+import campus.tech.kakao.map.presentation.view.SearchActivity
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -69,7 +71,7 @@ class SearchTest {
 
     @Test
     fun kakaoMapSearchButton() {
-        val scenario = ActivityScenario.launch(KakaoMapView::class.java)
+        val scenario = ActivityScenario.launch(KakaoMapViewActivity::class.java)
         onView(withId(R.id.searchButton))
             .perform(click())
         Thread.sleep(2000)
@@ -80,7 +82,7 @@ class SearchTest {
         onView(withId(R.id.searchWord))
             .check(matches(isDisplayed()))
 
-        Thread.sleep(2000)
+        Thread.sleep(3000)
 
         onView(withId(R.id.searchWord))
             .perform(replaceText(query))
